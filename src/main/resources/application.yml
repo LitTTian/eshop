@@ -2,6 +2,7 @@ server:
     port: 8080
 mybatis-plus:
     configuration:
+        # 指定日志输出格式
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 spring:
     datasource:
@@ -28,6 +29,7 @@ aliyun:
         id: LTAI5tMNsyUE93KKe9RZu6Pa
         secret: 20p7WKXl5GXlrAp5kcWvHPhx3XEXGL
         bucket-name: e-shop-oss
+        dir-prefix: images/
 
 
 # 注意：

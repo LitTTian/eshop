@@ -4,15 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.common.webapi.ResultCode;
+import com.lrz.eshop.mapper.TradeMapper;
 import com.lrz.eshop.mapper.UserMapper;
 import com.lrz.eshop.pojo.User;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -28,17 +26,32 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private OssService ossService;
 
+    /*@GetMapping("/user/query")
+    public Result<?> query() {
+        List<User> list = userMapper.selectList(null);
+        System.out.println(list);
+        return Result.success("查询所有用户");
+    }
+
+    @GetMapping("/user/queryAll")
+    public Result<?> queryAll() {
+        List<User> list = userMapper.selectAllUserAndTrades();
+        System.out.println(list);
+        return Result.success("查询所有用户和购买记录");
+    }*/
+
     /**
      * 根据用户名请求返回用户信息
-     * @param id 用户名
+     * @param id 用户id
      * @return 用户或错误信息
      */
 //    @ApiOperation("根据用户名返回用户信息")
     @PostMapping("/user/queryId")
-    public Result<?> queryId(@RequestBody String id) {
+    public Result<?> queryId(@RequestParam String id) {
         System.out.println("In queryUsername:" + id);
         User user =  userMapper.selectById(id);
         return user == null ? Result.failed(ResultCode.UserNotExist) : Result.success(user);
@@ -97,10 +110,11 @@ public class UserController {
      * @return true表示存在，false不存在
      */
     @PostMapping("/user/queryUsername")
-    public Result<?> queryUsername(@RequestBody String username) {
+    public Result<?> queryUsername(@RequestParam String username) {
         Long cnt = userMapper.selectCount(
                 new QueryWrapper<User>().eq("username", username)
         );
+        // System.out.println(cnt);
         return Result.success(cnt != 0);
     }
 
@@ -113,14 +127,14 @@ public class UserController {
      */
     @PostMapping("/user/setAvatar")
     public Result<?> setAvatar(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
-//        System.out.println("avatar file:");
-//        System.out.println(file);
-//        System.out.println("username: ");
-//        System.out.println(username);
-        //将头像上传云端
-        String url = ossService.uploadFileAvatar(file, "users/"+id+"/avatar");
+        // System.out.println("avatar file:");
+        // System.out.println(file);
+        // System.out.println("username: ");
+        // System.out.println(username);
+        //  将头像上传云端
+        String url = ossService.uploadFileAvatar(file, id);
         System.out.println("avatarUrl: " + url);
-        //修改数据库
+        // 修改数据库
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
         userUpdateWrapper.eq("id", id).set("avatar_url", url);
         userMapper.update(null, userUpdateWrapper);

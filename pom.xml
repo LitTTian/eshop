@@ -53,7 +53,7 @@
         <!--    <artifactId>mybatis</artifactId>-->
         <!--    <version>3.5.11</version>-->
         <!--</dependency>-->
-        <!-- MyBatisPlus依赖 -->
+        <!-- MyBatisPlus依赖(包含了MyBatis) -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>

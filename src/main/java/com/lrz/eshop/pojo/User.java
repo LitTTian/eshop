@@ -2,14 +2,17 @@ package com.lrz.eshop.pojo;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lrz.eshop.pojo.supply.Sell;
+import com.lrz.eshop.pojo.trade.Trade;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
- * 用户信息对应数据库的实体类
+ * table name:  user
  * @author 天天
  * @create 2023/1/19 2:52
  * @description
@@ -37,7 +40,11 @@ public class User {
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
     @Version
     private Integer version;
+
+    @TableField(exist = false)
+    private List<Trade> trades;
+    @TableField(exist = false)
+    private List<Sell> sells;
 }

@@ -2,8 +2,9 @@ package com.lrz.eshop.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lrz.eshop.pojo.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 /**
  *
@@ -16,6 +17,23 @@ import org.apache.ibatis.annotations.Select;
 // Spring会自动创建UserMapper接口实现类对应的实例
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    @Select("select * from user where id = #{id}")
-    User selectById(int id);
+
+    @Select("select * from user")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "pwd", column = "pwd"),
+            @Result(property = "creditScore", column = "creditScore"),
+            @Result(property = "cumulativeScore", column = "cumulativeScore"),
+            @Result(property = "schoolId", column = "schoolId"),
+            @Result(property = "avatarUrl", column = "avatarUrl"),
+            @Result(property = "balance", column = "balance"),
+            @Result(property = "createTime", column = "createTime"),
+            @Result(property = "updateTime", column = "updateTime"),
+            @Result(property = "version", column = "version"),
+            @Result(property = "trades", column = "id", javaType = List.class,
+                    many = @Many(select = "com.lrz.eshop.mapper.TradeMapper.selectByBuyerId")
+            ),
+    })
+    List<User> selectAllUserAndTrades();
 }
