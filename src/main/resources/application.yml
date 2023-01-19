@@ -30,5 +30,7 @@ aliyun:
         bucket-name: e-shop-oss
 
 
-
+# 注意：
+    # Spring Boot 2.6.X后与Swagger有版本冲突问题，需要在application.properties中添加:
+    # spring.mvc.pathmatch.matching-strategy=ant_path_matcher
 

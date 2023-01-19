@@ -72,18 +72,19 @@
             <version>1.2.15</version>
         </dependency>
 
-        <!--&lt;!&ndash; 添加swagger2相关功能 &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--    <groupId>io.springfox</groupId>-->
-        <!--    <artifactId>springfox-swagger2</artifactId>-->
-        <!--    <version>2.9.2</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; 添加swagger-ui相关功能 &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--    <groupId>io.springfox</groupId>-->
-        <!--    <artifactId>springfox-swagger-ui</artifactId>-->
-        <!--    <version>3.0.0</version>-->
-        <!--</dependency>-->
+        <!-- 注意swagger2版本要和spring版本匹配！！ -->
+        <!-- 添加swagger2相关功能 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <!-- 添加swagger-ui相关功能 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
         <!--&lt;!&ndash; fix swagger bug &ndash;&gt;-->
         <!--<dependency>-->
         <!--    <groupId>com.fasterxml</groupId>-->
