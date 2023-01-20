@@ -23,11 +23,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // 设置前端port
-        registry.addMapping("/**").allowedOrigins("http://localhost:8088")
-                .allowedHeaders("*")
-                .allowedMethods("*")
-                .maxAge(30000)
-                .allowCredentials(true);
+        registry.addMapping("/**") // 允许跨域访问的路径
+                .allowedOrigins("http://localhost:8080") // 允许跨越访问的源
+                .allowedHeaders("*") // 允许的头部
+                .allowedMethods("*") // 允许的请求方法
+                .maxAge(30000) // 预检间隔时间
+                .allowCredentials(true); // 是否发送cookie
     }
 
     @Override

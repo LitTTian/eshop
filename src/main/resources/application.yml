@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 8088
 mybatis-plus:
     configuration:
         # 指定日志输出格式
@@ -9,8 +9,8 @@ spring:
         username: root
         password: liruizhi
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://localhost:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
-#        url: jdbc:mysql://43.143.215.47:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+#        url: jdbc:mysql://localhost:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+        url: jdbc:mysql://43.143.215.47:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
         driver-class-name: com.mysql.cj.jdbc.Driver
     mvc:
         pathmatch:

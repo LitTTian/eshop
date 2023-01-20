@@ -18,18 +18,20 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
+    // 一定要注意自己封装的mapper方法写正确
     @Select("select * from user")
     @Results({
+            // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
             @Result(property = "pwd", column = "pwd"),
-            @Result(property = "creditScore", column = "creditScore"),
-            @Result(property = "cumulativeScore", column = "cumulativeScore"),
-            @Result(property = "schoolId", column = "schoolId"),
-            @Result(property = "avatarUrl", column = "avatarUrl"),
+            @Result(property = "creditScore", column = "credit_score"),
+            @Result(property = "cumulativeScore", column = "cumulative_score"),
+            @Result(property = "schoolId", column = "school_id"),
+            @Result(property = "avatarUrl", column = "avatar_url"),
             @Result(property = "balance", column = "balance"),
-            @Result(property = "createTime", column = "createTime"),
-            @Result(property = "updateTime", column = "updateTime"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
             @Result(property = "version", column = "version"),
             @Result(property = "trades", column = "id", javaType = List.class,
                     many = @Many(select = "com.lrz.eshop.mapper.TradeMapper.selectByBuyerId")

@@ -23,6 +23,7 @@ import java.util.List;
  * @description
  */
 @RestController
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserMapper userMapper;
@@ -30,19 +31,27 @@ public class UserController {
     @Autowired
     private OssService ossService;
 
-    /*@GetMapping("/user/query")
+    /**
+     * 查询所有用户
+     * @return
+     */
+    @GetMapping("/user/query")
     public Result<?> query() {
         List<User> list = userMapper.selectList(null);
         System.out.println(list);
-        return Result.success("查询所有用户");
+        return Result.success(list);
     }
 
+    /**
+     * 查询所有用户和购买记录
+     * @return
+     */
     @GetMapping("/user/queryAll")
     public Result<?> queryAll() {
         List<User> list = userMapper.selectAllUserAndTrades();
         System.out.println(list);
-        return Result.success("查询所有用户和购买记录");
-    }*/
+        return Result.success(list);
+    }
 
     /**
      * 根据用户名请求返回用户信息
