@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * 阿里云OSS配置类
- * @author 天天  
- * @create 2023/1/19 17:15  
+ * 阿里云OSS参数类
+ * @author 天天
+ * @create 2023/1/19 17:15
  * @description
  */
 @Component

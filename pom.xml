@@ -28,6 +28,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -53,18 +54,21 @@
         <!--    <artifactId>mybatis</artifactId>-->
         <!--    <version>3.5.11</version>-->
         <!--</dependency>-->
+
         <!-- MyBatisPlus依赖(包含了MyBatis) -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.3.1</version>
         </dependency>
+
         <!-- mysql驱动依赖  -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.26</version>
         </dependency>
+
         <!--    数据连接池 druid    -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -85,18 +89,48 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <!--&lt;!&ndash; fix swagger bug &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--    <groupId>com.fasterxml</groupId>-->
-        <!--    <artifactId>classmate</artifactId>-->
-        <!--    <version>1.5.1</version>-->
-        <!--</dependency>-->
-        <!--oss-->
+
+        <!-- 谷歌图片验证码 -->
+        <!-- 可能需要自行下载，并用如下命令安装 -->
+        <!-- mvn install:install-file -DgroupId="com.google.code" -DartifactId="kaptcha" -Dversion="2.3" -Dfile="kaptcha-2.3.jar"  -Dpackaging="jar"  -DgeneratePom="true" -->
+        <dependency>
+            <groupId>com.google.code</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+
+        <!-- oss -->
         <dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>3.10.2</version>
         </dependency>
+
+        <!-- region email -->
+        <!-- spring data redis 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- hutool工具包依赖 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.11</version>
+        </dependency>
+        <!--  mail依赖 -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <!--  模板引擎依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <!--   endregion email   -->
 
     </dependencies>
 

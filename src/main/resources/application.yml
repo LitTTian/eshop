@@ -12,6 +12,26 @@ spring:
 #        url: jdbc:mysql://localhost:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
         url: jdbc:mysql://43.143.215.47:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
         driver-class-name: com.mysql.cj.jdbc.Driver
+    # 配置redis
+    redis:
+        #redis-单机和主从配置
+        host: 43.143.215.47
+        port: 6379
+        jedis:
+            pool:
+                # 连接池最大连接数(使用负值表示没有限制) 默认为8
+                max-active: 8
+                # 连接池中的最大空闲连接 默认为8
+                max-idle: 8
+                # 连接池最大阻塞等待时间(使用负值表示没有限制) 默认为-1
+                max-wait: -1
+                # 连接池中的最小空闲连接 默认为 0
+                min-idle: 0
+        timeout: 5000
+        #redis-哨兵集群的配置
+#        sentinel:
+#            master: mymaster
+#            nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
     mvc:
         pathmatch:
             matching-strategy: ant_path_matcher
@@ -22,7 +42,7 @@ spring:
           additional-paths: src/main/java
           exclude: static/**
 
-
+# 阿里云oss对象存储服务
 aliyun:
     oss:
         endpoint: oss-cn-hangzhou.aliyuncs.com
@@ -30,6 +50,29 @@ aliyun:
         secret: 20p7WKXl5GXlrAp5kcWvHPhx3XEXGL
         bucket-name: e-shop-oss
         dir-prefix: images/
+# 注册用电子邮箱信息
+mail:
+    # 负责发送验证码的邮箱
+    email: eleproductmall@163.com
+    host: smtp.163.com
+    port: 465
+#    username: EPMall
+    password: HLHRYOALGTPASQBL
+    username: eleproductmall
+    # 授权码是用于登录第三方邮件客户端的专用密码
+#    password: WDYPAXVBNEUBYTUI
+#    # 开启加密认证
+#    properties:
+#        mail:
+#            smtp:
+#                ssl:
+#                    enable: true
+    #邮箱验证码有效时间/秒
+    code:
+        expiration: 300
+
+
+
 
 
 # 注意：
