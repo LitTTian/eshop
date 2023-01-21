@@ -28,6 +28,7 @@ public class User {
     private Long id;
     private String username;
     private String pwd;
+    private String email;
     @TableField(fill = FieldFill.INSERT)
     private short creditScore;
     @TableField(fill = FieldFill.INSERT)
