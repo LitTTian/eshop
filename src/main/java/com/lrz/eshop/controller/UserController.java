@@ -1,14 +1,16 @@
 package com.lrz.eshop.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.common.webapi.ResultCode;
-import com.lrz.eshop.mapper.TradeMapper;
-import com.lrz.eshop.mapper.UserMapper;
 import com.lrz.eshop.pojo.User;
+import com.lrz.eshop.service.AuthEmailService;
 import com.lrz.eshop.service.OssService;
+import com.lrz.eshop.service.UserService;
+import com.lrz.eshop.service.dto.AuthUserDto;
 import com.lrz.eshop.util.Encrypt;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,12 +24,17 @@ import java.util.List;
  * @create 2023/1/19 2:51
  * @description
  */
+@Api(tags = "user-controller")
 @RestController
 @CrossOrigin
 public class UserController {
-    @Autowired
-    private UserMapper userMapper;
+    // @Autowired
+    // private UserMapper userMapper;
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AuthEmailService authService;
     @Autowired
     private OssService ossService;
 
@@ -35,9 +42,10 @@ public class UserController {
      * 查询所有用户
      * @return
      */
+    @ApiOperation("查询所有的用户信息")
     @GetMapping("/user/query")
     public Result<?> query() {
-        List<User> list = userMapper.selectList(null);
+        List<User> list = userService.selectList(null);
         System.out.println(list);
         return Result.success(list);
     }
@@ -46,25 +54,14 @@ public class UserController {
      * 查询所有用户和购买记录
      * @return
      */
+    @ApiOperation("查询所有用户和购买记录")
     @GetMapping("/user/queryAll")
     public Result<?> queryAll() {
-        List<User> list = userMapper.selectAllUserAndTrades();
+        List<User> list = userService.selectAllUserAndTrades();
         System.out.println(list);
         return Result.success(list);
     }
 
-    /**
-     * 根据用户名请求返回用户信息
-     * @param id 用户id
-     * @return 用户或错误信息
-     */
-//    @ApiOperation("根据用户名返回用户信息")
-    @PostMapping("/user/queryId")
-    public Result<?> queryId(@RequestParam String id) {
-        System.out.println("In queryUsername:" + id);
-        User user =  userMapper.selectById(id);
-        return user == null ? Result.failed(ResultCode.UserNotExist) : Result.success(user);
-    }
 
     /**
      * 登陆时确认用户名密码，并存入session
@@ -74,11 +71,9 @@ public class UserController {
      */
     @PostMapping("/user/verifyUser")
     public Result<?> verifyUser(@RequestBody User user, HttpSession session) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", user.getUsername());
-        //加密后比较
-        queryWrapper.eq("pwd", Encrypt.encodeWithSha1(user.getPwd()));
-        List<User> userList = userMapper.selectList(queryWrapper);
+        // 使用sha1加密
+        user.setPwd(Encrypt.encodeWithSha1(user.getPwd()));
+        List<User> userList = userService.verifyUser(user);
         if (userList.size() == 1) {
             // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
             session.setAttribute("id", String.valueOf(userList.get(0).getId()));
@@ -94,37 +89,24 @@ public class UserController {
      */
     @PostMapping("/user/signUp")
     public Result<?> signUp(@RequestBody User user, HttpSession session) {
-        //sha1加密
+        // 使用sha1加密
         user.setPwd(Encrypt.encodeWithSha1(user.getPwd()));
-        userMapper.insert(user);
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", user.getUsername());
-        List<User> userList = userMapper.selectList(queryWrapper);
+        userService.insert(user);
+        List<User> userList = userService.verifyUser(user);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
         session.setAttribute("id", String.valueOf(userList.get(0).getId()));
         return Result.success(userList.get(0));
     }
 
-//    @PostMapping("/user/id")
-//    public Result<?> queryUserId(@RequestBody User user) {
-//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("username", user.getUsername());
-//        List<User> userList = userMapper.selectList(queryWrapper);
-//        return userList.size() == 0 ? Result.error("-1", "Found no users in database") : Result.success(userList.get(0).getId());
-//    }
 
     /**
      * 查询用户名是否已经存在
      * @param username 用户名
      * @return true表示存在，false不存在
      */
-    @PostMapping("/user/queryUsername")
-    public Result<?> queryUsername(@RequestParam String username) {
-        Long cnt = userMapper.selectCount(
-                new QueryWrapper<User>().eq("username", username)
-        );
-        // System.out.println(cnt);
-        return Result.success(cnt != 0);
+    @PostMapping("/user/existUsername")
+    public Result<?> existUsername(@RequestParam String username) {
+         return Result.success(userService.existUsername(username));
     }
 
 
@@ -146,8 +128,20 @@ public class UserController {
         // 修改数据库
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
         userUpdateWrapper.eq("id", id).set("avatar_url", url);
-        userMapper.update(null, userUpdateWrapper);
+        userService.update(null, userUpdateWrapper);
         return Result.success(url);
+    }
+
+    @ApiOperation(value = "发送邮箱验证码")
+    @PostMapping("/getemailcode")
+    public Result<?> getEmailCode(@RequestParam String email) {
+        return Result.success(authService.sendMailCode(email));
+    }
+
+    @ApiOperation(value = "注册")
+    @PostMapping("/register")
+    public Result<?> register(@RequestBody AuthUserDto authUserDto) {
+        return Result.success(authService.register(authUserDto));
     }
 
 
