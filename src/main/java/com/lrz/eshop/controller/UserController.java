@@ -7,7 +7,7 @@ import com.lrz.eshop.pojo.User;
 import com.lrz.eshop.service.AuthEmailService;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.UserService;
-import com.lrz.eshop.util.Encrypt;
+import com.lrz.eshop.util.EncryptUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ public class UserController {
     @PostMapping("/verifyUser")
     public Result<?> verifyUser(@RequestBody User user, HttpSession session) {
         // 使用sha1加密
-        user.setPwd(Encrypt.encodeWithSha1(user.getPwd()));
+        user.setPwd(EncryptUtils.encodeWithSha1(user.getPwd()));
         List<User> userList = userService.verifyUser(user);
         if (userList.size() == 1) {
             // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
@@ -88,7 +88,7 @@ public class UserController {
     @PostMapping("/signUp")
     public Result<?> signUp(@RequestBody User user, HttpSession session) {
         // 使用sha1加密
-        user.setPwd(Encrypt.encodeWithSha1(user.getPwd()));
+        user.setPwd(EncryptUtils.encodeWithSha1(user.getPwd()));
         userService.insert(user);
         List<User> userList = userService.verifyUser(user);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度

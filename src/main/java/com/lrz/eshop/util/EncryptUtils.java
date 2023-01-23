@@ -1,5 +1,6 @@
 package com.lrz.eshop.util;
 
+import com.lrz.eshop.util.encrypt.AESUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**  
@@ -8,7 +9,28 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @create 2023/1/19 17:21  
  * @description
  */
-public class Encrypt {
+public class EncryptUtils {
+
+    private final AESUtils aesUtils = new AESUtils();
+
+    /**
+     * AES加密
+     * @param content
+     * @return
+     */
+    public static String aesEncrypt (String content) {
+        return AESUtils.Encrypt(content);
+    }
+
+    /**
+     * AES解密
+     * @param content
+     * @return
+     */
+    public static String aesDecrypt (String content) {
+        return AESUtils.Decrypt(content);
+    }
+
 
     /**
      * MD5加密
@@ -22,4 +44,8 @@ public class Encrypt {
             return DigestUtils.sha1Hex(string);
         }
     }
+
+
+
+
 }

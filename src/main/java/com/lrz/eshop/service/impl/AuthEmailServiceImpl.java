@@ -46,7 +46,7 @@ public class AuthEmailServiceImpl implements AuthEmailService {
     public String sendEmailCode(String redisKey, String email) {
         String emailCode = (String) redisTemplate.opsForValue().get(redisKey);
         // System.out.println("code = " + code);
-        if(StringUtils.isEmpty(emailCode)) {
+        if(!StringUtils.isEmpty(emailCode)) {
             return "验证码已发送";
         }
         // 如果从redis获取不到，
@@ -56,7 +56,9 @@ public class AuthEmailServiceImpl implements AuthEmailService {
                 new EmailDto(Collections.singletonList(email),
                         "验证码",
                         emailCode,
-                        "邮箱注册"));
+                        "邮箱注册"
+                )
+        );
         //生成验证码放到redis里面，设置有效时间
         redisTemplate.opsForValue().set(
                 redisKey,

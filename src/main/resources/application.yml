@@ -6,16 +6,16 @@ mybatis-plus:
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 spring:
     datasource:
-        username: root
-        password: liruizhi
+        username: ENC@[yWRWzi8K+TM1iHIZYrqspQ==]
+        password: ENC@[T4t2tW8gpY6oHKdDeQ5xvKA30mEVw2og]
+        url: ENC@[5spTxc59d5YHlqCsa3HKupJbbHj09YpxHjjPeBR+/18jHio6pFPnn56WKRKC8rV1hOsXQHgY8fmECyAjmLOi1kep6QWkrcHHYw/lYePwp4ou2WEeDnD9VkZLSPrwjht4HdeCtA4Blaa6WB1Vd5nfM61vaW/R46xbVicMlZn89BVVoH4D7au5jWcqHPfHiG/g]
+#        url: jdbc:mysql://{url:port}}/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
         type: com.alibaba.druid.pool.DruidDataSource
-#        url: jdbc:mysql://localhost:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
-        url: jdbc:mysql://43.143.215.47:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
         driver-class-name: com.mysql.cj.jdbc.Driver
     # 配置redis
     redis:
         #redis-单机和主从配置
-        host: 43.143.215.47
+        host: ENC@[jPwm2BBtqFGXAnfP/7VLNxjNByYY1JIK]
         port: 6379
         jedis:
             pool:
@@ -29,7 +29,8 @@ spring:
                 min-idle: 0
         timeout: 5000
         #redis-哨兵集群的配置
-#        sentinel:
+        password: ENC@[+PISn5p4RhkDxNh2M7eRULSsPMnVDpIV]
+    #        sentinel:
 #            master: mymaster
 #            nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
     mvc:
@@ -42,23 +43,33 @@ spring:
           additional-paths: src/main/java
           exclude: static/**
 
+# jasypt加密配置
+jasypt:
+    encryptor:
+        # 加密盐
+        password: liruizhi
+        algorithm: PBEWITHMD5ANDDES
+        property:
+            prefix: "ENC@["
+            suffix: "]"
+#        iv-generator-classname: org.jasypt.iv.NoIvGenerator
 # 阿里云oss对象存储服务
 aliyun:
     oss:
-        endpoint: oss-cn-hangzhou.aliyuncs.com
-        id: LTAI5tMNsyUE93KKe9RZu6Pa
-        secret: 20p7WKXl5GXlrAp5kcWvHPhx3XEXGL
-        bucket-name: e-shop-oss
+        endpoint: ENC@[EhKgUjr/jvXd7ofewKVK/5eQgNIVwN5m]
+        id: ENC@[C6eLSEFmiCOhrv6Y9ZHOtOE+isxDk95OGAai+s3LhKPwE/s1ClfVhw==]
+        secret: ENC@[Lf+ySV6IiN4xD/fDBiFkj9hDamOouCCjJSZLC+DfKleKo/nxnB9gCQ==]
+        bucket-name: ENC@[txs9Rot+dBPUZiCbXGxKeHVHCw3aq0F7]
         dir-prefix: images/
 # 注册用电子邮箱信息
 mail:
     # 负责发送验证码的邮箱
-    email: eleproductmall@163.com
+    email: ENC@[h5Av3Qhe7acsxuH+ZHC+Lh84k5lGh/Blb90qBNCgFFw=]
     host: smtp.163.com
     port: 465
 #    username: EPMall
-    password: HLHRYOALGTPASQBL
-    username: eleproductmall
+    password: ENC@[vXsyW3Luc+GHsJA1JbTJsUN0v/sa40ioGyFnIKQZDqM=]
+    username: ENC@[UnXejK1c+38DBoqD4GIQFBl/hpHB+hKl]
     # 授权码是用于登录第三方邮件客户端的专用密码
 #    password: WDYPAXVBNEUBYTUI
 #    # 开启加密认证
@@ -67,11 +78,6 @@ mail:
 #            smtp:
 #                ssl:
 #                    enable: true
-    #邮箱验证码有效时间/秒
-    code:
-        expiration: 300
-
-
 
 
 

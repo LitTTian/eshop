@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * 图片验证码控制类
+ * 验证码控制类
  * @author 天天
  * @create 2023/1/21 14:34
  * @description

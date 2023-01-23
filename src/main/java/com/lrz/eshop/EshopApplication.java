@@ -14,6 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("com.lrz.eshop.mapper")
 public class EshopApplication {
 
+
+
     public static void main(String[] args) {
         SpringApplication.run(EshopApplication.class, args);
     }

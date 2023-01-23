@@ -1,0 +1,5 @@
+spring:
+    datasource:
+    url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=mydatabase
+    username: bob
+    password: ENC(eGm+abBtq2NXGt7FZ3SDoEPpHaQ2OOpXZ/L16aSfBMc=)

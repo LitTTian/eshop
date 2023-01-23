@@ -29,7 +29,7 @@ public class RedisUtils {
     public static String getRedisKey(@RequestBody HttpServletRequest request, String type){
         String ip = NetworkUtils.getIpAddr(request);
         String userAgent = request.getHeader("User-Agent");
-        String key = "user-service:" + type + ":" + Encrypt.encodeWithSha1(ip + userAgent);
+        String key = "user-service:" + type + ":" + EncryptUtils.encodeWithSha1(ip + userAgent);
         return key;
     }
 
