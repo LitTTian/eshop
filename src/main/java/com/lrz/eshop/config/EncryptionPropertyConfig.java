@@ -26,8 +26,24 @@ public class EncryptionPropertyConfig {
     private static final String PREFIX = "ENC@[";
     private static final String SUFFIX = "]";
     // 密钥
-    private static String PASSWORD = "liruizhi";
+    private static final String PASSWORD = "liruizhi";
 
+    /* private static SimpleStringPBEConfig config;
+
+    static {
+        config.setPassword(PASSWORD);
+        config.setAlgorithm("PBEWITHMD5ANDDES");
+        config.setKeyObtentionIterations("1000");
+        config.setPoolSize("1");
+        config.setProviderName("SunJCE");
+        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        config.setStringOutputType("base64");
+    } */
+
+    /**
+     * 自定义加密解密器
+     * @return
+     */
     @Bean(name = "encryptablePropertyResolver")
     public EncryptablePropertyResolver encryptablePropertyResolver() {
         return new MyEncryptablePropertyResolver(PREFIX, SUFFIX, PASSWORD);
@@ -57,7 +73,7 @@ public class EncryptionPropertyConfig {
             // 简单字符串形式的PBC配置
             SimpleStringPBEConfig config = new SimpleStringPBEConfig();
             // 设置加密密码（大小写敏感），密码错误将导致程序异常
-            config.setPassword("liruizhi");
+            config.setPassword(password);
             // 设置加密算法
             // config.setAlgorithm("PBEWithMD5AndDES");
             config.setAlgorithm("PBEWITHMD5ANDDES");
@@ -88,9 +104,10 @@ public class EncryptionPropertyConfig {
          */
         @Override
         public String resolvePropertyValue(String value) {
-            System.out.println("resolvePropertyValue : " + count++ + value);
+            System.out.println("resolvePropertyValue::" + count++ + ":: " + value);
             if (!StringUtils.isEmpty(value) && value.startsWith(Prefix) && value.endsWith(Suffix)) {
                 String encValue = value.substring(Prefix.length(), value.length() - Suffix.length());
+                // System.out.println("resolvePropertyValue::" + count + ":: " + encValue);
                 return encryptor.decrypt(encValue);
             }
             return value;
@@ -99,16 +116,17 @@ public class EncryptionPropertyConfig {
 
 
     /**
-     * 配置加密器@Bean("jasyptStringEncryptor")
+     * 配置加密器
      * @return StringEncryptor
      */
+    @Bean("jasyptStringEncryptor")
     public StringEncryptor stringEncryptor() {
         //集中式PBE字符串加密器
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         //简单字符串形式的PBC配置
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         //设置加密密码（大小写敏感），密码错误将导致程序异常
-        config.setPassword("liruizhi");
+        config.setPassword(PASSWORD);
         //设置加密算法
         // config.setAlgorithm("PBEWithMD5AndDES");
         config.setAlgorithm("PBEWITHMD5ANDDES");

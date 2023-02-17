@@ -26,7 +26,7 @@ import java.util.List;
 @Api(tags = "user-controller")
 @RestController
 @CrossOrigin
-@RequestMapping("/api/data/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -104,7 +104,17 @@ public class UserController {
      */
     @PostMapping("/existUsername")
     public Result<?> existUsername(@RequestParam String username) {
-         return Result.success(userService.existUsername(username));
+         return Result.createResult(0, "", userService.existUsername(username));
+    }
+
+    /**
+     * 查询邮箱是否已经存在
+     * @param email 邮箱
+     * @return true表示存在，false不存在
+     */
+    @PostMapping("/existEmail")
+    public Result<?> existEmail(@RequestParam String email) {
+        return Result.createResult(0, "", userService.existEmail(email));
     }
 
 

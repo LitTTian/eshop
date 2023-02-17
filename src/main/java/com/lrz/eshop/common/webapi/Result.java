@@ -19,6 +19,11 @@ public class Result<T> {
         this.result = result;
     }
 
+    public static <T> Result<T> createResult(long code, String message, T result) {
+        return new Result<T>(code, message, result);
+    }
+
+
     /**
      * 成功返回结果
      *

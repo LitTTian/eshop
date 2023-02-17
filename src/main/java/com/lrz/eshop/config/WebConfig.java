@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // 设置前端port
         registry.addMapping("/**") // 允许跨域访问的路径
-                .allowedOrigins("http://localhost:8080") // 允许跨越访问的源
+                .allowedOrigins("http://localhost:8081") // 允许跨越访问的源
                 .allowedHeaders("*") // 允许的头部
                 .allowedMethods("*") // 允许的请求方法
                 .maxAge(30000) // 预检间隔时间
