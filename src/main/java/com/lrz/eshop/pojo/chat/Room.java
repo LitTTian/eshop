@@ -20,23 +20,21 @@ import java.util.Date;
 @Data
 @TableName("room")
 public class Room {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long roomId;
+    @TableId(type = IdType.AUTO)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long fromId;
+    private Long id;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long toId;
-    private int cnt;
+    private Long userId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long roomName;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
     @Version
-    private Integer version;
+    @TableField(value = "version", fill = FieldFill.INSERT)
+    private int version;
 
-    public Room(Long fromId, Long toId, int cnt) {
-        this.fromId = fromId;
-        this.toId = toId;
-        this.cnt = cnt;
-    }
 }

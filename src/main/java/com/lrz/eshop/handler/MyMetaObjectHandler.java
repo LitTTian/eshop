@@ -5,7 +5,9 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * MyBatisPlus字段自动填充
@@ -15,18 +17,33 @@ import java.util.Date;
  */
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
-    //插入时的自动填充策略
+    /**
+     * 插入时的自动填充策略
+     * @param metaObject 元对象
+     */
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.setFieldValByName("createTime", new Date(), metaObject);
-        this.setFieldValByName("updateTime", new Date(), metaObject);
-        this.setFieldValByName("cumulativeScore", 0, metaObject);
-        this.setFieldValByName("creditScore", (short)100, metaObject);
-        //        this.setFieldValByName("balance", 100L, metaObject);
+        this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
+        this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
+        this.strictInsertFill(metaObject,"cumulativeScore", Integer.class, 0);
+        this.strictInsertFill(metaObject,"creditScore", Short.class, (short)100);
+        this.strictInsertFill(metaObject,"balance", Float.class, (float)0f);
+        this.strictInsertFill(metaObject,"isSeller", Boolean.class, false);
+        this.strictInsertFill(metaObject, "version", Integer.class, 1);
     }
-    //更新时的自动填充策略
+
+    /**
+     * 更新时的自动填充策略
+     * @param metaObject 元对象
+     */
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "updateTime", LocalDateTime::now, LocalDateTime.class);
+        // LocalDateTime::now, LocalDateTime.class
+        // this.setFieldValByName("updateTime", Calendar.getInstance(Locale.CHINA).getTime(), metaObject);
+        this.setFieldValByName("updateTime", new Date(), metaObject);
     }
+
+    // public static void main(String[] args) {
+    //     System.out.println(new Date());
+    // }
 }

@@ -43,11 +43,12 @@ public class AuthEmailServiceImpl implements AuthEmailService {
     private UserService userService;
 
     @Override
-    public String sendEmailCode(String redisKey, String email) {
+    public Boolean sendEmailCode(String redisKey, String email) {
         String emailCode = (String) redisTemplate.opsForValue().get(redisKey);
         // System.out.println("code = " + code);
         if(!StringUtils.isEmpty(emailCode)) {
-            return "验证码已发送";
+            // redis中已经有验证码了，直接返回
+            return true;
         }
         // 如果从redis获取不到，
         // 生成验证码，
@@ -66,7 +67,7 @@ public class AuthEmailServiceImpl implements AuthEmailService {
                 CaptchaExpiration.MAIL_REGISTRY_CODE.getCount(),
                 CaptchaExpiration.MAIL_REGISTRY_CODE.getTimeUnit()
         );
-        return "成功发送验证码";
+        return true;
     }
 
     @Override

@@ -104,10 +104,11 @@ public class EncryptionPropertyConfig {
          */
         @Override
         public String resolvePropertyValue(String value) {
-            System.out.println("resolvePropertyValue::" + count++ + ":: " + value);
+            System.out.println("resolvePropertyValue::" + count + ":: " + value);
             if (!StringUtils.isEmpty(value) && value.startsWith(Prefix) && value.endsWith(Suffix)) {
                 String encValue = value.substring(Prefix.length(), value.length() - Suffix.length());
-                // System.out.println("resolvePropertyValue::" + count + ":: " + encValue);
+                // 将解密后的配置打印在控制台上
+                System.out.println("resolvePropertyValue::" + count + ":: " + encValue);
                 return encryptor.decrypt(encValue);
             }
             return value;
@@ -120,7 +121,7 @@ public class EncryptionPropertyConfig {
      * @return StringEncryptor
      */
     @Bean("jasyptStringEncryptor")
-    public StringEncryptor stringEncryptor() {
+    public static StringEncryptor stringEncryptor() {
         //集中式PBE字符串加密器
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         //简单字符串形式的PBC配置
@@ -152,5 +153,12 @@ public class EncryptionPropertyConfig {
         return (StringEncryptor) context.getBean("jasyptStringEncryptor");
     }
 
-
+    // 用来加密数据
+    public static void main(String[] args) {
+        StringEncryptor stringEncryptor = stringEncryptor();
+        String pwd = "txs9Rot+dBPUZiCbXGxKeHVHCw3aq0F7";
+        // String test = stringEncryptor.encrypt(pwd);
+        String test = stringEncryptor.decrypt(pwd);
+        System.out.println("处理后：" + test);
+    }
 }

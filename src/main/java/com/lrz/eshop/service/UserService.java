@@ -3,6 +3,7 @@ package com.lrz.eshop.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lrz.eshop.pojo.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,6 +13,13 @@ import java.util.List;
  * @description
  */
 public interface UserService {
+
+    /**
+     * 根据id查询用户数据
+     * @param id
+     * @return
+     */
+    User selectById(String id);
 
     /**
      * 插入信息
@@ -60,7 +68,16 @@ public interface UserService {
     Boolean existId(String id);
     Boolean existUsername(String username);
     Boolean existEmail(String id);
-    List<User> verifyUser(User user);
+    User verifyUser(User user);
+
+
+    /**
+     * 上传头像到阿里云OSS
+     * @param file
+     * @param user
+     * @return
+     */
+    String uploadUserAvatar(MultipartFile file, User user);
 
 
 }

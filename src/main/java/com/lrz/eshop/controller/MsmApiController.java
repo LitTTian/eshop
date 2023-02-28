@@ -37,6 +37,9 @@ public class MsmApiController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     /**
      * 发送手机验证码
      * @param phone
@@ -69,7 +72,7 @@ public class MsmApiController {
      */
     @GetMapping("/sendEmail/{email}")
     public Result<?> sendEmailCode(HttpServletRequest request, HttpServletResponse response, @PathVariable String email) {
-        String redisKey = RedisUtils.getRedisKey(request, "email");
+        String redisKey = redisUtils.getRedisKey(request, "email");
         String code = (String) redisTemplate.opsForValue().get(redisKey);
         System.out.println("code = " + code);
         if(!StringUtils.isEmpty(code)) {

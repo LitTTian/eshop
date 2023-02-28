@@ -1,4 +1,4 @@
-package com.lrz.eshop.pojo.supply;
+package com.lrz.eshop.pojo.common;
 
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -20,15 +20,16 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName("star")
 public class Star {
-    @TableId(type = IdType.ASSIGN_ID)
+    @TableId(type = IdType.AUTO)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long supplyId;
+    private Long productId;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @Version
+    @TableField(value = "version", fill = FieldFill.INSERT)
     private int version;
 }

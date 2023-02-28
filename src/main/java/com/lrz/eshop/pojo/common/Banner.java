@@ -1,4 +1,4 @@
-package com.lrz.eshop.pojo.chat;
+package com.lrz.eshop.pojo.common;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,30 +8,30 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-/**  
- * table name:  message
- * @author 天天  
- * @create 2023/1/19 17:17  
+/**
+ * table name:  swiper_supply
+ * @author 天天
+ * @create 2023/1/19 17:19
  * @description
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("message")
-public class Message {
+@TableName("banner")
+public class Banner {
+
     @TableId(type = IdType.AUTO)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
+
+    private String imgUrl;
+
+    private short type;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long roomId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long userId;
-    private String content;
-    private boolean seen; // 接受者是否看过了消息
+    private Long foreignId;
+
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-    @Version
-    private int version;
+
 }

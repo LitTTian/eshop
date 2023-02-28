@@ -25,6 +25,7 @@ public class OssClientConfig {
 
     @Bean
     public OSSClient createOssClient() {
+        // System.out.println("##################endpoint:" + endpoint);
         return (OSSClient)new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
     }
 }

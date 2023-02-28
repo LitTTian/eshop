@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class EshopApplicationTests {
 
     @Autowired
-    private StringEncryptor stringEncryptor;
+    private StringEncryptor jasyptStringEncryptor;
 
     @Test
     void contextLoads() {
@@ -20,7 +20,7 @@ class EshopApplicationTests {
     public void test01() {
 
 
-        String test = stringEncryptor.encrypt("Liruizhi.123");
+        String test = jasyptStringEncryptor.encrypt("oss-cn-hangzhou.aliyuncs.com");
         System.out.println("test::" + test);
 
 

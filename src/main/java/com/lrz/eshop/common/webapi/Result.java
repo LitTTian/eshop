@@ -39,7 +39,7 @@ public class Result<T> {
      * @param data 获取的数据
      * @param  message 提示信息
      */
-    public static <T> Result<T> success(T data, String message) {
+    public static <T> Result<T> success(String message, T data) {
         return new Result<T>(ResultCode.SUCCESS.getCode(), message, data);
     }
 
@@ -54,22 +54,23 @@ public class Result<T> {
     /**
      * 失败返回结果
      * @param errorCode 错误码
-     * @param message 错误信息
+     * @param data 错误返回数据
      */
-    public static <T> Result<T> failed(IErrorCode errorCode, String message) {
-        return new Result<T>(errorCode.getCode(), message, null);
+    public static <T> Result<T> failed(IErrorCode errorCode, T data) {
+        return new Result<T>(errorCode.getCode(), errorCode.getMessage(), data);
     }
 
     /**
      * 失败返回结果
      * @param message 提示信息
+     * @param data 错误返回数据
      */
-    public static <T> Result<T> failed(String message) {
-        return new Result<T>(ResultCode.FAILED.getCode(), message, null);
+    public static <T> Result<T> failed(String message, T data) {
+        return new Result<T>(ResultCode.FAILED.getCode(), message, data);
     }
 
     /**
-     * 失败返回结果
+     * 失败返回结果 500
      */
     public static <T> Result<T> failed() {
         return failed(ResultCode.FAILED);

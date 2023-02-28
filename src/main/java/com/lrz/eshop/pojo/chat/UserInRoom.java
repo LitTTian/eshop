@@ -1,4 +1,4 @@
-package com.lrz.eshop.pojo.supply;
+package com.lrz.eshop.pojo.chat;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -11,18 +11,22 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * table name:  swiper_supply
  * @author 天天
- * @create 2023/1/19 17:19
+ * @create 2023/2/26 14:33
  * @description
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("swiper_supply")
-public class SwiperSupply {
+@TableName("user_in_room")
+public class UserInRoom {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long id;
+    private Long userId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long roomId;
+
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
+
 }

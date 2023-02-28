@@ -8,8 +8,9 @@ spring:
     datasource:
         username: ENC@[yWRWzi8K+TM1iHIZYrqspQ==]
         password: ENC@[T4t2tW8gpY6oHKdDeQ5xvKA30mEVw2og]
-        url: ENC@[5spTxc59d5YHlqCsa3HKupJbbHj09YpxHjjPeBR+/18jHio6pFPnn56WKRKC8rV1hOsXQHgY8fmECyAjmLOi1kep6QWkrcHHYw/lYePwp4ou2WEeDnD9VkZLSPrwjht4HdeCtA4Blaa6WB1Vd5nfM61vaW/R46xbVicMlZn89BVVoH4D7au5jWcqHPfHiG/g]
-#        url: jdbc:mysql://{url:port}}/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+#        url: ENC@[5spTxc59d5YHlqCsa3HKupJbbHj09YpxHjjPeBR+/18jHio6pFPnn56WKRKC8rV1hOsXQHgY8fmECyAjmLOi1kep6QWkrcHHYw/lYePwp4ou2WEeDnD9VkZLSPrwjht4HdeCtA4Blaa6WB1Vd5nfM61vaW/R46xbVicMlZn89BVVoH4D7au5jWcqHPfHiG/g]
+#        url: jdbc:mysql://{url:port}/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+        url: jdbc:mysql://localhost:3306/yigou?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
     # 配置redis
@@ -17,19 +18,26 @@ spring:
         #redis-单机和主从配置
         host: ENC@[jPwm2BBtqFGXAnfP/7VLNxjNByYY1JIK]
         port: 6379
-        jedis:
-            pool:
-                # 连接池最大连接数(使用负值表示没有限制) 默认为8
-                max-active: 8
-                # 连接池中的最大空闲连接 默认为8
-                max-idle: 8
-                # 连接池最大阻塞等待时间(使用负值表示没有限制) 默认为-1
-                max-wait: -1
-                # 连接池中的最小空闲连接 默认为 0
-                min-idle: 0
+#        jedis:
+#            pool:
+#                # 连接池最大连接数(使用负值表示没有限制) 默认为8
+#                max-active: 8
+#                # 连接池中的最大空闲连接 默认为8
+#                max-idle: 8
+#                # 连接池最大阻塞等待时间(使用负值表示没有限制) 默认为-1
+#                max-wait: -1
+#                # 连接池中的最小空闲连接 默认为 0
+#                min-idle: 0
         timeout: 5000
         #redis-哨兵集群的配置
         password: ENC@[+PISn5p4RhkDxNh2M7eRULSsPMnVDpIV]
+        lettuce:
+            pool:
+                max-active: 8
+                max-wait: -1
+                max-idle: 8
+                min-idle: 0
+            shutdown-timeout: 3000
     #        sentinel:
 #            master: mymaster
 #            nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
@@ -56,7 +64,7 @@ jasypt:
 # 阿里云oss对象存储服务
 aliyun:
     oss:
-        endpoint: ENC@[EhKgUjr/jvXd7ofewKVK/5eQgNIVwN5m]
+        endpoint: ENC@[c5rUxJAXLRD9MrKWfBQv7YENikH0n2Qpw2vGiuHmP5WEXceAWQ+QRg==]
         id: ENC@[C6eLSEFmiCOhrv6Y9ZHOtOE+isxDk95OGAai+s3LhKPwE/s1ClfVhw==]
         secret: ENC@[Lf+ySV6IiN4xD/fDBiFkj9hDamOouCCjJSZLC+DfKleKo/nxnB9gCQ==]
         bucket-name: ENC@[txs9Rot+dBPUZiCbXGxKeHVHCw3aq0F7]

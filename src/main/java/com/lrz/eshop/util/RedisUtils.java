@@ -26,7 +26,7 @@ public class RedisUtils {
      * @param request
      * @return
      */
-    public static String getRedisKey(@RequestBody HttpServletRequest request, String type){
+    public String getRedisKey(@RequestBody HttpServletRequest request, String type){
         String ip = NetworkUtils.getIpAddr(request);
         String userAgent = request.getHeader("User-Agent");
         String key = "user-service:" + type + ":" + EncryptUtils.encodeWithSha1(ip + userAgent);
@@ -80,6 +80,19 @@ public class RedisUtils {
         }
     }
 
+    public boolean set(String key, Object value, long time, TimeUnit unit) {
+        try {
+            if (time > 0) {
+                redisTemplate.opsForValue().set(key, value, time, unit);
+            } else {
+                set(key, value);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * 删除缓存
      *
@@ -87,7 +100,7 @@ public class RedisUtils {
      * @return 是否成功
      */
     public boolean del(String key) {
-        return redisTemplate.delete(key);
+        return Boolean.TRUE.equals(redisTemplate.delete(key));
     }
 
     /**
@@ -107,8 +120,6 @@ public class RedisUtils {
         }
         return true;
     }
-
-
 
 
 }

@@ -31,10 +31,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private AuthEmailService authService;
-    @Autowired
-    private OssService ossService;
 
     /**
      * 查询所有用户
@@ -44,7 +40,7 @@ public class UserController {
     @GetMapping("/query")
     public Result<?> query() {
         List<User> list = userService.selectList(null);
-        System.out.println(list);
+        // System.out.println(list);
         return Result.success(list);
     }
 
@@ -56,7 +52,7 @@ public class UserController {
     @GetMapping("/queryAll")
     public Result<?> queryAll() {
         List<User> list = userService.selectAllUserAndTrades();
-        System.out.println(list);
+        // System.out.println(list);
         return Result.success(list);
     }
 
@@ -69,14 +65,14 @@ public class UserController {
      */
     @PostMapping("/verifyUser")
     public Result<?> verifyUser(@RequestBody User user, HttpSession session) {
-        // 使用sha1加密
-        user.setPwd(EncryptUtils.encodeWithSha1(user.getPwd()));
-        List<User> userList = userService.verifyUser(user);
-        if (userList.size() == 1) {
+        // 密码已在前端加密过了
+        User sUser = userService.verifyUser(user);
+        if (sUser != null) {
             // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-            session.setAttribute("id", String.valueOf(userList.get(0).getId()));
+            session.setAttribute("id", String.valueOf(sUser.getId()));
+            return Result.success("登录成功", sUser);
         }
-        return userList.size() == 1 ? Result.success(userList.get(0)) : Result.failed(ResultCode.LoginFailed);
+        return Result.failed(ResultCode.LoginFailed);
     }
 
     /**
@@ -85,36 +81,52 @@ public class UserController {
      * @param session HttpSession
      * @return 用户对象
      */
-    @PostMapping("/signUp")
-    public Result<?> signUp(@RequestBody User user, HttpSession session) {
+    @PostMapping("/register")
+    public Result<?> register(@RequestBody User user, HttpSession session) {
+        // System.out.println(user);
+        // 判断是否已存在用户
+        if(userService.existEmail(user.getEmail())) {
+            System.out.println("邮箱已存在");
+            return Result.failed(ResultCode.EmailAlreadyExist);
+        }
+
+        if (userService.existUsername(user.getUsername())) {
+            System.out.println("用户名已存在");
+            return Result.failed(ResultCode.UsernameAlreadyExist);
+        }
         // 使用sha1加密
-        user.setPwd(EncryptUtils.encodeWithSha1(user.getPwd()));
+        // user.setPassword(EncryptUtils.encodeWithSha1(user.setPassword()));
         userService.insert(user);
-        List<User> userList = userService.verifyUser(user);
+        User sUser = userService.verifyUser(user);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-        session.setAttribute("id", String.valueOf(userList.get(0).getId()));
-        return Result.success(userList.get(0));
+        session.setAttribute("id", String.valueOf(sUser.getId()));
+        return Result.success("注册成功", sUser);
     }
 
 
     /**
      * 查询用户名是否已经存在
      * @param username 用户名
-     * @return true表示存在，false不存在
+     * @return {"message": "message", result: true/false}
+     * true代表存在
      */
     @PostMapping("/existUsername")
     public Result<?> existUsername(@RequestParam String username) {
-         return Result.createResult(0, "", userService.existUsername(username));
+        return userService.existUsername(username)?
+                Result.failed(ResultCode.UsernameAlreadyExist, true):
+                Result.success("用户名可用", false);
     }
 
     /**
      * 查询邮箱是否已经存在
      * @param email 邮箱
-     * @return true表示存在，false不存在
+     * @return {"message": "message", result: true/false}
      */
     @PostMapping("/existEmail")
     public Result<?> existEmail(@RequestParam String email) {
-        return Result.createResult(0, "", userService.existEmail(email));
+        return userService.existEmail(email)?
+                Result.failed(ResultCode.EmailAlreadyExist, true):
+                Result.success("邮箱可用", false);
     }
 
 
@@ -126,20 +138,21 @@ public class UserController {
      */
     @PostMapping("/setAvatar")
     public Result<?> setAvatar(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
-        // System.out.println("avatar file:");
-        // System.out.println(file);
-        // System.out.println("username: ");
-        // System.out.println(username);
+        // 先查询出来才能使乐观锁生效
+        User user = userService.selectById(id);
+        if(user == null) {
+            return Result.failed();
+        }
         //  将头像上传云端
-        String url = ossService.uploadFileAvatar(file, id);
-        System.out.println("avatarUrl: " + url);
+        String url = userService.uploadUserAvatar(file, user);
+        if (url == null) {
+            return Result.failed();
+        }
         // 修改数据库
-        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
-        userUpdateWrapper.eq("id", id).set("avatar_url", url);
-        userService.update(null, userUpdateWrapper);
-        return Result.success(url);
+        user.setAvatarUrl(url);
+        userService.updateById(user);
+        return Result.success("上传成功", url);
     }
-
 
 
 }

@@ -1,7 +1,7 @@
 package com.lrz.eshop.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lrz.eshop.pojo.supply.Star;
+import com.lrz.eshop.pojo.common.Star;
 import org.springframework.stereotype.Repository;
 
 /**  

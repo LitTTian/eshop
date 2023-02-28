@@ -13,6 +13,21 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TradeMapper extends BaseMapper<Trade> {
+
+    /**
+     * 查询所有出售订单
+     * @param sellerId
+     * @return
+     */
+    @Select("select * from trade where seller_id = #{sellerId}")
+    Trade selectBySellerId(String sellerId);
+
+    /**
+     * 查询所有购买订单
+     * @param buyerId
+     * @return
+     */
     @Select("select * from trade where buyer_id = #{buyerId}")
-    Trade selectByBuyerId(Long buyerId);
+    Trade selectByBuyerId(String buyerId);
+
 }

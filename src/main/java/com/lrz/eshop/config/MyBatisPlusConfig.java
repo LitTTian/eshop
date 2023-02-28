@@ -17,6 +17,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @MapperScan("com.lrz.eshop.mapper")
 public class MyBatisPlusConfig {
+
+    /**
+     * 配置MybatisPlus拦截器
+     * @return
+     */
     @Bean
     public MybatisPlusInterceptor paginationInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
@@ -25,6 +30,5 @@ public class MyBatisPlusConfig {
         // 乐观锁拦截器
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return interceptor;
-
     }
 }

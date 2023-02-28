@@ -24,17 +24,25 @@ public interface UserMapper extends BaseMapper<User> {
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
-            @Result(property = "pwd", column = "pwd"),
+            @Result(property = "password", column = "password"),
+            @Result(property = "email", column = "email"),
+            @Result(property = "avatarUrl", column = "avatar_url"),
             @Result(property = "creditScore", column = "credit_score"),
             @Result(property = "cumulativeScore", column = "cumulative_score"),
-            @Result(property = "schoolId", column = "school_id"),
-            @Result(property = "avatarUrl", column = "avatar_url"),
             @Result(property = "balance", column = "balance"),
+            @Result(property = "isSeller", column = "is_seller"),
+            @Result(property = "shopId", column = "shop_id"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "updateTime", column = "update_time"),
             @Result(property = "version", column = "version"),
-            @Result(property = "trades", column = "id", javaType = List.class,
+            @Result(property = "models", column = "id", javaType = List.class,
+                    many = @Many(select = "com.lrz.eshop.mapper.ModelMapper.selectBySellerId")
+            ),
+            @Result(property = "buys", column = "id", javaType = List.class,
                     many = @Many(select = "com.lrz.eshop.mapper.TradeMapper.selectByBuyerId")
+            ),
+            @Result(property = "sells", column = "id", javaType = List.class,
+                    many = @Many(select = "com.lrz.eshop.mapper.TradeMapper.selectBySellerId")
             ),
     })
     List<User> selectAllUserAndTrades();

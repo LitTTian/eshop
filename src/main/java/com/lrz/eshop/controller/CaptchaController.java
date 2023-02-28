@@ -23,7 +23,7 @@ import java.io.IOException;
  * @description
  */
 @RestController
-@RequestMapping("/api/v1/captcha")
+@RequestMapping("/api/captcha")
 public class CaptchaController {
 
     @Autowired
@@ -35,6 +35,8 @@ public class CaptchaController {
     @Autowired
     private AuthEmailService authEmailService;
 
+    @Autowired
+    private RedisUtils redisUtils;
 
     /**
      * 随机生成一个六位图片验证码
@@ -44,7 +46,7 @@ public class CaptchaController {
     @GetMapping("/getImage")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
         String captchaText = captcharProducer.createText();
-        String key = RedisUtils.getRedisKey(request, "captcha");
+        String key = redisUtils.getRedisKey(request, "captcha");
         // 10分钟过期
         redisTemplate.opsForValue().set(
                 key,
@@ -65,15 +67,21 @@ public class CaptchaController {
         }
     }
 
-    @GetMapping("/sendMailCode/{email}")
-    public Result<?> sendEmailCode(HttpServletRequest request, HttpServletResponse response, @PathVariable String email) {
-        String redisKey = RedisUtils.getRedisKey(request, "email-code");
+    @GetMapping("/sendEmailCode/{email}")
+    public Result<?> sendEmailCodeWithPath(HttpServletRequest request, HttpServletResponse response, @PathVariable String email) {
+        String redisKey = redisUtils.getRedisKey(request, "email-code");
+        return Result.success(authEmailService.sendEmailCode(redisKey, email));
+    }
+
+    @PostMapping("/sendEmailCode")
+    public Result<?> sendEmailCode(HttpServletRequest request, HttpServletResponse response, @RequestParam String email) {
+        String redisKey = redisUtils.getRedisKey(request, "email-code");
         return Result.success(authEmailService.sendEmailCode(redisKey, email));
     }
 
     @PostMapping("/verifyEmailCode")
     public Result<?> verifyEmailCode(HttpServletRequest request, HttpServletResponse response,@RequestParam String emailCode) {
-        String redisKey = RedisUtils.getRedisKey(request, "email-code");
+        String redisKey = redisUtils.getRedisKey(request, "email-code");
         return Result.success(authEmailService.verifyEmailCode(redisKey, emailCode));
     }
 
@@ -83,7 +91,6 @@ public class CaptchaController {
         String key = "user-service:captcha:" + Encrypt.encodeWithSha1(ip + userAgent);
         return key;
     } */
-
 
 
 }
