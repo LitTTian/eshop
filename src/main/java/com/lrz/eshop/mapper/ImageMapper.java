@@ -18,9 +18,18 @@ import java.util.List;
 @Repository
 public interface ImageMapper extends BaseMapper<Image> {
     @Select("select * from image where foreign_id = #{foreignId} AND type = #{type}")
-    List<Image> selectByForeignId(String foreignId);
+    List<Image> selectByForeignId(String foreignId, int type);
 
-    @Select("select * from image where foreign_id = #{productId} AND type = 2")
-    List<Image> selectByProductId(String productId);
+    // @Select("select * from image where foreign_id = #{productId} AND type = 2")
+    // List<Image> selectByProductId(String productId);
+
+    @Select("select * from image where foreign_id = #{modelId} AND type = 1")
+    List<Image> selectByModelId(String modelId);
+
+    @Select("select max(seq) from image where foreign_id = #{foreignId} AND type = #{type}")
+    Integer maxPicSeq(String foreignId, int type);
+
+    @Select("select img_url from image where foreign_id = #{modelId} AND type = 1 order by seq limit 1")
+    String selectCoverImageUrlByModelId(String modelId);
 
 }

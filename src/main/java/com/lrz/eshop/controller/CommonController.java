@@ -2,12 +2,15 @@ package com.lrz.eshop.controller;
 
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.pojo.common.Banner;
+import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.service.CommonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author 天天
@@ -36,4 +39,22 @@ public class CommonController {
         commonService.insertBanner(banner);
         return Result.success("更新成功", banner);
     }
+
+    @ApiOperation("获取首页轮播图")
+    @GetMapping("/banner")
+    public Result<?> getAllHomeBanner() {
+        return Result.success("获取成功", commonService.getAllHomeBanner());
+    }
+
+    @ApiOperation("获取分类弹出层")
+    @GetMapping("/quertTop")
+    public Result<?> quertTop() {
+        List<Category> categories = commonService.selectAllCategoryWithTopModel();
+        if(categories == null) {
+            return Result.failed();
+        }
+        return Result.success("获取成功", categories);
+    }
+
+
 }

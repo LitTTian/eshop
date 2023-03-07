@@ -13,33 +13,26 @@ import java.util.List;
 
 /**
  * @author 天天
- * @create 2023/2/26 14:25
+ * @create 2023/3/1 17:06
  * @description
  */
 
-@TableName("category")
 @Data
+@TableName("config")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class Config {
     @TableId(type = IdType.AUTO)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long categoryId;
+
     private String name;
-    // private String configMain;
-    // private String config1;
-    // private String config2;
-    // private String config3;
-    // private String config4;
-    // private String config5;
+    private String value;
 
     @TableField(exist = false)
-    private List<Config> configs;
-
-    // 用于存放弹出层的model数据
-    @TableField(exist = false)
-    private List<Model> models;
-
+    private List<String> values;
 
 }

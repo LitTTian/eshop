@@ -11,6 +11,7 @@ import com.lrz.eshop.service.UserService;
 import com.lrz.eshop.util.ImageNameUtil;
 import com.lrz.eshop.util.RedisUtils;
 import com.lrz.eshop.util.TokenUtil;
+import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,8 +37,11 @@ public class UserServiceImpl implements UserService {
     // @Autowired
     // RedisUtils redisUtils;
 
-    // @Autowired
-    // private TokenUtil tokenUtil;
+    @Autowired
+    private TokenUtil tokenUtil;
+
+    @Autowired
+    ImageNameUtil imageNameUtil;
 
 
     @Override
@@ -104,16 +108,22 @@ public class UserServiceImpl implements UserService {
         queryWrapper.eq("username", user.getUsername());
         queryWrapper.eq("password", user.getPassword());
         List<User> users = selectList(queryWrapper);
-        User sUser = users.get(0);
-        if(sUser == null) {
+        if(users.size() == 0) {
             return null;
         }else {
-            String token = UUID.randomUUID().toString();
+            User userDB = users.get(0);
+            userDB.setPassword(null);
+            // String token = UUID.randomUUID().toString();
+            if(userDB.getToken() != null && !userDB.getToken().equals("")) {
+                String id = TokenUtil.getIdByToken(userDB.getToken());
+                if(Long.valueOf(id).equals(user.getId())) {
+                    return userDB;
+                }
+            }
+            String token = TokenUtil.sign(userDB);
+            userDB.setToken(token);
             // redisUtils.set(token, sUser.getId(), 60 * 60 * 24 * 7,  TimeUnit.SECONDS);
-            // String token = tokenUtil.generateToken(sUser);
-            sUser.setToken(token);
-            sUser.setPassword(null);
-            return sUser;
+            return userDB;
         }
     }
 
@@ -126,10 +136,23 @@ public class UserServiceImpl implements UserService {
             }
         }
         // users/123456/avatar/2021/01/19/123456/avatar/db39a8379db54ae0a92e82f498751589.jpg
-        String path = "users/" + user.getId() + "/avatar/" + ImageNameUtil.getImgName(file.getOriginalFilename());
+        String path = "users/" + user.getId() + "/avatar/" + imageNameUtil.getImgName(file.getOriginalFilename());
         // 成功返回：https://oss-cn-hangzhou.aliyuncs.com/images/users/123456/avatar/db39a8379db54ae0a92e82f498751589.jpg
         // 否则返回：null
         return ossService.uploadFile(file, path);
+    }
+
+    @Override
+    public User getUserInfoByToken(String token) {
+        if(!TokenUtil.verify(token)) {
+            return null;
+        }
+        String userId = TokenUtil.getIdByToken(token);
+        User user = selectById(userId);
+        // String newToken = TokenUtil.sign(user);
+        user.setToken(token);
+        user.setPassword(null);
+        return user;
     }
 
 

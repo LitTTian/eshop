@@ -24,6 +24,7 @@ public class Banner {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
+    @TableField(exist = false)
     private String imgUrl;
 
     private short type;
@@ -33,5 +34,8 @@ public class Banner {
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
+
+    @TableField(exist = false)
+    private String hrefUrl;
 
 }

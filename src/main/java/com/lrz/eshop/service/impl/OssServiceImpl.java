@@ -54,8 +54,9 @@ public class OssServiceImpl implements OssService {
     public Boolean deleteFile(String path) {
         String filePath = path.split(ossClient.getEndpoint().getHost() + "/")[1];
         try {
-            System.out.println("deleting file at '" + filePath + "' ...");
+            System.out.println("ossService.deleteFile: deleting file at '" + filePath + "' ...");
             ossClient.deleteObject(ossBucketName, filePath);
+            System.out.println("ossService.deleteFile: delete successfully!!");
         }catch (Exception e) {
             e.printStackTrace();
             return false;

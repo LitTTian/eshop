@@ -1,4 +1,4 @@
-package com.lrz.eshop.pojo.product;
+package com.lrz.eshop.pojo.common;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,37 +9,32 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author 天天
- * @create 2023/2/26 14:25
+ * @create 2023/3/2 22:28
  * @description
  */
 
-@TableName("category")
+@TableName("queryTop")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class QueryTop {
     @TableId(type = IdType.AUTO)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    private String name;
-    // private String configMain;
-    // private String config1;
-    // private String config2;
-    // private String config3;
-    // private String config4;
-    // private String config5;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long modelId;
+
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @TableField(exist = false)
+    private Long categoryId;
 
     @TableField(exist = false)
-    private List<Config> configs;
+    private Long lowPrice;
 
-    // 用于存放弹出层的model数据
-    @TableField(exist = false)
-    private List<Model> models;
 
 
 }

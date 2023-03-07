@@ -1,5 +1,7 @@
 package com.lrz.eshop.service;
 
+import com.lrz.eshop.pojo.common.Image;
+import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +52,7 @@ public interface ProductService {
      * @param model
      * @return
      */
-    String uploadModelCoverImage(MultipartFile file, Model model);
+    // String uploadModelCoverImage(MultipartFile file, Model model);
 
 
 
@@ -67,7 +69,28 @@ public interface ProductService {
      */
     List<Model> selectModelByCategoryId(String categoryId);
 
-    int selectMaxSeqByModelId(String modelId);
+    Integer selectMaxProSeqByModelId(String modelId);
+
+    Integer selectMaxPicSeqByModelId(String modelId);
 
 
+    List<Category> selectAllCategory();
+
+    Image delImgById(String id);
+
+    Image delImg(Image image);
+
+    String uploadImage(MultipartFile file);
+
+    int insertImage(Image image);
+
+    Image linkImage(Image image);
+
+
+    /**
+     * 根据modelId查询具体的产品信息，用于购物车页面
+     * @param productId
+     * @return
+     */
+    Product selectProductDetailByProductId(String productId);
 }

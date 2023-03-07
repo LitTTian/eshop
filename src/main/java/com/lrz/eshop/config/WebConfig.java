@@ -1,5 +1,6 @@
 package com.lrz.eshop.config;
 
+import com.lrz.eshop.interceptor.JWTInterceptor;
 import com.lrz.eshop.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -33,7 +34,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor( new LoginInterceptor()).addPathPatterns("/user/**");
+        // registry.addInterceptor( new LoginInterceptor()).addPathPatterns("/user/**");
+        // registry.addInterceptor(new JWTInterceptor())
+        //         .addPathPatterns("/**")
+        //         .excludePathPatterns("/api/user/**");
     }
 
     /**

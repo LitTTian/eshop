@@ -1,5 +1,7 @@
 package com.lrz.eshop.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 /**
@@ -8,18 +10,24 @@ import java.util.UUID;
  * @create 2023/1/19 16:47
  * @description
  */
+@Component
 public class ImageNameUtil {
-    private static final String[] imageExtension = {".jpg", ".jpeg", ".png", ".gif"};
+    private final String[] imageExtension = {".jpg", ".jpeg", ".png", ".gif"};
 
-    public static String getImgName(String url) {
+    public String getImgName(String url) {
+        String ext = getImageExtension(url);
+        // db39a8379db54ae0a92e82f498751589.jpg
+        return  UUID.randomUUID().toString().replace("-","") + ext;
+    }
+
+    public String getImageExtension(String url) {
         String ext = "";
         for (String extItem : imageExtension) {
-            if (url.indexOf(extItem) != -1) {
+            if (url.contains(extItem)) {
                 ext = extItem;
                 break;
             }
         }
-        // db39a8379db54ae0a92e82f498751589.jpg
-        return  UUID.randomUUID().toString().replace("-","") + ext;
+        return ext;
     }
 }

@@ -2,6 +2,7 @@ package com.lrz.eshop.pojo.product;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.trade.Trade;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,10 +30,20 @@ public class Model {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long categoryId;
 
+    @TableField(exist = false)
+    private Category category;
+
     private String title;
 
     private String advertisement;
 
+    @TableField(exist = false)
+    private double highPrice;
+
+    @TableField(exist = false)
+    private double lowPrice;
+
+    @TableField(exist = false)
     private String coverImgUrl;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -48,7 +59,10 @@ public class Model {
 
     private int starCount;
 
+    @TableField(exist = false)
     private int sellCount;
+    @TableField(exist = false)
+    private int stock;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -58,6 +72,9 @@ public class Model {
     @Version
     @TableField(value = "version", fill = FieldFill.INSERT)
     private int version;
+
+    @TableField(exist = false)
+    private List<Image> images;
 
     @TableField(exist = false)
     private List<Product> products;

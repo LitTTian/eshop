@@ -154,11 +154,11 @@ public class EncryptionPropertyConfig {
     }
 
     // 用来加密数据
-    public static void main(String[] args) {
+/*     public static void main(String[] args) {
         StringEncryptor stringEncryptor = stringEncryptor();
         String pwd = "txs9Rot+dBPUZiCbXGxKeHVHCw3aq0F7";
         // String test = stringEncryptor.encrypt(pwd);
         String test = stringEncryptor.decrypt(pwd);
         System.out.println("处理后：" + test);
-    }
+    } */
 }

@@ -1,6 +1,6 @@
 package com.lrz.eshop.common.webapi;
 
-/**  
+/**
  * 枚举了一些常用API操作码
  * @author 天天  
  * @create 2023/1/19 3:03  

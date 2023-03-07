@@ -80,4 +80,5 @@ public interface UserService {
     String uploadUserAvatar(MultipartFile file, User user);
 
 
+    User getUserInfoByToken(String token);
 }

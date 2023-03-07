@@ -4,7 +4,18 @@ mybatis-plus:
     configuration:
         # 指定日志输出格式
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    config-location: classpath:mybatis-config.xml
+#pagehelper分页插件配置
+pagehelper:
+    helper-dialect: mysql  #设置数据库类型
+    reasonable: true  #开启合理化：页码<=0 查询第一页，页码>=总页数查询最后一页
+    support-methods-arguments: true  #支持通过 Mapper 接口参数来传递分页参数
+    params: count=countsql
 spring:
+    servlet:
+        multipart:
+            max-file-size: 2MB
+            max-request-size: 10MB
     datasource:
         username: ENC@[yWRWzi8K+TM1iHIZYrqspQ==]
         password: ENC@[T4t2tW8gpY6oHKdDeQ5xvKA30mEVw2og]

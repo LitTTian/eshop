@@ -1,6 +1,7 @@
 package com.lrz.eshop.pojo.common;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,6 +32,7 @@ public class Image {
 
     private int seq;
 
+    @TableField(exist = false)
     private String hrefUrl;
 
     /* public Image(Short type, Long foreignId, String imgUrl, int seq) {

@@ -33,26 +33,31 @@ public class Product {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long modelId;
 
+    private Float originalPrice;
+    private int discount;
     private Float price;
 
     private String description;
 
     private int seq;
 
-    private String configMain;
     private String config1;
     private String config2;
     private String config3;
     private String config4;
     private String config5;
-    private String mainImgUrl;
     private String gift;
-    private String stackCnt;
-    private String sellCnt;
-    private int onSale;
+    private int stock;
+    private int sellCount;
+
 
     @TableField(exist = false)
-    private List<Image> images;
+    private List<String> configs;
 
+    @TableField(exist = false)
+    private Model model;
+
+    // @TableField(exist = false)
+    // private List<Image> images;
 
 }

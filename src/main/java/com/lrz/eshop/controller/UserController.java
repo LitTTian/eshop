@@ -66,13 +66,24 @@ public class UserController {
     @PostMapping("/verifyUser")
     public Result<?> verifyUser(@RequestBody User user, HttpSession session) {
         // 密码已在前端加密过了
-        User sUser = userService.verifyUser(user);
-        if (sUser != null) {
+        User userDB = userService.verifyUser(user);
+        if (userDB != null) {
             // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-            session.setAttribute("id", String.valueOf(sUser.getId()));
-            return Result.success("登录成功", sUser);
+            // session.setAttribute("id", String.valueOf(userDB.getId()));
+            return Result.success("登录成功", userDB);
         }
         return Result.failed(ResultCode.LoginFailed);
+    }
+
+    @PostMapping("/getUserInfoByToken")
+    public Result<?> getUserInfoByToken(@RequestParam String token) {
+        return Result.success("登录成功", userService.getUserInfoByToken(token));
+    }
+
+    @PostMapping("/logout")
+    public Result<?> logout(@RequestParam String uId, HttpSession session) {
+        // session.removeAttribute("id");
+        return Result.success("退出成功");
     }
 
     /**
@@ -97,10 +108,10 @@ public class UserController {
         // 使用sha1加密
         // user.setPassword(EncryptUtils.encodeWithSha1(user.setPassword()));
         userService.insert(user);
-        User sUser = userService.verifyUser(user);
+        User userDB = userService.verifyUser(user);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-        session.setAttribute("id", String.valueOf(sUser.getId()));
-        return Result.success("注册成功", sUser);
+        // session.setAttribute("id", String.valueOf(userDB.getId()));
+        return Result.success("注册成功", userDB);
     }
 
 
