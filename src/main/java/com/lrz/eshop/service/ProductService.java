@@ -4,6 +4,8 @@ import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
+import com.lrz.eshop.pojo.trade.Trade;
+import com.lrz.eshop.pojo.trade.TradeDetail;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -71,20 +73,9 @@ public interface ProductService {
 
     Integer selectMaxProSeqByModelId(String modelId);
 
-    Integer selectMaxPicSeqByModelId(String modelId);
-
 
     List<Category> selectAllCategory();
 
-    Image delImgById(String id);
-
-    Image delImg(Image image);
-
-    String uploadImage(MultipartFile file);
-
-    int insertImage(Image image);
-
-    Image linkImage(Image image);
 
 
     /**
@@ -93,4 +84,8 @@ public interface ProductService {
      * @return
      */
     Product selectProductDetailByProductId(String productId);
+
+    Trade insertTrade(Trade trade);
+    TradeDetail insertTradeDetail(TradeDetail tradeDetail);
+
 }

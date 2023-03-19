@@ -1,7 +1,8 @@
-package com.lrz.eshop.pojo;
+package com.lrz.eshop.pojo.user;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
 import com.lrz.eshop.pojo.trade.Trade;
@@ -28,6 +29,8 @@ public class User {
 //    @JsonSerialize(using = ToStringSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
+
+    private String nickname;
     private String username;
     private String password;
     private String email;
@@ -49,12 +52,24 @@ public class User {
     private int version;
 
     @TableField(exist = false)
+    private List<Star> modelStars;
+
+    @TableField(exist = false)
+    private List<Star> articleStars;
+
+    @TableField(exist = false)
+    private List<Star> peopleStars;
+
+    @TableField(exist = false)
     private List<Model> models;
 
     @TableField(exist = false)
     private List<Trade> buys;
     @TableField(exist = false)
     private List<Trade> sells;
+
+    @TableField(exist = false)
+    private List<Location> locations;
 
     @TableField(exist = false)
     private String token;

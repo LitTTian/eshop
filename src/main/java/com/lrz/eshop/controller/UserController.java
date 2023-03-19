@@ -1,13 +1,13 @@
 package com.lrz.eshop.controller;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.common.webapi.ResultCode;
-import com.lrz.eshop.pojo.User;
-import com.lrz.eshop.service.AuthEmailService;
-import com.lrz.eshop.service.OssService;
+import com.lrz.eshop.mapper.article.LikeMapper;
+import com.lrz.eshop.pojo.common.Star;
+import com.lrz.eshop.pojo.user.Location;
+import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.service.UserService;
-import com.lrz.eshop.util.EncryptUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +48,13 @@ public class UserController {
      * 查询所有用户和购买记录
      * @return
      */
-    @ApiOperation("查询所有用户和购买记录")
-    @GetMapping("/queryAll")
-    public Result<?> queryAll() {
-        List<User> list = userService.selectAllUserAndTrades();
-        // System.out.println(list);
-        return Result.success(list);
-    }
+    // @ApiOperation("查询所有用户和购买记录")
+    // @GetMapping("/queryAll")
+    // public Result<?> queryAll() {
+    //     List<User> list = userService.selectAllUserAndTrades();
+    //     // System.out.println(list);
+    //     return Result.success(list);
+    // }
 
 
     /**
@@ -69,20 +69,26 @@ public class UserController {
         User userDB = userService.verifyUser(user);
         if (userDB != null) {
             // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-            // session.setAttribute("id", String.valueOf(userDB.getId()));
+            session.setAttribute("id", String.valueOf(userDB.getId()));
             return Result.success("登录成功", userDB);
         }
         return Result.failed(ResultCode.LoginFailed);
     }
 
     @PostMapping("/getUserInfoByToken")
-    public Result<?> getUserInfoByToken(@RequestParam String token) {
-        return Result.success("登录成功", userService.getUserInfoByToken(token));
+    public Result<?> getUserInfoByToken(@RequestParam String token, HttpSession session) {
+        User user = userService.getUserInfoByToken(token);
+        if (user != null) {
+            session.setAttribute("id", String.valueOf(user.getId()));
+            return Result.success("登录成功", user);
+        }
+        return Result.failed(ResultCode.LoginFailed);
     }
 
-    @PostMapping("/logout")
-    public Result<?> logout(@RequestParam String uId, HttpSession session) {
-        // session.removeAttribute("id");
+    @GetMapping("/logout")
+    // public Result<?> logout(@RequestParam String uId, HttpSession session) {
+    public Result<?> logout(HttpSession session) {
+        session.removeAttribute("id");
         return Result.success("退出成功");
     }
 
@@ -110,7 +116,7 @@ public class UserController {
         userService.insert(user);
         User userDB = userService.verifyUser(user);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-        // session.setAttribute("id", String.valueOf(userDB.getId()));
+        session.setAttribute("id", String.valueOf(userDB.getId()));
         return Result.success("注册成功", userDB);
     }
 
@@ -150,7 +156,7 @@ public class UserController {
     @PostMapping("/setAvatar")
     public Result<?> setAvatar(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
         // 先查询出来才能使乐观锁生效
-        User user = userService.selectById(id);
+        User user = userService.selectUserInfoById(id);
         if(user == null) {
             return Result.failed();
         }
@@ -163,6 +169,31 @@ public class UserController {
         user.setAvatarUrl(url);
         userService.updateById(user);
         return Result.success("上传成功", url);
+    }
+
+
+    @ApiOperation("新增地址")
+    @PostMapping("/addLocation")
+    public Result< ? > addLocation(@RequestBody Location location) {
+        if(location.getUserId() == null) {
+            return Result.failed();
+        }
+        Location LocationDB = userService.addLocation(location);
+        if(LocationDB == null) {
+            return Result.failed();
+        }
+        return Result.success("添加地址成功", LocationDB);
+    }
+
+    @ApiOperation("移除地址，并不是真正删除地址记录，而是设置status为0")
+    @PostMapping("/deleteLocation")
+    public Result< ? > deleteLocation(@RequestParam("locationId") String locationId) {
+        // 因为地址信息对订单信息有用，所以并不是真正删除地址记录，而是设置标志位
+        Location location = userService.deleteLocation(locationId);
+        if(location == null) {
+            return Result.failed();
+        }
+        return Result.success("移除成功！", location);
     }
 
 

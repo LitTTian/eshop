@@ -1,8 +1,6 @@
 package com.lrz.eshop.controller;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lrz.eshop.common.webapi.Result;
-import com.lrz.eshop.pojo.User;
 import com.lrz.eshop.service.OssService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

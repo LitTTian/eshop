@@ -150,6 +150,37 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @return
      */
     @Select("select * from model where seller_id = #{sellerId}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "categoryId", column = "category_id"),
+/*             @Result(property = "category", column = "category_id", javaType = Category.class,
+                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+            ), */
+            @Result(property = "title", column = "title"),
+            @Result(property = "advertisement", column = "advertisement"),
+/*             @Result(property = "highPrice", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.ProductMapper.selectHighPriceByModelId")
+            ), */
+            @Result(property = "lowPrice", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.ProductMapper.selectLowPriceByModelId")
+            ),
+            @Result(property = "coverImgUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByModelId")
+            ),
+            @Result(property = "sellerId", column = "seller_id"),
+            @Result(property = "starCount", column = "star_count"),
+/*             @Result(property = "sellCount", column = "total"),
+            @Result(property = "stock", column = "stk"), */
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "version", column = "version"),
+/*             @Result(property = "images", column = "id", javaType = List.class,
+                    many = @Many(select = "com.lrz.eshop.mapper.ImageMapper.selectByModelId")
+            ),
+            @Result(property = "products", column = "id", javaType = List.class,
+                    many = @Many(select = "com.lrz.eshop.mapper.ProductMapper.selectByModelId")
+            ), */
+    })
     List<Model> selectBySellerId(String sellerId);
 
 

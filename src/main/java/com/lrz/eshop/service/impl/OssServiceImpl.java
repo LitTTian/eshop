@@ -52,6 +52,7 @@ public class OssServiceImpl implements OssService {
 
     @Override
     public Boolean deleteFile(String path) {
+        // images/testUpload/dc8fa1c08cea42cb838ff4706d61ddaf.jpg
         String filePath = path.split(ossClient.getEndpoint().getHost() + "/")[1];
         try {
             System.out.println("ossService.deleteFile: deleting file at '" + filePath + "' ...");

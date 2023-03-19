@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lrz.eshop.pojo.chat.Room;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**  
  *
  * @author 天天  
@@ -12,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RoomMapper extends BaseMapper<Room> {
+
 }

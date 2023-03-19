@@ -3,6 +3,7 @@ package com.lrz.eshop.pojo.common;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lrz.eshop.pojo.product.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,11 +26,24 @@ public class Star {
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
+
+    // 1.文章 2.商品 3.用户
+    private Short type;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long productId;
+    private Long foreignId;
+
+    @TableField(exist = false)
+    private Object object;
+
+
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
+
     @Version
     @TableField(value = "version", fill = FieldFill.INSERT)
     private int version;
+
+
 }

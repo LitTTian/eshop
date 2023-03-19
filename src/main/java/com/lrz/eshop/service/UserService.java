@@ -2,7 +2,9 @@ package com.lrz.eshop.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.lrz.eshop.pojo.User;
+import com.lrz.eshop.pojo.common.Star;
+import com.lrz.eshop.pojo.user.Location;
+import com.lrz.eshop.pojo.user.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public interface UserService {
      * @param id
      * @return
      */
-    User selectById(String id);
+    User selectUserInfoById(String id);
 
     /**
      * 插入信息
@@ -56,7 +58,7 @@ public interface UserService {
      * @return
      */
     List<User> selectList(Wrapper<User> queryWrapper);
-    List<User> selectAllUserAndTrades();
+    // List<User> selectAllUserAndTrades();
 
     /**
      * 判断是否存在
@@ -81,4 +83,9 @@ public interface UserService {
 
 
     User getUserInfoByToken(String token);
+
+    int selectLocationSeqByUserId(String userId);
+    Location addLocation(Location location);
+
+    Location deleteLocation(String locationId);
 }

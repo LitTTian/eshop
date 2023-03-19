@@ -3,22 +3,21 @@ package com.lrz.eshop.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.lrz.eshop.common.webapi.Result;
+import com.lrz.eshop.mapper.LocationMapper;
+import com.lrz.eshop.mapper.StarMapper;
 import com.lrz.eshop.mapper.UserMapper;
-import com.lrz.eshop.pojo.User;
+import com.lrz.eshop.pojo.common.Star;
+import com.lrz.eshop.pojo.user.Location;
+import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.UserService;
 import com.lrz.eshop.util.ImageNameUtil;
-import com.lrz.eshop.util.RedisUtils;
 import com.lrz.eshop.util.TokenUtil;
-import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 调用UserMapper操作数据库
@@ -41,12 +40,18 @@ public class UserServiceImpl implements UserService {
     private TokenUtil tokenUtil;
 
     @Autowired
+    private StarMapper starMapper;
+
+    @Autowired
+    private LocationMapper locationMapper;
+
+    @Autowired
     ImageNameUtil imageNameUtil;
 
 
     @Override
-    public User selectById(String id) {
-        return userMapper.selectById(id);
+    public User selectUserInfoById(String id) {
+        return userMapper.selectUserInfoById(id);
     }
 
     @Override
@@ -77,10 +82,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectList(queryWrapper);
     }
 
-    @Override
-    public List<User> selectAllUserAndTrades() {
-        return userMapper.selectAllUserAndTrades();
-    }
+    // @Override
+    // public List<User> selectAllUserAndTrades() {
+    //     return userMapper.selectAllUserAndTrades();
+    // }
 
     @Override
     public Boolean exist(Wrapper<User> queryWrapper) {
@@ -148,11 +153,39 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         String userId = TokenUtil.getIdByToken(token);
-        User user = selectById(userId);
+        User user = selectUserInfoById(userId);
         // String newToken = TokenUtil.sign(user);
         user.setToken(token);
         user.setPassword(null);
         return user;
+    }
+
+
+    public int selectLocationSeqByUserId(String userId) {
+        Integer seq = locationMapper.selectMaxSeqByUserId(userId);
+        return seq == null ? 0 : seq + 1;
+    }
+    @Override
+    public Location addLocation(Location location) {
+        int seq = selectLocationSeqByUserId(String.valueOf(location.getUserId()));
+        location.setSeq(seq);
+        location.setStatus((short)1); // 1表示可用
+        locationMapper.insert(location);
+        if(location.getId() == null) {
+            return null;
+        }
+        return location;
+    }
+
+    @Override
+    public Location deleteLocation(String locationId) {
+        Location location = locationMapper.selectById(locationId);
+        if(location == null) {
+            return null;
+        }
+        location.setStatus((short)0);
+        locationMapper.updateById(location);
+        return location;
     }
 
 

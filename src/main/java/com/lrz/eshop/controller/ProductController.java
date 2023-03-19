@@ -5,6 +5,8 @@ import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
+import com.lrz.eshop.pojo.trade.Trade;
+import com.lrz.eshop.pojo.trade.TradeDetail;
 import com.lrz.eshop.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -141,47 +143,6 @@ public class ProductController {
     }
 
 
-    @ApiOperation("根据image删除图片,image必须包含id和url")
-    @PostMapping("/delImg")
-    public Result<?> delImg(@RequestBody Image image) {
-        Image imageDB = productService.delImg(image);
-        if(imageDB == null) {
-            return Result.failed();
-        }
-        return Result.success(imageDB);
-    }
-
-    // @ApiOperation("根据modelId返回图片list")
-    // @PostMapping("/selectImageByModelId")
-    // public Result<?> selectImageByModelId
-
-
-
-    @ApiOperation("上传图片文件")
-    @PostMapping("/uploadImage")
-    public Result<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        String url = productService.uploadImage(file);
-        if(url == null) {
-            return Result.failed();
-        }
-        Image image = new Image();
-        image.setImgUrl(url);
-        image.setType((short) 1);
-        productService.insertImage(image);
-        return Result.success(image);
-    }
-
-    @ApiOperation("关联图片文件")
-    @PostMapping("/linkImage")
-    public Result<?> linkImage(@RequestBody Image image) {
-        Image imageDB = productService.linkImage(image);
-        if (imageDB == null) {
-            return Result.failed();
-        }
-        return Result.success(imageDB);
-    }
-
-
 
     // 下面是购物车页面所用到的接口
 
@@ -200,6 +161,9 @@ public class ProductController {
     @PostMapping("/selectProductDetailByProductIdList")
     public Result<?> selectProductDetailByProductIdList(@RequestBody List<String> productIds) {
         List<Product> products = new ArrayList<>();
+        if(productIds == null || productIds.size() == 0) {
+            return Result.success(products);
+        }
         for (String productId: productIds) {
             Product product = productService.selectProductDetailByProductId(productId);
             if (product != null) {
@@ -210,6 +174,38 @@ public class ProductController {
             return Result.failed();
         }else {
             return Result.success("查询成功", products);
+        }
+    }
+
+    // 提交订单
+    @ApiOperation("提交订单")
+    @PostMapping("/submitTrade")
+    public Result<?> submitTrade(@RequestBody Trade trade) {
+        Trade tradeDB = productService.insertTrade(trade);
+        if (tradeDB == null) {
+            return Result.failed();
+        }else {
+            return Result.success("提交成功", tradeDB);
+        }
+    }
+
+    @ApiOperation("提交订单详情")
+    @PostMapping("/submitTradeDetailList")
+    public Result<?> submitTradeDetailList(@RequestBody List<TradeDetail> tradeDetails) {
+        List<TradeDetail> tradeDetailDBs = new ArrayList<>();
+        if(tradeDetails == null || tradeDetails.size() == 0) {
+            return Result.success(tradeDetails);
+        }
+        for(TradeDetail tradeDetail: tradeDetails) {
+            TradeDetail tradeDetailDB = productService.insertTradeDetail(tradeDetail);
+            if (tradeDetailDB != null) {
+                tradeDetailDBs.add(tradeDetailDB);
+            }
+        }
+        if (tradeDetailDBs.size() == 0) {
+            return Result.failed();
+        }else {
+            return Result.success("提交成功", tradeDetailDBs);
         }
     }
 }

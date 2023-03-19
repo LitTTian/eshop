@@ -233,11 +233,19 @@
             <version>1.4.6</version>
         </dependency>
 
+        <!-- websocket -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.10.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+
+        <!-- <dependency> -->
+        <!--     <groupId>com.squareup.okhttp3</groupId> -->
+        <!--     <artifactId>okhttp</artifactId> -->
+        <!--     <version>4.10.0</version> -->
+        <!-- </dependency> -->
+
+
 
     </dependencies>
 

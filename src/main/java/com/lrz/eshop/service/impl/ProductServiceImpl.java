@@ -1,20 +1,20 @@
 package com.lrz.eshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lrz.eshop.mapper.CategoryMapper;
-import com.lrz.eshop.mapper.ImageMapper;
-import com.lrz.eshop.mapper.ModelMapper;
-import com.lrz.eshop.mapper.ProductMapper;
+import com.lrz.eshop.mapper.*;
 import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
+import com.lrz.eshop.pojo.trade.Trade;
+import com.lrz.eshop.pojo.trade.TradeDetail;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.ProductService;
 import com.lrz.eshop.util.ImageNameUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +39,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ImageMapper imageMapper;
+
+    @Autowired
+    TradeMapper tradeMapper;
+
+    @Autowired
+    TradeDetailMapper tradeDetailMapper;
 
     @Autowired
     ImageNameUtil imageNameUtil;
@@ -126,10 +132,6 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.maxProSeq(modelId);
     }
 
-    @Override
-    public Integer selectMaxPicSeqByModelId(String modelId) {
-        return imageMapper.maxPicSeq(modelId, 1);
-    }
 
     @Override
     public List<Category> selectAllCategory() {
@@ -137,65 +139,30 @@ public class ProductServiceImpl implements ProductService {
         return categoryList;
     }
 
-    @Override
-    public Image delImgById(String id) {
-        Image image = imageMapper.selectById(id);
-        String imgUrl = image.getImgUrl();
-        if(imgUrl == null) {
-            return null;
-        }else {
-            ossService.deleteFile(imgUrl);
-        }
-        return image;
-    }
-
-    @Override
-    public Image delImg(Image image) {
-        Image imageDB = imageMapper.selectById(image.getId());
-        if(imageDB == null) {
-            return null;
-        }
-        String delUrl = imageDB.getImgUrl();
-        if(!Objects.equals(delUrl, image.getImgUrl())) {
-            return null;
-        }
-        ossService.deleteFile(delUrl);
-        return imageDB;
-    }
-
-    @Override
-    public String uploadImage(MultipartFile file) {
-        String path="testUpload/" + imageNameUtil.getImgName(file.getOriginalFilename());
-        return ossService.uploadFile(file, path);
-    }
-
-    @Override
-    public int insertImage(Image image) {
-        return imageMapper.insert(image);
-    }
-
-    @Override
-    public Image linkImage(Image image) {
-        Image imageDB = imageMapper.selectById(image.getId());
-        if(imageDB == null) {
-            return null;
-        }
-        String delUrl = imageDB.getImgUrl();
-        if(!Objects.equals(delUrl, image.getImgUrl())) {
-            return null;
-        }
-        imageDB.setForeignId(image.getForeignId());
-        imageDB.setType(image.getType());
-        Integer seq = selectMaxPicSeqByModelId(image.getForeignId().toString());
-        if(seq == null) seq = 0;
-        imageDB.setSeq(seq + 1);
-        imageMapper.updateById(imageDB);
-        return imageDB;
-    }
 
     @Override
     public Product selectProductDetailByProductId(String productId) {
         return productMapper.selectDetailById(productId);
+    }
+
+    @Override
+    public Trade insertTrade(Trade trade) {
+        tradeMapper.insert(trade);
+        if(trade.getId() == null) {
+            return null;
+        }else {
+            return trade;
+        }
+    }
+
+    @Override
+    public TradeDetail insertTradeDetail(TradeDetail tradeDetail) {
+        tradeDetailMapper.insert(tradeDetail);
+        if(tradeDetail.getId() == null) {
+            return null;
+        }else {
+            return tradeDetail;
+        }
     }
 
 

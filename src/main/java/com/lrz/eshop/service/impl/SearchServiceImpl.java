@@ -1,11 +1,8 @@
 package com.lrz.eshop.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lrz.eshop.mapper.ModelMapper;
-import com.lrz.eshop.pojo.User;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;

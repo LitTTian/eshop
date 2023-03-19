@@ -37,4 +37,6 @@ public class Room {
     @TableField(value = "version", fill = FieldFill.INSERT)
     private int version;
 
+    private Short type;
+
 }

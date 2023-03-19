@@ -30,6 +30,9 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject,"balance", Float.class, (float)0f);
         this.strictInsertFill(metaObject,"isSeller", Boolean.class, false);
         this.strictInsertFill(metaObject, "version", Integer.class, 1);
+        this.strictInsertFill(metaObject, "status", Short.class, (short)1);
+        // 文章浏览量
+        this.strictInsertFill(metaObject, "watches", Integer.class, 0);
     }
 
     /**

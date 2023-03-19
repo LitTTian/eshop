@@ -1,0 +1,182 @@
+package com.lrz.eshop.component;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lrz.eshop.config.GetHttpSessionConfigurator;
+import com.lrz.eshop.mapper.MessageMapper;
+import com.lrz.eshop.mapper.RoomMapper;
+import com.lrz.eshop.mapper.UserMapper;
+import com.lrz.eshop.pojo.chat.Room;
+import com.lrz.eshop.pojo.user.User;
+import com.lrz.eshop.util.MessageUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpSession;
+import javax.websocket.*;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+//
+// @ServerEndpoint(value = "/chat", configurator = GetHttpSessionConfig.class)
+// @Component
+// public class ChatEndpoint {
+//
+//     //目前在线的用户集合
+//     public static Map<String, ChatEndpoint> onlineUsers = new ConcurrentHashMap<>();
+//
+//     //标记用户
+//     private Session session;
+//
+//     private HttpSession httpSession;
+//
+//     private static UserMapper userMapper;
+//     private static RoomMapper roomMapper;
+//     private static MessageMapper messageMapper;
+//
+//     /**
+//      * 必须要这样注入，虽然还没弄懂为什么！！
+//      * 参考 https://blog.csdn.net/u013905744/article/details/104818462
+//      */
+//
+//     @Autowired
+//     public void setUserMapper(UserMapper userMapper) {
+//         ChatEndpoint.userMapper = userMapper;
+//     }
+//
+//     @Autowired
+//     public void setRoomMapper(RoomMapper roomMapper) {
+//         ChatEndpoint.roomMapper = roomMapper;
+//     }
+//
+//     @Autowired
+//     public void setMessageMapper(MessageMapper messageMapper) {
+//         ChatEndpoint.messageMapper = messageMapper;
+//     }
+//
+//     @OnOpen
+//     public void onOpen(Session session, EndpointConfig config){
+//         System.out.println("websocket connect successfully!");
+//         // 建立发送者的身份
+//         this.session = session;
+//         this.httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+//         // 写入map
+//         onlineUsers.put((String) httpSession.getAttribute("id"), this);
+//
+//         // 查询所有有过聊天记录的人的username和头像图片
+//         String fromId = (String) httpSession.getAttribute("id");
+//         System.out.println("========"+fromId);
+//         // 查询结果是Map的列表，每个map表示一个user，有username和头像url两个属性
+//         List<Map<String, String>> userList = new ArrayList<>();
+//         QueryWrapper<Room> roomQueryWrapper = new QueryWrapper<>();
+//         roomQueryWrapper.eq("from_id", Long.valueOf(fromId));
+//         List<Room> roomList = roomMapper.selectList(roomQueryWrapper);
+//         for(Room room : roomList) {
+//             User user = userMapper.selectById(room.getToId());
+//             Map<String, String> map = new HashMap<String, String>(){{
+//               put("username", user.getUsername());
+//               put("portraitUrl", user.getPortraitUrl());
+//             }};
+//             userList.add(map);
+//         }
+//         // 清除掉 from_id == fromId 的数据
+//         roomQueryWrapper = new QueryWrapper<>();
+//         roomQueryWrapper.eq("to_id", Long.valueOf(fromId));
+//         roomList = roomMapper.selectList(roomQueryWrapper);
+//         for(Room room: roomList) {
+//             User user = userMapper.selectById(room.getFromId());
+//             Map<String, String> map = new HashMap<String, String>(){{
+//                 put("username", user.getUsername());
+//                 put("portraitUrl", user.getPortraitUrl());
+//             }};
+//             userList.add(map);
+//         }
+//         String resultMessage = MessageUtils.getMessage("userList", true, fromId, userList);
+//         try {
+//             onlineUsers.get(fromId).session.getBasicRemote().sendText(resultMessage);
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+//     }
+//     @OnMessage
+//     public void onMessage(String message, Session session) {
+//         // message从String转换为Message的对象
+//         try {
+//             ObjectMapper mapper = new ObjectMapper();
+//             ReceiveMessage mess = mapper.readValue(message, ReceiveMessage.class);
+//             String data = mess.getMessage();
+//             // 接收者的用户名
+//             String toName = mess.getToName();
+//             // 查找接收者的id
+//             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//             System.out.println(toName);
+//             queryWrapper.eq("username", toName);
+//             List<User> userList = userMapper.selectList(queryWrapper);
+//             System.out.println(userList);
+//             String toId = String.valueOf(userList.get(0).getId());
+//             String fromId = (String) httpSession.getAttribute("id");
+//             System.out.println("data: " + data + ", id: " + fromId);
+//             // 写入数据库
+//             // 判断是否已有这两个人组成的房间
+//             QueryWrapper<Room> roomQueryWrapper = new QueryWrapper<>();
+//             roomQueryWrapper.eq("to_id", toId);
+//             roomQueryWrapper.eq("from_id", fromId);
+//             List<Room> roomList = roomMapper.selectList(roomQueryWrapper);
+//             Message m;
+//             boolean newRoom = false;
+//             if (roomList.size() == 1) {
+//                 // 发送者正好就是room中的发送者
+//                 int cnt = roomList.get(0).getCnt() + 1;
+//                 roomList.get(0).setCnt(cnt);
+//                 System.out.println("room: " + roomList.get(0));
+//                 roomMapper.updateById(roomList.get(0));
+//                 m = new Message(roomList.get(0).getRoomId(), Long.valueOf(fromId), data, cnt, false);
+//             } else {
+//                 roomQueryWrapper = new QueryWrapper<>();
+//                 roomQueryWrapper.eq("to_id", fromId);
+//                 roomQueryWrapper.eq("from_id", toId);
+//                 roomList = roomMapper.selectList(roomQueryWrapper);
+//                 if (roomList.size() == 1) {
+//                     // 发送和接收者角色互换
+//                     int cnt = roomList.get(0).getCnt() + 1;
+//                     roomList.get(0).setCnt(cnt);
+//                     roomMapper.updateById(roomList.get(0));
+//                     m = new Message(roomList.get(0).getRoomId(), Long.valueOf(fromId), data, cnt, false);
+//                 } else {
+//                     // 没有这个room
+//                     Room room = new Room(Long.valueOf(fromId), Long.valueOf(toId), 0);
+//                     roomMapper.insert(room);
+//                     m = new Message(room.getRoomId(), Long.valueOf(fromId), data, 0, false);
+//                     newRoom = true;
+//                 }
+//             }
+//             // 将要发送的数据
+//             // 数据携带的是发送者用户名，而不是id
+//             User fromUser = userMapper.selectById(fromId);
+//             String resultMessage = MessageUtils.getMessage("chat", newRoom, fromUser.getUsername(), data);
+//             System.out.println(resultMessage);
+//             // 发送到目标用户的 ChatEndpoint 对象
+//             // 注意，如果对方许久未登录，那么这个session对象不存在；如果对方登陆了刚刚推出了，这个session对象存在但处于断开状态
+//             if (onlineUsers.get(toId) != null && onlineUsers.get(toId).session.isOpen()) {
+//                 // 发送消息
+//                 m.setSeen(true);
+//                 onlineUsers.get(toId).session.getBasicRemote().sendText(resultMessage);
+//             } else {
+//                 m.setSeen(false);
+//                 System.out.println("对方离线");
+//             }
+//             System.out.println("the message to insert: " + m);
+//             messageMapper.insert(m);
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+//     }
+//     @OnClose
+//     public void onClose(Session session) {
+//
+//     }
+// }

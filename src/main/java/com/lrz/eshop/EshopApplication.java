@@ -3,6 +3,8 @@ package com.lrz.eshop;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.ComponentScan;
 
 /**  
  * 梦开始的地方
@@ -11,7 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @description    
  */
 @SpringBootApplication
+@ServletComponentScan
+// @ComponentScan(basePackages = {"com.lrz.eshop"})
 @MapperScan("com.lrz.eshop.mapper")
+@MapperScan("com.lrz.eshop.mapper.article")
 public class EshopApplication {
 
     public static void main(String[] args) {

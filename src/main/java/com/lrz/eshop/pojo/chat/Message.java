@@ -27,11 +27,15 @@ public class Message {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
     private String content;
-    private boolean seen; // 接受者是否看过了消息
+    // private boolean seen; // 接受者是否看过了消息
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
     @Version
+    @TableField(value = "version", fill = FieldFill.INSERT)
     private int version;
+
 }
+
+
