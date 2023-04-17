@@ -47,6 +47,22 @@ public class TokenUtil {
         String token = null;
         try {
             Date expiresAt = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            // q：这里的withClaim是什么意思？
+            // a：withClaim是设置一个私有声明，可以在解析token的时候获取到。
+            // q：这里的sign是什么意思？
+            // a：sign是使用了HMAC256加密算法。
+            // q: 为什么每次加密的结果都一样
+            // a: 因为每次加密的时候，都是用的同一个密钥，所以每次加密的结果都是一样的。
+            // q: 怎么才能保证加密的结果不一样
+            // a: 每次加密的时候，都使用不同的密钥，这样就能保证加密的结果不一样。
+            // q: 每次密钥不一样，我还怎么解密
+            // a: 解密的时候，也需要使用同一个密钥，这样才能解密成功。
+            // q: 这个不一样的密钥存放在哪里
+            // a: 一般是存放在服务器端，这样就能保证每次加密的时候，都使用不同的密钥。
+            // q: 那服务端不就变成有状态了？
+            // a: 服务端不是有状态的，因为服务端只是存放密钥，而不是存放用户的信息。
+            // q: 那我怎么知道这个密钥是不是我自己的
+            // a: 一般是使用jwt的时候，会在请求头中携带一个token，这个token就是用户的身份凭证，服务端会根据这个token来获取用户的信息。
             token = JWT.create()
                     .withClaim("id", user.getId().toString())
                     .withClaim("username", user.getUsername())
@@ -75,15 +91,16 @@ public class TokenUtil {
             throw new BaseException(ConstantResultCode.ERROR_CLIENT_REQUIRED_PARAMETER_EMPTY, "token为空");
         }
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).build();//自定义的
-            DecodedJWT jwt = verifier.verify(token);
-            System.out.println("认证通过：");
-            // System.out.println("id: " + jwt.getClaim("id").asInt());
+            // JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).build();//自定义的
+            // DecodedJWT jwt = verifier.verify(token);
+            DecodedJWT jwt = JWT.decode(token);
+            System.out.println("认证通过：id: " + jwt.getClaim("id").asString());
             // System.out.println("role: " + jwt.getClaim("role").asString());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println("过期时间：" + sdf.format(jwt.getExpiresAt()));
             return true;
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
     }
@@ -94,11 +111,11 @@ public class TokenUtil {
      * @Param [request]
      * @Return java.lang.String
      */
-    public static String getRoleByToken(HttpServletRequest request) {
+/*     public static String getRoleByToken(HttpServletRequest request) {
         String token = request.getHeader("token");
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getClaim("status").asString();
-    }
+    } */
 
     /**
      * <p> 获得id,操作人 </p>

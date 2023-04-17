@@ -64,6 +64,9 @@ public interface ProductService {
     int insertModel(Model model);
     int insertProduct(Product product);
 
+    // 移除model
+    Model delModel(String sellerId, String modelId);
+
     /**
      * 根据categoryId查询所有model
      * @param categoryId
@@ -85,7 +88,6 @@ public interface ProductService {
      */
     Product selectProductDetailByProductId(String productId);
 
-    Trade insertTrade(Trade trade);
-    TradeDetail insertTradeDetail(TradeDetail tradeDetail);
 
+    boolean addModel(Model model);
 }

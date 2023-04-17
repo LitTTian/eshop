@@ -95,8 +95,22 @@ public class ProductController {
     @ApiOperation("添加model")
     @PostMapping("/addModel")
     public Result<?> addModel(@RequestBody Model model) {
-        productService.insertModel(model);
-        return Result.success("添加成功", model);
+        // System.out.println("666666666666666666666666");
+        System.out.println(model);
+        // if(model.getProducts() != null) {
+        //     for (Product product: model.getProducts()) {
+        //         product.setModelId(model.getId());
+        //     }
+        //     System.out.println(model.getProducts());
+        // }
+        // productService.insertModel(model);
+        boolean flag = productService.addModel(model);
+        // boolean flag = true;
+        if(flag) {
+            return Result.success("添加成功", model);
+        }else {
+            return Result.failed();
+        }
     }
 
     @ApiOperation("添加product")
@@ -177,35 +191,17 @@ public class ProductController {
         }
     }
 
-    // 提交订单
-    @ApiOperation("提交订单")
-    @PostMapping("/submitTrade")
-    public Result<?> submitTrade(@RequestBody Trade trade) {
-        Trade tradeDB = productService.insertTrade(trade);
-        if (tradeDB == null) {
+
+    @ApiOperation("根据sellerId和modelId移除model")
+    @PostMapping("/removeModel")
+    public Result<?> removeModel(@RequestParam("sellerId") String sellerId, @RequestParam("modelId") String modelId) {
+        Model model = productService.delModel(sellerId, modelId);
+        if(model == null) {
             return Result.failed();
-        }else {
-            return Result.success("提交成功", tradeDB);
         }
+        return Result.success("删除成功", model);
     }
 
-    @ApiOperation("提交订单详情")
-    @PostMapping("/submitTradeDetailList")
-    public Result<?> submitTradeDetailList(@RequestBody List<TradeDetail> tradeDetails) {
-        List<TradeDetail> tradeDetailDBs = new ArrayList<>();
-        if(tradeDetails == null || tradeDetails.size() == 0) {
-            return Result.success(tradeDetails);
-        }
-        for(TradeDetail tradeDetail: tradeDetails) {
-            TradeDetail tradeDetailDB = productService.insertTradeDetail(tradeDetail);
-            if (tradeDetailDB != null) {
-                tradeDetailDBs.add(tradeDetailDB);
-            }
-        }
-        if (tradeDetailDBs.size() == 0) {
-            return Result.failed();
-        }else {
-            return Result.success("提交成功", tradeDetailDBs);
-        }
-    }
+
+
 }

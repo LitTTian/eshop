@@ -23,7 +23,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @param limit
      * @return
      */
-    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.category_id = #{categoryId} ORDER BY total DESC LIMIT #{limit}")
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.category_id = #{categoryId} WHERE model.deleted = false ORDER BY total DESC LIMIT #{limit}")
     // @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1, model WHERE t1.model_id = model.id AND category_id = #{categoryId} ORDER BY total DESC LIMIT #{limit}")
     // @Select("select * from model where category_id = #{categoryId} order by sell_count desc limit #{limit}")
     @Results({
@@ -66,7 +66,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @return
      */
     // @Select("select * from model order by create_time desc limit #{limit}")
-    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id ORDER BY create_time DESC LIMIT #{limit}")
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id WHERE model.deleted = false ORDER BY create_time DESC LIMIT #{limit}")
     @Results({
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),
@@ -108,7 +108,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @return
      */
     // @Select("select * from model order by sell_count desc limit #{limit}")
-    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id ORDER BY total DESC LIMIT #{limit}")
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id WHERE model.deleted = false ORDER BY total DESC LIMIT #{limit}")
     @Results({
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),
@@ -149,7 +149,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @param sellerId
      * @return
      */
-    @Select("select * from model where seller_id = #{sellerId}")
+    @Select("select * from model where seller_id = #{sellerId} and deleted = false")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "categoryId", column = "category_id"),
@@ -190,7 +190,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @return
      */
     // @Select("select * from model where id = #{modelId}")
-    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.id = #{modelId}")
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.id = #{modelId} where model.deleted = false")
     @Results({
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),
@@ -230,7 +230,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @param categoryId
      * @return
      */
-    @Select("select * from model where id in (select model_id from querytop) and category_id = #{categoryId}")
+    @Select("select * from model where id in (select model_id from querytop) and category_id = #{categoryId} and model.deleted = false")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "categoryId", column = "category_id"),
@@ -270,7 +270,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @param order
      * @return
      */
-    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND (model.title like CONCAT('%', #{keyword} ,'%') OR model.advertisement like CONCAT('%', #{keyword} ,'%') ) ORDER BY #{order} DESC")
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.deleted = false AND (model.title like CONCAT('%', #{keyword} ,'%') OR model.advertisement like CONCAT('%', #{keyword} ,'%') ) ORDER BY #{order} DESC")
     // @Select("select * from model where title like CONCAT('%',#{keywords},'%') or advertisement like CONCAT('%',#{keywords},'%') order by #{order} desc")
     @Results({
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
@@ -313,7 +313,7 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @return
      */
     // @Select("select * from model where id = #{modelId}")
-    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.id = #{modelId}")
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.id = #{modelId} where model.deleted = false")
     @Results({
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),

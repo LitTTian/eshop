@@ -51,16 +51,16 @@ public class Trade {
     private Long commentId;
 
     @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy年MM月dd HH:mm:ss")
+    // @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy年MM月dd HH:mm:ss")
     Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy年MM月dd HH:mm:ss")
+    // @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy年MM月dd HH:mm:ss")
     Date updateTime;
 
     private Short state; // 订单状态：1，下单，未付；2，已付，未收到；3，收到；4，退货中；5，交易完成；6，订单关闭
 
     @Version
-    @TableField(value = "version", fill = FieldFill.INSERT)
+    @TableField(fill = FieldFill.INSERT)
     private Integer version;
 
     @TableField(exist = false)

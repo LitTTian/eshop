@@ -1,10 +1,9 @@
 package com.lrz.eshop.service;
 
-import com.lrz.eshop.pojo.article.Article;
-import com.lrz.eshop.pojo.article.ArticleComment;
-import com.lrz.eshop.pojo.article.ArticleCommentChild;
-import com.lrz.eshop.pojo.article.ArticleTag;
+import com.lrz.eshop.pojo.article.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author 天天
@@ -27,4 +26,5 @@ public interface ArticleService {
     ArticleComment addArticleComment(ArticleComment articleComment);
 
     ArticleCommentChild addArticleCommentChild(ArticleCommentChild articleCommentChild);
+
 }

@@ -26,6 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
         // 设置前端port
         registry.addMapping("/**") // 允许跨域访问的路径
                 .allowedOrigins("http://localhost:8080") // 允许跨越访问的源
+                .allowCredentials(true) // 允许跨域传输cookie
                 .allowedHeaders("*") // 允许的头部
                 .allowedMethods("*") // 允许的请求方法
                 .maxAge(30000) // 预检间隔时间
@@ -36,8 +37,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // registry.addInterceptor( new LoginInterceptor()).addPathPatterns("/user/**");
         // registry.addInterceptor(new JWTInterceptor())
-        //         .addPathPatterns("/**")
-        //         .excludePathPatterns("/api/user/**");
+                // .addPathPatterns("/api/trade/**")
+                // .addPathPatterns("/ws") // 添加拦截器后，websocket能正确拿到session
+                // .excludePathPatterns("/api/user/**");
     }
 
     /**

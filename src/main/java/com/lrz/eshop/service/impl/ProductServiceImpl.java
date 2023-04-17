@@ -1,6 +1,7 @@
 package com.lrz.eshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lrz.eshop.controller.ImageController;
 import com.lrz.eshop.mapper.*;
 import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.product.Category;
@@ -8,6 +9,7 @@ import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
 import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.pojo.trade.TradeDetail;
+import com.lrz.eshop.service.ImageService;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.ProductService;
 import com.lrz.eshop.util.ImageNameUtil;
@@ -45,6 +47,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     TradeDetailMapper tradeDetailMapper;
+
+    @Autowired
+    ImageService imageService;
 
     @Autowired
     ImageNameUtil imageNameUtil;
@@ -121,6 +126,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Model delModel(String sellerId, String modelId) {
+        Model model = modelMapper.selectById(modelId);
+        if(model == null) {
+            return null;
+        }
+        if(!String.valueOf(model.getSellerId()).equals(sellerId)) {
+            return null;
+        }
+        model.setDeleted(true);
+        modelMapper.updateById(model);
+        return model;
+    }
+
+    @Override
     public List<Model> selectModelByCategoryId(String categoryId) {
         QueryWrapper<Model> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("category_id", categoryId);
@@ -145,23 +164,29 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.selectDetailById(productId);
     }
 
-    @Override
-    public Trade insertTrade(Trade trade) {
-        tradeMapper.insert(trade);
-        if(trade.getId() == null) {
-            return null;
-        }else {
-            return trade;
-        }
-    }
 
     @Override
-    public TradeDetail insertTradeDetail(TradeDetail tradeDetail) {
-        tradeDetailMapper.insert(tradeDetail);
-        if(tradeDetail.getId() == null) {
-            return null;
+    public boolean addModel(Model model) {
+        modelMapper.insert(model);
+        System.out.println(model.getId());
+        if(model.getId() == null) {
+            return false;
+        }
+        if(model.getProducts() != null) {
+            for(Product product : model.getProducts()) {
+                product.setModelId(model.getId());
+                insertProduct(product);
+            }
+            if(model.getProducts().size() > 0) {
+                for(Image image : model.getImages()) {
+                    image.setForeignId(model.getId());
+                    image.setType((short) 1);
+                    imageService.linkImage(image);
+                }
+            }
+            return true;
         }else {
-            return tradeDetail;
+            return false;
         }
     }
 

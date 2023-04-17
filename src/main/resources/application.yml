@@ -12,6 +12,12 @@ pagehelper:
     support-methods-arguments: true  #支持通过 Mapper 接口参数来传递分页参数
     params: count=countsql
 spring:
+    rabbitmq:
+        host: localhost # RabbitMQ服务器地址
+        port: 5672 # RabbitMQ服务器端口
+        username: test # RabbitMQ服务器用户名
+        password: liruizhi
+        virtual-host: / # RabbitMQ服务器虚拟主机
     servlet:
         multipart:
             max-file-size: 2MB

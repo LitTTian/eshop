@@ -4,9 +4,11 @@ import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.article.Like;
+import com.lrz.eshop.pojo.article.Tag;
 import com.lrz.eshop.pojo.common.Banner;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Category;
+import com.lrz.eshop.service.ArticleService;
 import com.lrz.eshop.service.CommonService;
 import com.lrz.eshop.service.LikeService;
 import com.lrz.eshop.service.UserService;
@@ -37,6 +39,7 @@ public class CommonController {
     @Autowired
     UserService userService;
 
+
     @ApiOperation("上传轮播图")
     @PostMapping("/uploadBannerImage")
     public Result<?> uploadBannerImage(@RequestParam("file") MultipartFile file, @RequestParam("foreignId") String foreignId, @RequestParam("type") short type) {
@@ -61,13 +64,21 @@ public class CommonController {
     }
 
     @ApiOperation("获取分类弹出层")
-    @GetMapping("/quertTop")
-    public Result<?> quertTop() {
+    @GetMapping("/queryTop")
+    public Result<?> queryTop() {
         List<Category> categories = commonService.selectAllCategoryWithTopModel();
         if(categories == null) {
             return Result.failed();
         }
         return Result.success("获取成功", categories);
+    }
+
+    @ApiOperation("获取热门文章标签")
+    @GetMapping("/hotTags")
+    public Result<?> hotTags() {
+        List<Tag> tags = commonService.hotTags();
+        if(tags == null) return Result.failed();
+        return Result.success("获取热门文章标签成功", tags);
     }
 
 
@@ -116,6 +127,7 @@ public class CommonController {
         }
     }
 
+
     @PostMapping("/isLiked")
     // 必须包含：用户userId，评论/文章foreignId，点赞类型type
     public Result<?> isLiked(@RequestBody Like like) {
@@ -152,16 +164,20 @@ public class CommonController {
     }
 
 
+
     // 获取文章展示卡片
-    @ApiOperation("获取文章首页展示卡片")
-    @GetMapping("/getMostWatchesArticleCard/{categoryId}")
-    public Result<?> selectMostWatchesArticleCardByCategoryId(@PathVariable(value = "categoryId") String categoryId) {
-        List<ArticleShowInfo> list = commonService.selectMostWatchesArticleCardByCategoryId(categoryId);
+    @ApiOperation("获取文章卡片：根据关键字")
+    @GetMapping("/getMostWatchesArticleCard/{keyword}/{key}")
+    public Result<?> selectMostWatchesArticleCardByCategoryId(
+            @PathVariable(value = "keyword") String keyword,
+            @PathVariable(value = "key") String key) {
+        List<ArticleShowInfo> list = commonService.selectMostWatchesArticleCardByKeyword(keyword, key);
         if(list == null) {
             return Result.failed();
         }
         return Result.success("获取成功", list);
     }
+
 
     @ApiOperation("获取文章首页展示卡片")
     @GetMapping("/getMostWatchesArticleCard")

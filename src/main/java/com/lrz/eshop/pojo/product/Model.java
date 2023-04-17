@@ -80,6 +80,11 @@ public class Model {
     private List<Product> products;
 
 
+    @TableField(fill = FieldFill.INSERT)
+    // true表示被移除，不接受查询
+    private Boolean deleted;
+
+
 
 
 }

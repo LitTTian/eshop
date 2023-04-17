@@ -3,6 +3,7 @@ package com.lrz.eshop.service;
 import com.lrz.eshop.mapper.BannerMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.article.Like;
+import com.lrz.eshop.pojo.article.Tag;
 import com.lrz.eshop.pojo.common.Banner;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Category;
@@ -27,6 +28,8 @@ public interface CommonService {
 
     List<Category> selectAllCategoryWithTopModel();
 
+    List<Tag> hotTags();
+
 
     // 点赞和收藏
 
@@ -50,6 +53,8 @@ public interface CommonService {
     Short isLiked(Like like);
 
 
-    List<ArticleShowInfo> selectMostWatchesArticleCardByCategoryId(String categoryId);
     List<ArticleShowInfo> selectMostWatchesArticleCard();
+
+
+    List<ArticleShowInfo> selectMostWatchesArticleCardByKeyword(String keyword, String key);
 }

@@ -13,12 +13,12 @@ import javax.websocket.server.ServerEndpointConfig;
  * @create 2023/3/9 14:50
  * @description
  */
-public class GetHttpSessionConfigurator extends ServerEndpointConfig.Configurator {
-    @Override
-    public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
-        // HandshakeRequest封装了request对象，可以获取request对象中的信息
-        HttpSession httpSession = (HttpSession) request.getHttpSession();
-        // httpSession对象存储到配置对象
-        sec.getUserProperties().put(HttpSession.class.getName(), httpSession);
-    }
-}
+// public class GetHttpSessionConfigurator extends ServerEndpointConfig.Configurator {
+//     @Override
+//     public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
+//         // HandshakeRequest封装了request对象，可以获取request对象中的信息
+//         HttpSession httpSession = (HttpSession) request.getHttpSession();
+//         // httpSession对象存储到配置对象
+//         sec.getUserProperties().put(HttpSession.class.getName(), httpSession);
+//     }
+// }

@@ -1,17 +1,11 @@
 package com.lrz.eshop.component;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lrz.eshop.config.GetHttpSessionConfigurator;
-import com.lrz.eshop.mapper.MessageMapper;
-import com.lrz.eshop.mapper.RoomMapper;
-import com.lrz.eshop.mapper.UserInRoomMapper;
-import com.lrz.eshop.mapper.UserMapper;
-import com.lrz.eshop.pojo.chat.Message;
-import com.lrz.eshop.pojo.chat.ReceiveMessage;
-import com.lrz.eshop.pojo.chat.Room;
-import com.lrz.eshop.pojo.chat.UserInRoom;
-import com.lrz.eshop.pojo.user.User;
+import com.lrz.eshop.config.WebSocketConfig;
+import com.lrz.eshop.mapper.*;
+import com.lrz.eshop.pojo.chat.*;
+import com.lrz.eshop.pojo.user.UserSocialInfo;
+import com.lrz.eshop.util.EncryptUtils;
 import com.lrz.eshop.util.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 
-@ServerEndpoint(value = "/chat", configurator = GetHttpSessionConfigurator.class)
+@ServerEndpoint(value = "/chat", configurator = WebSocketConfig.class)
 @Component
 public class ChatEndpoint {
 
@@ -49,7 +43,9 @@ public class ChatEndpoint {
     private static UserMapper userMapper;
     private static RoomMapper roomMapper;
     private static MessageMapper messageMapper;
+    private static MessageContentMapper messageContentMapper;
     private static UserInRoomMapper userInRoomMapper;
+
 
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
@@ -64,6 +60,11 @@ public class ChatEndpoint {
     @Autowired
     public void setMessageMapper(MessageMapper messageMapper) {
         ChatEndpoint.messageMapper = messageMapper;
+    }
+
+    @Autowired
+    public void setMessageContentMapper(MessageContentMapper messageContentMapper) {
+        ChatEndpoint.messageContentMapper = messageContentMapper;
     }
 
     @Autowired
@@ -86,6 +87,7 @@ public class ChatEndpoint {
         // 将当前对象存入map中
         // onlineUsers.put(id, this);
         onlineUsers.put((String) httpSession.getAttribute("id"), this);
+        System.out.println("onlineUsers" + onlineUsers);
 
         // 查询结果是Map的列表，每个map表示一个user，有username和头像url两个属性
         // List<Map<String, String>> userList = new ArrayList<>();
@@ -99,10 +101,16 @@ public class ChatEndpoint {
         // 2.调用方法进行系统消息的推送
         // broadcastAllUsers(message);
 
-        List<UserInRoom> userInRooms = userInRoomMapper.selectPrivateChatByUserId(id);
-        String resultMessage = MessageUtils.getMessage("userInRooms", true, null, userInRooms);
+        List<UserInRoom> userInRooms = userInRoomMapper.selectFriendsInRoomByUserId(id);
+        System.out.println(userInRooms);
+        ResultMessage resultMessage = new ResultMessage();
+        resultMessage.setType("userInRooms");
+        resultMessage.setResult(userInRooms);
+        // resultMessage.setFromNew(false);
+
+        String resultMessageStr = MessageUtils.getMessage(resultMessage);
         try {
-            onlineUsers.get(id).session.getBasicRemote().sendText(resultMessage);
+            onlineUsers.get(id).session.getBasicRemote().sendText(resultMessageStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -150,17 +158,17 @@ public class ChatEndpoint {
             if(toId == null && roomId == null) return;
             // String roomId = mess.getRoomId();
             // 查找接收者的id
-            System.out.println("接收者的id" + toId);
-            String fromId = (String) httpSession.getAttribute("id");
-            System.out.println("content: " + content + ", id: " + fromId);
+            System.out.println("接收者的id: " + toId);
+            System.out.println("房间的id: " + roomId);
+            // String fromId = (String) httpSession.getAttribute("id");
+            String userId = mess.getUserId(); // 发送者的id
+            System.out.println("content: " + content + ", id: " + userId);
             // 写入数据库
-            // 判断是否已有这两个人组成的房间
-            boolean newRoom = false;
-            if(roomId == null) {
-                roomId = userInRoomMapper.hasPrivateRoom(fromId, toId);
+            boolean isNewRoom = false;
+            if(roomId == null) { // 判断是否已有这两个人组成的房间
+                roomId = userInRoomMapper.hasPrivateRoom(userId, toId);
             }
-            if(roomId == null) {
-                // 创建房间
+            if(roomId == null) {// 没有房间，创建房间
                 Room room = new Room();
                 room.setType((short) 1);
                 roomMapper.insert(room);
@@ -168,11 +176,11 @@ public class ChatEndpoint {
                 if (newRoomId == null) {
                     return;
                 }
-                newRoom = true;
+                isNewRoom = true;
                 System.out.println("创建房间成功!" + room.getId());
                 UserInRoom userInroom1 = new UserInRoom();
                 userInroom1.setRoomId(newRoomId);
-                userInroom1.setUserId(Long.valueOf(fromId));
+                userInroom1.setUserId(Long.valueOf(userId));
                 userInRoomMapper.insert(userInroom1);
                 UserInRoom userInroom2 = new UserInRoom();
                 userInroom2.setRoomId(newRoomId);
@@ -180,41 +188,65 @@ public class ChatEndpoint {
                 userInRoomMapper.insert(userInroom2);
                 roomId = String.valueOf(newRoomId);
             }
+
             Message newMessage = new Message();
-            newMessage.setUserId(Long.valueOf(fromId));
+            newMessage.setUserId(Long.valueOf(userId));
             newMessage.setRoomId(Long.valueOf(roomId));
-            newMessage.setContent(content);
+            System.out.println("roomId: " + roomId);
+            // TODO 加密
+            // newMessage.setContent(content);
+            messageMapper.insert(newMessage);
+            List<MessageContent> messageContents = EncryptUtils.encryptMessage(content, Long.valueOf(roomId));
+            System.out.println("messageContents: " + messageContents);
+            for(MessageContent messageContent : messageContents) {
+                messageContent.setMessageId(newMessage.getId());
+                messageContentMapper.insert(messageContent);
+            }
 
             // 将要发送的数据
             // 数据携带的是发送者用户名，而不是id
             // User fromUser = userMapper.selectById(fromId);
-            String resultMessage = MessageUtils.getMessage("chat", newRoom, roomId, content);
-            messageMapper.insert(newMessage);
-            System.out.println(resultMessage);
+            // resultMessage直接发送给接收方，不需要加密
+
+            UserSocialInfo user = userMapper.selectSocialInfoById(userId);
+            ResultMessage resultMessage = new ResultMessage();
+            resultMessage.setType("chat");
+            resultMessage.setFromNew(isNewRoom);
+            resultMessage.setRoomId(roomId);
+            resultMessage.setUser(user);
+            resultMessage.setCreateTime(newMessage.getCreateTime());
+            resultMessage.setResult(content);
+            String resultMessageStr = MessageUtils.getMessage(resultMessage);
+
+            // String resultMessageStr = MessageUtils.getMessage("chat", isNewRoom, roomId, content);
+
+            System.out.println(resultMessageStr);
             // 发送到目标用户的 ChatEndpoint 对象
             // 注意，如果对方许久未登录，那么这个session对象不存在；如果对方登陆了刚刚推出了，这个session对象存在但处于断开状态
             if(toId != null) {
                 if (onlineUsers.get(toId) != null && onlineUsers.get(toId).session.isOpen()) {
                     // 发送消息
                     // m.setSeen(true);
-                    onlineUsers.get(toId).session.getBasicRemote().sendText(resultMessage);
+                    onlineUsers.get(toId).session.getBasicRemote().sendText(resultMessageStr);
                 } else {
                     // m.setSeen(false);
                     System.out.println("对方离线");
                 }
             }else {
                 // 查询房间中的其他人
-                // 群聊的关键！！
-                List<String> friendIds = userInRoomMapper.selectFriendIdsByUserIdAndRoomId(roomId, fromId);
-                for(String friendId: friendIds) {
+                List<String> friendIds = userInRoomMapper.selectFriendIdsByUserIdAndRoomId(roomId, userId);
+                for(String friendId: friendIds) { // 遍历房间中的其他人
                     if(friendId != null) {
+                        System.out.println("正在给" + friendId + "发送消息");
+                        System.out.println("onlineUsers" + onlineUsers);
                         if (onlineUsers.get(friendId) != null && onlineUsers.get(friendId).session.isOpen()) {
                             // 发送消息
                             // m.setSeen(true);
-                            onlineUsers.get(friendId).session.getBasicRemote().sendText(resultMessage);
+                            System.out.println(friendId + "在线");
+                            onlineUsers.get(friendId).session.getBasicRemote().sendText(resultMessageStr);
                         } else {
                             // m.setSeen(false);
-                            System.out.println("对方离线");
+                            System.out.println(friendId + "离线");
                         }
                     }
                 }

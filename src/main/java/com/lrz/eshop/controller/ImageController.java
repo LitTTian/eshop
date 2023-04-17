@@ -76,11 +76,12 @@ public class ImageController {
     @PostMapping("/linkImage")
     public Result<?> linkImage(@RequestBody Image image) {
         // image必须包含type、id、url、foreignId
+        // System.out.println(image);
         Image imageDB = imageService.linkImage(image);
         if (imageDB == null) {
             return Result.failed();
         }
-        return Result.success("关联图片成功", imageDB);
+        return Result.success("关联图片成功", image);
     }
 
 

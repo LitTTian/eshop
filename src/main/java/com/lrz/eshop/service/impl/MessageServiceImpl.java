@@ -1,18 +1,15 @@
 package com.lrz.eshop.service.impl;
 
+import com.lrz.eshop.mapper.MessageContentMapper;
 import com.lrz.eshop.mapper.MessageMapper;
 import com.lrz.eshop.mapper.RoomMapper;
 import com.lrz.eshop.mapper.UserInRoomMapper;
-import com.lrz.eshop.pojo.chat.Message;
-import com.lrz.eshop.pojo.chat.ResultMessage;
-import com.lrz.eshop.pojo.chat.Room;
-import com.lrz.eshop.pojo.chat.UserInRoom;
+import com.lrz.eshop.pojo.chat.*;
 import com.lrz.eshop.service.MessageService;
+import com.lrz.eshop.util.EncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.processing.Messager;
-import javax.websocket.server.ServerEndpoint;
 import java.util.List;
 
 /**
@@ -30,18 +27,25 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageMapper messageMapper;
+    @Autowired
+    private MessageContentMapper messageContentMapper;
 
     @Autowired
     private RoomMapper roomMapper;
 
     @Override
     public List<UserInRoom> getPrivateChat(String userId) {
-        return userInRoomMapper.selectPrivateChatByUserId(userId);
+        return userInRoomMapper.selectFriendsInRoomByUserId(userId);
     }
 
     @Override
     public List<Message> getRoomMessage(String roomId) {
-        return messageMapper.selectByRoomId(roomId);
+        List<Message> messages = messageMapper.selectByRoomId(roomId);
+        for(Message message: messages) {
+            message.setContent(EncryptUtils.decryptMessage(message.getMessageContents(), message.getRoomId()));
+            message.setMessageContents(null);
+        }
+        return messages;
     }
 
     @Override
@@ -73,12 +77,22 @@ public class MessageServiceImpl implements MessageService {
             Message message = new Message();
             message.setRoomId(newRoomId);
             message.setUserId(Long.valueOf(buyerId));
-            message.setContent(HELLO_MESSAGE);
+            // message.setContent(HELLO_MESSAGE);
+            // 加密消息
+            List<MessageContent> messageContents = EncryptUtils.encryptMessage(HELLO_MESSAGE, newRoomId);
+            for(MessageContent messageContent : messageContents) {
+                messageContent.setMessageId(newRoomId);
+                messageContentMapper.insert(messageContent);
+            }
             messageMapper.insert(message);
             // 返回新的房间号
             roomId = String.valueOf(newRoomId);
         }
         Room room = roomMapper.selectById(roomId);
         return room;
+    }
+
+    public static void main(String[] args) {
+
     }
 }

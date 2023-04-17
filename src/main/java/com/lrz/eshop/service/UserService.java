@@ -7,6 +7,7 @@ import com.lrz.eshop.pojo.user.Location;
 import com.lrz.eshop.pojo.user.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -70,7 +71,7 @@ public interface UserService {
     Boolean existId(String id);
     Boolean existUsername(String username);
     Boolean existEmail(String id);
-    User verifyUser(User user);
+    User verifyUser(User user, HttpSession session);
 
 
     /**
@@ -82,10 +83,12 @@ public interface UserService {
     String uploadUserAvatar(MultipartFile file, User user);
 
 
-    User getUserInfoByToken(String token);
+    User getUserInfoByToken(String token, HttpSession session);
 
     int selectLocationSeqByUserId(String userId);
     Location addLocation(Location location);
 
     Location deleteLocation(String locationId);
+
+    Location updateLocation(Location location);
 }

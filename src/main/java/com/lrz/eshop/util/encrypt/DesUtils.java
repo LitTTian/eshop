@@ -17,7 +17,7 @@ import java.security.SecureRandom;
  */
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DesUtil {
+public class DesUtils {
     /** 默认key */
     public final static String KEY = "liruizhi";
 

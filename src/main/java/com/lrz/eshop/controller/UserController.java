@@ -7,6 +7,7 @@ import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.user.Location;
 import com.lrz.eshop.pojo.user.User;
+import com.lrz.eshop.service.TradeService;
 import com.lrz.eshop.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TradeService tradeService;
 
     /**
      * 查询所有用户
@@ -66,10 +70,12 @@ public class UserController {
     @PostMapping("/verifyUser")
     public Result<?> verifyUser(@RequestBody User user, HttpSession session) {
         // 密码已在前端加密过了
-        User userDB = userService.verifyUser(user);
+        User userDB = userService.verifyUser(user, session);
         if (userDB != null) {
             // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-            session.setAttribute("id", String.valueOf(userDB.getId()));
+            // session.setAttribute("id", String.valueOf(userDB.getId()));
+            // System.out.println("session id: " + session.getAttribute("id"));
+            tradeService.updateTradeByUserId(String.valueOf(userDB.getId()));
             return Result.success("登录成功", userDB);
         }
         return Result.failed(ResultCode.LoginFailed);
@@ -77,9 +83,11 @@ public class UserController {
 
     @PostMapping("/getUserInfoByToken")
     public Result<?> getUserInfoByToken(@RequestParam String token, HttpSession session) {
-        User user = userService.getUserInfoByToken(token);
+        User user = userService.getUserInfoByToken(token, session);
         if (user != null) {
-            session.setAttribute("id", String.valueOf(user.getId()));
+            // session.setAttribute("id", String.valueOf(user.getId()));
+            // System.out.println("session id: " + session.getAttribute("id"));
+            tradeService.updateTradeByUserId(String.valueOf(user.getId()));
             return Result.success("登录成功", user);
         }
         return Result.failed(ResultCode.LoginFailed);
@@ -89,6 +97,7 @@ public class UserController {
     // public Result<?> logout(@RequestParam String uId, HttpSession session) {
     public Result<?> logout(HttpSession session) {
         session.removeAttribute("id");
+        session.invalidate();
         return Result.success("退出成功");
     }
 
@@ -114,9 +123,9 @@ public class UserController {
         // 使用sha1加密
         // user.setPassword(EncryptUtils.encodeWithSha1(user.setPassword()));
         userService.insert(user);
-        User userDB = userService.verifyUser(user);
+        User userDB = userService.verifyUser(user, session);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-        session.setAttribute("id", String.valueOf(userDB.getId()));
+        // session.setAttribute("id", String.valueOf(userDB.getId()));
         return Result.success("注册成功", userDB);
     }
 
@@ -194,6 +203,16 @@ public class UserController {
             return Result.failed();
         }
         return Result.success("移除成功！", location);
+    }
+
+    @ApiOperation("修改地址")
+    @PostMapping("/updateLocation")
+    public Result< ? > updateLocation(@RequestBody Location location) {
+        Location locationDB = userService.updateLocation(location);
+        if(locationDB == null) {
+            return Result.failed();
+        }
+        return Result.success("修改地址成功", locationDB);
     }
 
 

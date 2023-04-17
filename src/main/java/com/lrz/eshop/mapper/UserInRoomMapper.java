@@ -3,7 +3,6 @@ package com.lrz.eshop.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lrz.eshop.pojo.chat.Room;
 import com.lrz.eshop.pojo.chat.UserInRoom;
-import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.pojo.user.UserSocialInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -63,7 +62,7 @@ public interface UserInRoomMapper extends BaseMapper<UserInRoom> {
                     many = @Many(select = "com.lrz.eshop.mapper.UserInRoomMapper.selectFriendsByUserIdAndRoomId")
             ),
     })
-    List<UserInRoom> selectPrivateChatByUserId(String userId);
+    List<UserInRoom> selectFriendsInRoomByUserId(String userId);
 
     @Select("select user_id from user_in_room where room_id = #{roomId} and user_id != #{userId}")
     List<String> selectFriendIdsByUserIdAndRoomId(@Param("roomId") String roomId, @Param("userId") String userId);

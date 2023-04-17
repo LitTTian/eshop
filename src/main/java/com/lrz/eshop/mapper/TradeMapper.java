@@ -56,7 +56,7 @@ public interface TradeMapper extends BaseMapper<Trade> {
     List<Trade> selectByBuyerId(String buyerId);
 
 
-    @Select("select * from trade where id = #{tradeId}")
+    @Select("select * from trade where id = #{tradeId} and buyer_id = #{buyerId} and state = 1")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "buyerId", column = "buyer_id"),
@@ -78,7 +78,7 @@ public interface TradeMapper extends BaseMapper<Trade> {
                     many = @Many(select = "com.lrz.eshop.mapper.TradeDetailMapper.selectByTradeId")
             ),
     })
-    Trade selectByTradeId(String tradeId);
+    Trade selectByTradeId(String tradeId, String buyerId);
 
 
 

@@ -1,7 +1,12 @@
 package com.lrz.eshop.util;
 
+import com.lrz.eshop.pojo.chat.MessageContent;
 import com.lrz.eshop.util.encrypt.AESUtils;
+import com.lrz.eshop.util.encrypt.ElgamalUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**  
  * 加密工具类
@@ -45,6 +50,51 @@ public class EncryptUtils {
         }
     }
 
+    /**
+     * 使用Elgamal加密
+     * @param content 原始消息内容
+     * @param roomX 房间的x（房间号）
+     * @return 加密后的消息内容<MessageContent>
+     */
+    public static List<MessageContent> encryptMessage(String content, Long roomX) {
+        List<MessageContent> list = new ArrayList<>();
+        Long x = Long.parseLong(String.valueOf(roomX));
+        long[] arr = Encode.encodeAndGroup(content);
+        int i = 0;
+        for(long l : arr) {
+            long[] arr2 = ElgamalUtils.encrypt(l, x);
+            MessageContent msg = new MessageContent();
+            msg.setContent1(arr2[0]);
+            msg.setContent2(arr2[1]);
+            msg.setSeq(i ++);
+            list.add(msg);
+        }
+        return list;
+    }
+
+    /**
+     * 解密消息内容
+     * @param msgs 加密的消息内容
+     * @param roomX 房间号
+     * @return 解密后的消息内容
+     */
+    public static String decryptMessage(List<MessageContent> msgs, Long roomX) {
+        Long x = Long.parseLong(String.valueOf(roomX));
+        long[] longs = new long[msgs.size()];
+        int i = 0;
+        for(MessageContent msg: msgs) {
+            // System.out.println(msg.getC1());
+            // System.out.println(msg.getC2());
+            long l = ElgamalUtils.decrypt(msg.getContent1(), msg.getContent2(), x);
+            longs[i ++] = l;
+            // System.out.println(l);
+        }
+        return Encode.mergeAndDecode(longs);
+    }
+
+    public static void main(String[] args) {
+        // TEST
+    }
 
 
 

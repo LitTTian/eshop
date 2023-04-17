@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -108,14 +109,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User verifyUser(User user) {
+    public User verifyUser(User user, HttpSession session) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", user.getUsername());
         queryWrapper.eq("password", user.getPassword());
         List<User> users = selectList(queryWrapper);
         if(users.size() == 0) {
             return null;
-        }else {
+        }else { // 登录成功
             User userDB = users.get(0);
             userDB.setPassword(null);
             // String token = UUID.randomUUID().toString();
@@ -127,6 +128,8 @@ public class UserServiceImpl implements UserService {
             }
             String token = TokenUtil.sign(userDB);
             userDB.setToken(token);
+            session.setAttribute("id", String.valueOf(userDB.getId()));
+            System.out.println("session id: " + session.getAttribute("id"));
             // redisUtils.set(token, sUser.getId(), 60 * 60 * 24 * 7,  TimeUnit.SECONDS);
             return userDB;
         }
@@ -148,7 +151,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserInfoByToken(String token) {
+    public User getUserInfoByToken(String token, HttpSession session) {
         if(!TokenUtil.verify(token)) {
             return null;
         }
@@ -156,6 +159,8 @@ public class UserServiceImpl implements UserService {
         User user = selectUserInfoById(userId);
         // String newToken = TokenUtil.sign(user);
         user.setToken(token);
+        session.setAttribute("id", String.valueOf(user.getId()));
+        System.out.println("session id: " + session.getAttribute("id"));
         user.setPassword(null);
         return user;
     }
@@ -186,6 +191,24 @@ public class UserServiceImpl implements UserService {
         location.setStatus((short)0);
         locationMapper.updateById(location);
         return location;
+    }
+
+    @Override
+    public Location updateLocation(Location location) {
+        Location locationDB = locationMapper.selectById(location.getId());
+        if(locationDB == null || locationDB.getStatus() == 0) {
+            return null;
+        }
+        locationDB.setName(location.getName());
+        locationDB.setPhone(location.getPhone());
+        locationDB.setProvince(location.getProvince());
+        locationDB.setCity(location.getCity());
+        locationDB.setDistrict(location.getDistrict());
+        locationDB.setStreet(location.getStreet());
+        locationDB.setDetail(location.getDetail());
+        locationDB.setLabel(location.getLabel());
+        locationMapper.updateById(locationDB);
+        return locationDB;
     }
 
 

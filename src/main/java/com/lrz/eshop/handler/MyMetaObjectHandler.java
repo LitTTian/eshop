@@ -33,6 +33,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, "status", Short.class, (short)1);
         // 文章浏览量
         this.strictInsertFill(metaObject, "watches", Integer.class, 0);
+        // model是否被删除
+        this.strictInsertFill(metaObject, "deleted", Boolean.class, false);
     }
 
     /**

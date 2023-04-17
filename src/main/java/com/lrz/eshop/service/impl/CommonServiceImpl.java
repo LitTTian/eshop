@@ -6,8 +6,10 @@ import com.lrz.eshop.mapper.CategoryMapper;
 import com.lrz.eshop.mapper.StarMapper;
 import com.lrz.eshop.mapper.article.ArticleMapper;
 import com.lrz.eshop.mapper.article.LikeMapper;
+import com.lrz.eshop.mapper.article.TagMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.article.Like;
+import com.lrz.eshop.pojo.article.Tag;
 import com.lrz.eshop.pojo.common.Banner;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Category;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author 天天
@@ -49,6 +52,9 @@ public class CommonServiceImpl implements CommonService {
     @Autowired
     ArticleMapper articleMapper;
 
+    @Autowired
+    TagMapper tagMapper;
+
 
 
     @Override
@@ -76,11 +82,17 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
+    public List<Tag> hotTags() {
+        return tagMapper.selectHotTags();
+    }
+
+    @Override
     public Star star(Star star) {
         QueryWrapper<Star> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", star.getUserId());
         queryWrapper.eq("foreign_id", star.getForeignId());
-        queryWrapper.eq("type", star.getType());
+        if(star.getType() != null)
+            queryWrapper.eq("type", star.getType());
         List<Star> stars = starMapper.selectList(queryWrapper);
         if(stars.size() == 0) { // 未收藏
             Star starDB = new Star();
@@ -149,14 +161,23 @@ public class CommonServiceImpl implements CommonService {
         return likeDB.getIsLike();
     }
 
-    @Override
-    public List<ArticleShowInfo> selectMostWatchesArticleCardByCategoryId(String categoryId) {
-        return articleMapper.selectMostWatchesArticleCardByCategoryId(categoryId, 10);
-    }
 
     @Override
     public List<ArticleShowInfo> selectMostWatchesArticleCard() {
         return articleMapper.selectMostWatchesArticleCard(10);
+    }
+
+
+    @Override
+    public List<ArticleShowInfo> selectMostWatchesArticleCardByKeyword(String keyword, String key) {
+        if(Objects.equals(keyword, "tag")) {
+            return articleMapper.selectMostWatchesArticleCardByTagId(key, 10);
+        } else if(Objects.equals(keyword, "category")) {
+            keyword = "category_id";
+        } else if(Objects.equals(keyword, "user")) {
+            keyword = "user_id";
+        }
+        return articleMapper.selectMostWatchesArticleCardByKeyword(keyword, key, 10);
     }
 
 

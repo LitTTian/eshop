@@ -3,6 +3,7 @@ package com.lrz.eshop.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lrz.eshop.pojo.user.Location;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @create 2023/3/7 23:30
  * @description
  */
+@Repository
 public interface LocationMapper extends BaseMapper<Location> {
 
     @Select("select * from location where user_id = #{userId} and status = 1 order by seq desc")

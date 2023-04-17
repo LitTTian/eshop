@@ -10,7 +10,7 @@ public class Constant {
     /**
      * 定义Redis缓存默认过期时间
      */
-    public static final int CACHE_TIMEOUT_HOUR=2;
+    public static final int CACHE_TIMEOUT_HOUR = 2;
 
 
     /**

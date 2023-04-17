@@ -7,6 +7,8 @@ import com.lrz.eshop.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author 天天
  * @create 2023/3/15 17:49
@@ -73,8 +75,6 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleCommentChild addArticleCommentChild(ArticleCommentChild articleCommentChild) {
         return articleCommentChildMapper.insert(articleCommentChild) == 1 ? articleCommentChildMapper.selectDetailById(String.valueOf(articleCommentChild.getId())) : null;
     }
-
-
 
 
 }
