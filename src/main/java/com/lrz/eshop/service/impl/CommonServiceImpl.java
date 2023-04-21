@@ -8,7 +8,7 @@ import com.lrz.eshop.mapper.article.ArticleMapper;
 import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.mapper.article.TagMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
-import com.lrz.eshop.pojo.article.Like;
+import com.lrz.eshop.pojo.common.Likes;
 import com.lrz.eshop.pojo.article.Tag;
 import com.lrz.eshop.pojo.common.Banner;
 import com.lrz.eshop.pojo.common.Star;
@@ -117,18 +117,18 @@ public class CommonServiceImpl implements CommonService {
 
 
     @Override
-    public Like like(Like like) {
-        QueryWrapper<Like> likeQueryWrapper = new QueryWrapper<>();
+    public Likes like(Likes like) {
+        QueryWrapper<Likes> likeQueryWrapper = new QueryWrapper<>();
         likeQueryWrapper.eq("user_id", like.getUserId());
         likeQueryWrapper.eq("foreign_id", like.getForeignId());
         likeQueryWrapper.eq("type", like.getType());
 
-        Like likeDB = likeMapper.selectOne(likeQueryWrapper);
+        Likes likeDB = likeMapper.selectOne(likeQueryWrapper);
 
         if (likeDB == null) { // 本身没有值，直接插入
             // 没有值当成点赞处理
-            Short isLike = like.getIsLike() == null? 1 : like.getIsLike();
-            Like likeToInsert = new Like();
+            Byte isLike = like.getIsLike() == null? 1 : like.getIsLike();
+            Likes likeToInsert = new Likes();
             likeToInsert.setUserId(like.getUserId());
             likeToInsert.setForeignId(like.getForeignId());
             likeToInsert.setType(like.getType());
@@ -142,15 +142,15 @@ public class CommonServiceImpl implements CommonService {
                 return null;
             }
             // 数据库中的值和传入的值不同，说明是相反的操作，直接更新
-            likeDB.setIsLike((short) (3 - likeDB.getIsLike()));
+            likeDB.setIsLike((byte) (3 - likeDB.getIsLike()));
             likeMapper.updateById(likeDB);
             return likeDB;
         }
     }
 
     @Override
-    public Short isLiked(Like like) {
-        Like likeDB = likeMapper.selectOne(new QueryWrapper<Like>()
+    public Byte isLiked(Likes like) {
+        Likes likeDB = likeMapper.selectOne(new QueryWrapper<Likes>()
                 .eq("user_id", like.getUserId())
                 .eq("foreign_id", like.getForeignId())
                 .eq("type", like.getType())

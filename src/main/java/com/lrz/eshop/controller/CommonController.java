@@ -3,12 +3,11 @@ package com.lrz.eshop.controller;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
-import com.lrz.eshop.pojo.article.Like;
+import com.lrz.eshop.pojo.common.Likes;
 import com.lrz.eshop.pojo.article.Tag;
 import com.lrz.eshop.pojo.common.Banner;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Category;
-import com.lrz.eshop.service.ArticleService;
 import com.lrz.eshop.service.CommonService;
 import com.lrz.eshop.service.LikeService;
 import com.lrz.eshop.service.UserService;
@@ -42,13 +41,13 @@ public class CommonController {
 
     @ApiOperation("上传轮播图")
     @PostMapping("/uploadBannerImage")
-    public Result<?> uploadBannerImage(@RequestParam("file") MultipartFile file, @RequestParam("foreignId") String foreignId, @RequestParam("type") short type) {
+    public Result<?> uploadBannerImage(@RequestParam("file") MultipartFile file, @RequestParam("foreignId") String foreignId, @RequestParam("type") byte type) {
         Banner banner = new Banner();
         banner.setForeignId(Long.valueOf(foreignId));
         banner.setType(type);
         String url = commonService.uploadBannerImage(file, foreignId, type);
         if(url == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         banner.setImgUrl(url);
         commonService.insertBanner(banner);
@@ -68,7 +67,7 @@ public class CommonController {
     public Result<?> queryTop() {
         List<Category> categories = commonService.selectAllCategoryWithTopModel();
         if(categories == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("获取成功", categories);
     }
@@ -77,7 +76,7 @@ public class CommonController {
     @GetMapping("/hotTags")
     public Result<?> hotTags() {
         List<Tag> tags = commonService.hotTags();
-        if(tags == null) return Result.failed();
+        if(tags == null) return Result.operateFailed();
         return Result.success("获取热门文章标签成功", tags);
     }
 
@@ -88,7 +87,7 @@ public class CommonController {
     // public Result<?> star(@RequestParam("userId") String userId, @RequestParam("modelId") String modelId) {
     public Result<?> star(@RequestBody Star star) {
         if(star.getUserId() == null || star.getForeignId() == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         Star st = commonService.star(star);
         if(st == null) {
@@ -102,7 +101,7 @@ public class CommonController {
     // public Result<?> star(@RequestParam("userId") String userId, @RequestParam("modelId") String modelId) {
     public Result<?> isStared(@RequestBody Star star) {
         if(star.getUserId() == null || star.getForeignId() == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         Boolean isStared = commonService.isStared(star);
         if (!isStared) {
@@ -113,8 +112,8 @@ public class CommonController {
 
     @PostMapping("/like")
     // 必须包含：用户userId，评论/文章foreignId，点赞类型type
-    public Result<?> like(@RequestBody Like like) {
-        Like likeDB = commonService.like(like);
+    public Result<?> like(@RequestBody Likes like) {
+        Likes likeDB = commonService.like(like);
         if(likeDB == null) {
             return Result.success("已取消", null);
         } else {
@@ -130,8 +129,8 @@ public class CommonController {
 
     @PostMapping("/isLiked")
     // 必须包含：用户userId，评论/文章foreignId，点赞类型type
-    public Result<?> isLiked(@RequestBody Like like) {
-        Short isLiked = commonService.isLiked(like);
+    public Result<?> isLiked(@RequestBody Likes like) {
+        short isLiked = commonService.isLiked(like);
         if(isLiked == 1) {
             return Result.success("已点赞", 1);
         }else if(isLiked == 2) {
@@ -159,7 +158,7 @@ public class CommonController {
     @ApiOperation("查询用户的文章点赞")
     @PostMapping("/selectArticleLikesByUserId")
     public Result< ? > selectArticleLikesByUserId(@RequestParam("userId") String userId) {
-        List<Like> list = likeMapper.selectLikeArticleByUserId(userId);
+        List<Likes> list = likeMapper.selectLikeArticleByUserId(userId);
         return Result.success("查询成功", list);
     }
 
@@ -173,7 +172,7 @@ public class CommonController {
             @PathVariable(value = "key") String key) {
         List<ArticleShowInfo> list = commonService.selectMostWatchesArticleCardByKeyword(keyword, key);
         if(list == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("获取成功", list);
     }
@@ -184,7 +183,7 @@ public class CommonController {
     public Result<?> selectMostLikesArticleCard() {
         List<ArticleShowInfo> list = commonService.selectMostWatchesArticleCard();
         if(list == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("获取成功", list);
     }

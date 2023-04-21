@@ -1,10 +1,7 @@
 package com.lrz.eshop.controller;
 
-import cn.hutool.core.date.LocalDateTimeUtil;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.common.webapi.ResultCode;
-import com.lrz.eshop.mapper.article.LikeMapper;
-import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.user.Location;
 import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.service.TradeService;
@@ -35,6 +32,23 @@ public class UserController {
 
     @Autowired
     private TradeService tradeService;
+
+    @ApiOperation("根据id查询用户的商城信息")
+    @GetMapping("/getSellInfoByUserId")
+    public Result<?> selectSellInfoByUserId(@RequestParam String userId) {
+        return Result.success(userService.selectSellInfoByUserId(userId));
+    }
+    @ApiOperation("根据id查询用户的社区信息")
+    @GetMapping("/getCommunityInfoByUserId")
+    public Result<?> selectCommunityInfoByUserId(@RequestParam String userId) {
+        return Result.success(userService.selectCommunityInfoByUserId(userId));
+    }
+
+    @ApiOperation("根据id查询用户个人中心信息")
+    @GetMapping("/getUserInfo/{userId}")
+    public Result<?> selectUserInfo(@PathVariable(value = "userId") String userId) {
+        return Result.success(userService.selectUserInfo(userId));
+    }
 
     /**
      * 查询所有用户
@@ -167,12 +181,12 @@ public class UserController {
         // 先查询出来才能使乐观锁生效
         User user = userService.selectUserInfoById(id);
         if(user == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         //  将头像上传云端
         String url = userService.uploadUserAvatar(file, user);
         if (url == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         // 修改数据库
         user.setAvatarUrl(url);
@@ -185,22 +199,22 @@ public class UserController {
     @PostMapping("/addLocation")
     public Result< ? > addLocation(@RequestBody Location location) {
         if(location.getUserId() == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         Location LocationDB = userService.addLocation(location);
         if(LocationDB == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("添加地址成功", LocationDB);
     }
 
-    @ApiOperation("移除地址，并不是真正删除地址记录，而是设置status为0")
+    @ApiOperation("移除地址，并不是真正删除地址记录，而是设置state为0")
     @PostMapping("/deleteLocation")
     public Result< ? > deleteLocation(@RequestParam("locationId") String locationId) {
         // 因为地址信息对订单信息有用，所以并不是真正删除地址记录，而是设置标志位
         Location location = userService.deleteLocation(locationId);
         if(location == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("移除成功！", location);
     }
@@ -210,7 +224,7 @@ public class UserController {
     public Result< ? > updateLocation(@RequestBody Location location) {
         Location locationDB = userService.updateLocation(location);
         if(locationDB == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("修改地址成功", locationDB);
     }

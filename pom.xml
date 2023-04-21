@@ -106,7 +106,7 @@
 
         <!-- 谷歌图片验证码 -->
         <!-- 可能需要自行下载，并用如下命令安装 -->
-        <!-- mvn install:install-file -DgroupId="com.google.code" -DartifactId="kaptcha" -Dversion="2.3" -Dfile="kaptcha-2.3.jar"  -Dpackaging="jar"  -DgeneratePom="true" -->
+        <!-- mvn install:install-file -DgroupId="com.google.code" -DartifactId="kaptcha" -Dversion="2.3.2" -Dfile="kaptcha-2.3.2.jar"  -Dpackaging="jar"  -DgeneratePom="true" -->
         <dependency>
             <groupId>com.google.code</groupId>
             <artifactId>kaptcha</artifactId>

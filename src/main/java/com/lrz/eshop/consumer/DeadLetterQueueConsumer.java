@@ -2,6 +2,7 @@ package com.lrz.eshop.consumer;
 
 import com.lrz.eshop.mapper.TradeMapper;
 import com.lrz.eshop.pojo.trade.Trade;
+import com.lrz.eshop.service.TradeService;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -28,6 +29,9 @@ public class DeadLetterQueueConsumer {
     @Autowired
     TradeMapper tradeMapper;
 
+    @Autowired
+    TradeService tradeService;
+
     // 监听死信队列
     @RabbitListener(queues = DELAY_QUEUE_NAME)
     public void receive(Message message, Channel channel) {
@@ -36,11 +40,9 @@ public class DeadLetterQueueConsumer {
         // 记录日志
         log.info("当前时间：{}，延迟队列接收到的订单编号：{}", LocalDateTime.now(), tradeId);
         Trade trade = tradeMapper.selectById(tradeId);
-        if(trade != null && trade.getState().equals((short) 1)) {
-            trade.setState((short) 6);
-            tradeMapper.updateById(trade);
-            // 记录操作日志
-        }
+        tradeService.updateTradeState(trade);
+        // 记录操作日志
+        // ...
     }
 
 }

@@ -32,7 +32,7 @@ public class ImageController {
         // image必须包含id和url
         Image imageDB = imageService.delImg(image);
         if(imageDB == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("删除图片成功",imageDB);
     }
@@ -48,7 +48,7 @@ public class ImageController {
         for (Image image: images) {
             Image imageDB = imageService.delImg(image);
             if (imageDB == null) {
-                return Result.failed();
+                return Result.operateFailed();
             }
             imageDBs.add(imageDB);
         }
@@ -63,7 +63,7 @@ public class ImageController {
     public Result<?> uploadImage(@RequestParam("file") MultipartFile file) {
         String url = imageService.uploadImage(file);
         if(url == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         Image image = new Image();
         image.setImgUrl(url);
@@ -79,7 +79,7 @@ public class ImageController {
         // System.out.println(image);
         Image imageDB = imageService.linkImage(image);
         if (imageDB == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("关联图片成功", image);
     }
@@ -92,7 +92,7 @@ public class ImageController {
         // image必须包含type、id、url、foreignId
         for (Image image: images) {
             Image imageDB = imageService.linkImage(image);
-            if(imageDB == null) return Result.failed();
+            if(imageDB == null) return Result.operateFailed();
             imageDBs.add(imageDB);
         }
         return Result.success("关联图片数组成功", imageDBs);

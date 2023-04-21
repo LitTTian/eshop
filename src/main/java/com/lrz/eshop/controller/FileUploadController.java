@@ -31,7 +31,7 @@ public class FileUploadController {
     public Result<?> setAvatar(@RequestParam("file") MultipartFile file, @RequestParam("path") String path) {
         String url = ossService.uploadFile(file, path);
         if (url == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         System.out.println("url: " + url);
         return Result.success(url);

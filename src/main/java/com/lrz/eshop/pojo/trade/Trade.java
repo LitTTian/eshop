@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.List;
 
-/**  
+/**
  * table name:  trade
- * @author 天天  
- * @create 2023/1/19 17:19  
+ * @author 天天
+ * @create 2023/1/19 17:19
  * @description
  */
 @Data
@@ -56,8 +56,10 @@ public class Trade {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     // @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy年MM月dd HH:mm:ss")
     Date updateTime;
-
-    private Short state; // 订单状态：1，下单，未付；2，已付，未收到；3，收到；4，退货中；5，交易完成；6，订单关闭
+    // old 订单状态：1，下单，未付；2，已付，未收到；3，收到；4，退货中；5，交易完成；6，订单关闭
+    // 订单状态：1，待付款；2，待发货；3，待收到；4，已收货；
+    // 5，退货中；6，交易完成；7，订单取消/关闭
+    private Byte state;
 
     @Version
     @TableField(fill = FieldFill.INSERT)

@@ -33,7 +33,7 @@ public class Star {
     private Long foreignId;
 
     @TableField(exist = false)
-    private Object object;
+    private Object object; // 收藏的实体
 
 
     @TableField(fill = FieldFill.INSERT)

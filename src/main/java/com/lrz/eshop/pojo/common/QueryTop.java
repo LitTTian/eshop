@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 首页展示的商品信息
  * @author 天天
  * @create 2023/3/2 22:28
  * @description

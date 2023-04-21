@@ -1,18 +1,14 @@
 package com.lrz.eshop.controller;
 
 import com.lrz.eshop.common.webapi.Result;
-import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
-import com.lrz.eshop.pojo.trade.Trade;
-import com.lrz.eshop.pojo.trade.TradeDetail;
 import com.lrz.eshop.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +35,7 @@ public class ProductController {
     public Result<?> selectAllModelBySellerId(@RequestParam("sellerId") String sellerId) {
         List<Model> models = productService.selectAllModelBySellerId(sellerId);
         if (models == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }else {
             return Result.success("查询成功", models);
         }
@@ -55,7 +51,7 @@ public class ProductController {
     public Result<?> selectAllProductByModelId(@RequestParam("modelId") String modelId) {
         Model model = productService.selectAllProductByModelId(modelId);
         if (model == null) {
-            return Result.failed();
+            return Result.notFound();
         }else {
             return Result.success("查询成功", model);
         }
@@ -109,7 +105,7 @@ public class ProductController {
         if(flag) {
             return Result.success("添加成功", model);
         }else {
-            return Result.failed();
+            return Result.operateFailed();
         }
     }
 
@@ -151,7 +147,7 @@ public class ProductController {
     public Result<?> selectAllCategory() {
         List<Category> categories = productService.selectAllCategory();
         if(categories == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("查询成功", categories);
     }
@@ -165,7 +161,7 @@ public class ProductController {
     public Result<?> selectProductDetailByProductId(@RequestParam("productId") String productId) {
         Product product = productService.selectProductDetailByProductId(productId);
         if (product == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }else {
             return Result.success("查询成功", product);
         }
@@ -185,7 +181,7 @@ public class ProductController {
             }
         }
         if (products.size() == 0) {
-            return Result.failed();
+            return Result.operateFailed();
         }else {
             return Result.success("查询成功", products);
         }
@@ -197,7 +193,7 @@ public class ProductController {
     public Result<?> removeModel(@RequestParam("sellerId") String sellerId, @RequestParam("modelId") String modelId) {
         Model model = productService.delModel(sellerId, modelId);
         if(model == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("删除成功", model);
     }

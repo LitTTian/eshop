@@ -15,17 +15,23 @@ public interface TradeService {
 
     List<Trade> getTradesByUserId(String userId);
 
+    /**
+     * 获取订单详情，用于支付页面
+     * @param tradeId
+     * @param userId
+     * @return
+     */
     Trade getTradeDetailByTradeId(String tradeId, String userId);
 
     Trade payByTradeId(String userId, String tradeId);
 
-    Trade cancelTrade(String userId, String tradeId);
+    Trade verifyAndCancelTrade(String userId, String tradeId);
 
     Trade confirmReceipt(String userId, String tradeId);
 
-    void updateTradeStatus(Trade trade);
+    void updateTradeState(Trade trade);
 
-    void updateTradeListStatus(List<Trade> tradeList);
+    void updateTradeListState(List<Trade> tradeList);
 
     void updateTradeByUserId(String id);
 
@@ -35,5 +41,8 @@ public interface TradeService {
     Trade insertTrade(Trade trade);
 
     TradeDetail insertTradeDetail(TradeDetail tradeDetail);
+
+    int cancelTrade(Trade trade);
+    int updateState(Trade trade, byte state);
 
 }

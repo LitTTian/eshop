@@ -89,4 +89,8 @@ public class Article {
     @TableField(value = "version", fill = FieldFill.INSERT)
     private int version;
 
+    // 1：public 2：private 3：delete
+    @TableField(fill = FieldFill.INSERT)
+    private byte type;
+
 }

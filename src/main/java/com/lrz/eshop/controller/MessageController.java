@@ -46,7 +46,7 @@ public class MessageController {
     public Result<?> contactSeller(@RequestParam("buyerId") String buyerId, @RequestParam("sellerId") String sellerId) {
         Room room = messageService.contactSeller(buyerId, sellerId);
         if (room == null) {
-            return Result.failed();
+            return Result.operateFailed();
         }
         return Result.success("联系成功", room);
     }

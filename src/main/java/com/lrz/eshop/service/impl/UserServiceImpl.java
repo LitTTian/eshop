@@ -5,10 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lrz.eshop.mapper.LocationMapper;
 import com.lrz.eshop.mapper.StarMapper;
+import com.lrz.eshop.mapper.UserInfoMapper;
 import com.lrz.eshop.mapper.UserMapper;
-import com.lrz.eshop.pojo.common.Star;
-import com.lrz.eshop.pojo.user.Location;
-import com.lrz.eshop.pojo.user.User;
+import com.lrz.eshop.pojo.user.*;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.UserService;
 import com.lrz.eshop.util.ImageNameUtil;
@@ -33,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     OssService ossService;
+
+    @Autowired
+    UserInfoMapper userInfoMapper;
 
     // @Autowired
     // RedisUtils redisUtils;
@@ -174,7 +176,7 @@ public class UserServiceImpl implements UserService {
     public Location addLocation(Location location) {
         int seq = selectLocationSeqByUserId(String.valueOf(location.getUserId()));
         location.setSeq(seq);
-        location.setStatus((short)1); // 1表示可用
+        location.setState((short)1); // 1表示可用
         locationMapper.insert(location);
         if(location.getId() == null) {
             return null;
@@ -188,7 +190,7 @@ public class UserServiceImpl implements UserService {
         if(location == null) {
             return null;
         }
-        location.setStatus((short)0);
+        location.setState((short)0);
         locationMapper.updateById(location);
         return location;
     }
@@ -196,7 +198,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Location updateLocation(Location location) {
         Location locationDB = locationMapper.selectById(location.getId());
-        if(locationDB == null || locationDB.getStatus() == 0) {
+        if(locationDB == null || locationDB.getState() == 0) {
             return null;
         }
         locationDB.setName(location.getName());
@@ -209,6 +211,29 @@ public class UserServiceImpl implements UserService {
         locationDB.setLabel(location.getLabel());
         locationMapper.updateById(locationDB);
         return locationDB;
+    }
+
+    @Override
+    public UserSellInfo selectSellInfoByUserId(String userId) {
+        // UserSellInfo userSellInfo = userInfoMapper.getUserSellInfo(userId);
+        // System.out.println(userSellInfo);
+        // return userSellInfo;
+        return userInfoMapper.getUserSellInfo(userId);
+    }
+
+    @Override
+    public UserCommunityInfo selectCommunityInfoByUserId(String userId) {
+        return userInfoMapper.getUserCommunityInfo(userId);
+    }
+
+    @Override
+    public UserInfo selectUserInfo(String userId) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(Long.valueOf(userId));
+        userInfo.setUserSocialInfo(userInfoMapper.getUserSocialInfo(userId));
+        userInfo.setUserSellInfo(userInfoMapper.getUserSellInfo(userId));
+        userInfo.setUserCommunityInfo(userInfoMapper.getUserCommunityInfo(userId));
+        return userInfo;
     }
 
 

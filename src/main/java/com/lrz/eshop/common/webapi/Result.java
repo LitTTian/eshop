@@ -1,23 +1,22 @@
 package com.lrz.eshop.common.webapi;
 
-/**  
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
  * 通用返回对象
- * @author 天天  
- * @create 2023/1/19 3:03  
- * @description    
+ * @author 天天
+ * @create 2023/1/19 3:03
+ * @description
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Result<T> {
     private long code;
     private String message;
     private T result;
-    protected Result() {
-    }
-
-    protected Result(long code, String message, T result) {
-        this.code = code;
-        this.message = message;
-        this.result = result;
-    }
 
     public static <T> Result<T> createResult(long code, String message, T result) {
         return new Result<T>(code, message, result);
@@ -44,7 +43,7 @@ public class Result<T> {
     }
 
     /**
-     * 失败返回结果
+     * 操作失败
      * @param errorCode 错误码
      */
     public static <T> Result<T> failed(IErrorCode errorCode) {
@@ -52,7 +51,7 @@ public class Result<T> {
     }
 
     /**
-     * 失败返回结果
+     * 操作失败
      * @param errorCode 错误码
      * @param data 错误返回数据
      */
@@ -72,9 +71,14 @@ public class Result<T> {
     /**
      * 失败返回结果 500
      */
-    public static <T> Result<T> failed() {
+    public static <T> Result<T> operateFailed() {
         return failed(ResultCode.FAILED);
     }
+
+    public static <T> Result<T> notFound() {
+        return failed(ResultCode.NOTFOUND);
+    }
+
 
     /**
      * 参数验证失败返回结果
@@ -105,28 +109,5 @@ public class Result<T> {
         return new Result<T>(ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage(), data);
     }
 
-    public long getCode() {
-        return code;
-    }
-
-    public void setCode(long code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getResult() {
-        return result;
-    }
-
-    public void setResult(T result) {
-        this.result = result;
-    }
 
 }

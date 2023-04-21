@@ -27,4 +27,7 @@ public interface ArticleService {
 
     ArticleCommentChild addArticleCommentChild(ArticleCommentChild articleCommentChild);
 
+    List<ArticleShowInfo> selectArticlesByUserId(String userId);
+
+    List<ArticleShowInfo> selectCollectArticlesByUserId(String userId);
 }

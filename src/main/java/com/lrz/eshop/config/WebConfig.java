@@ -36,10 +36,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // registry.addInterceptor( new LoginInterceptor()).addPathPatterns("/user/**");
-        // registry.addInterceptor(new JWTInterceptor())
-                // .addPathPatterns("/api/trade/**")
+        registry.addInterceptor(new JWTInterceptor())
+                .addPathPatterns("/api/trade/**")
+                .addPathPatterns("/api/do/**")
                 // .addPathPatterns("/ws") // 添加拦截器后，websocket能正确拿到session
-                // .excludePathPatterns("/api/user/**");
+                .excludePathPatterns("/api/user/**");
     }
 
     /**

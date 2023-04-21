@@ -76,5 +76,15 @@ public class ArticleServiceImpl implements ArticleService {
         return articleCommentChildMapper.insert(articleCommentChild) == 1 ? articleCommentChildMapper.selectDetailById(String.valueOf(articleCommentChild.getId())) : null;
     }
 
+    @Override
+    public List<ArticleShowInfo> selectArticlesByUserId(String userId) {
+        return articleMapper.selectArticlesByUserId(userId);
+    }
+
+    @Override
+    public List<ArticleShowInfo> selectCollectArticlesByUserId(String userId) {
+        return articleMapper.selectCollectArticlesByUserId(userId);
+    }
+
 
 }

@@ -37,6 +37,6 @@ public class Location {
     private String label;
 
     @TableField(fill = FieldFill.INSERT)
-    private Short status; // 1表示可用，0表示移除
+    private Short state; // 1表示可用，0表示移除
 
 }

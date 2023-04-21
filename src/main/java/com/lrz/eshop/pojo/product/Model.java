@@ -57,10 +57,10 @@ public class Model {
     // private String config4;
     // private String config5;
 
-    private int starCount;
+    private int starCount; // 收藏数
 
     @TableField(exist = false)
-    private int sellCount;
+    private int sellCount; // 销量
     @TableField(exist = false)
     private int stock;
 

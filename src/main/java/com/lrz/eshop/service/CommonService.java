@@ -1,13 +1,11 @@
 package com.lrz.eshop.service;
 
-import com.lrz.eshop.mapper.BannerMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
-import com.lrz.eshop.pojo.article.Like;
+import com.lrz.eshop.pojo.common.Likes;
 import com.lrz.eshop.pojo.article.Tag;
 import com.lrz.eshop.pojo.common.Banner;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Category;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -42,7 +40,7 @@ public interface CommonService {
      * @param like
      * @return
      */
-    public Like like(Like like);
+    public Likes like(Likes like);
 
 
     /**
@@ -50,7 +48,7 @@ public interface CommonService {
      * @param like
      * @return 0:未操作 1:点赞 2:踩
      */
-    Short isLiked(Like like);
+    Byte isLiked(Likes like);
 
 
     List<ArticleShowInfo> selectMostWatchesArticleCard();

@@ -3,8 +3,7 @@ package com.lrz.eshop.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lrz.eshop.pojo.common.Star;
-import com.lrz.eshop.pojo.user.Location;
-import com.lrz.eshop.pojo.user.User;
+import com.lrz.eshop.pojo.user.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -91,4 +90,10 @@ public interface UserService {
     Location deleteLocation(String locationId);
 
     Location updateLocation(Location location);
+
+    UserSellInfo selectSellInfoByUserId(String userId);
+
+    UserCommunityInfo selectCommunityInfoByUserId(String userId);
+
+    UserInfo selectUserInfo(String userId);
 }

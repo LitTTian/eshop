@@ -1,4 +1,4 @@
-package com.lrz.eshop.pojo.article;
+package com.lrz.eshop.pojo.common;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
+ * 点赞或踩
  * @author 天天
  * @create 2023/3/15 16:24
  * @description
@@ -17,8 +18,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("article_like")
-public class Like {
+@TableName("likes")
+public class Likes {
     @TableId(type = IdType.AUTO)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
@@ -30,10 +31,10 @@ public class Like {
     private Long foreignId;
 
     // 1：表示文章；2：表示主评论; 3：表示子评论
-    private Short type;
+    private Byte type;
 
     // 0:表示取消点赞；1：表示点赞；2：表示踩
-    private Short isLike;
+    private Byte isLike;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

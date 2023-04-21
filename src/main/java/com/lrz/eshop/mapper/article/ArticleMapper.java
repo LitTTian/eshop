@@ -19,7 +19,12 @@ import java.util.List;
 public interface ArticleMapper extends BaseMapper<Article> {
 
 
-    @Select("select * from article where id = #{id}")
+    /**
+     * 查询文章具体信息，用于展示具体文章信息页的数据
+     * @param id
+     * @return
+     */
+    @Select("select * from article where id = #{id} and type = 1")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
@@ -134,7 +139,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param limit
      * @return
      */
-    @Select("select * from article where ${keyword} = #{key} order by watches desc limit #{limit}")
+    @Select("select * from article where ${keyword} = #{key} and type = 1 order by watches desc limit #{limit}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
@@ -182,7 +187,13 @@ public interface ArticleMapper extends BaseMapper<Article> {
     })
     List<ArticleShowInfo> selectMostWatchesArticleCardByKeyword(String keyword, String key, int limit);
 
-    @Select("select * from article where id in (select article_id from (select article_id from article_tag where tag_id = #{tagId} limit #{limit}) as a )")
+    /**
+     * 查询热门标签的文章的展示信息
+     * @param tagId
+     * @param limit
+     * @return
+     */
+    @Select("select * from article where id in (select article_id from (select article_id from article_tag where tag_id = #{tagId} and type = 1 limit #{limit}) as a )")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
@@ -230,8 +241,86 @@ public interface ArticleMapper extends BaseMapper<Article> {
     })
     List<ArticleShowInfo> selectMostWatchesArticleCardByTagId(String tagId, int limit);
 
+    /**
+     * 根据用户id查询用户的文章的展示信息（type=1）
+     * @param userId
+     * @return
+     */
+    @Select("select * from article where user_id = #{user_id} and type = 1")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
+                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+            ),
+            @Result(property = "categoryId", column = "category_id"),
+            @Result(property = "category", column = "category_id", javaType = Category.class,
+                    // 用这种方式查出来的category有configs
+                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+            ),
+            @Result(property = "title", column = "title"),
+            @Result(property = "abstracts", column = "abstracts"),
+            @Result(property = "coverImageUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+            ),
+            // 浏览、赞、踩
+            @Result(property = "watches", column = "watches"),
+            @Result(property = "stars", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+            ),
+            @Result(property = "likes", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
+            ),
+            @Result(property = "dislikes", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectDislikeCountByArticleId")
+            ),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    List<ArticleShowInfo> selectArticlesByUserId(String userId);
+    /**
+     * 根据用户id查询用户收藏的文章的展示信息（type=1）
+     * @param userId
+     * @return
+     */
+    @Select("select * from article where id in (select foreign_id from star where user_id = #{userId} and type = 1)")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
+                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+            ),
+            @Result(property = "categoryId", column = "category_id"),
+            @Result(property = "category", column = "category_id", javaType = Category.class,
+                    // 用这种方式查出来的category有configs
+                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+            ),
+            @Result(property = "title", column = "title"),
+            @Result(property = "abstracts", column = "abstracts"),
+            @Result(property = "coverImageUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+            ),
+            // 浏览、赞、踩
+            @Result(property = "watches", column = "watches"),
+            @Result(property = "stars", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+            ),
+            @Result(property = "likes", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
+            ),
+            @Result(property = "dislikes", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectDislikeCountByArticleId")
+            ),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    List<ArticleShowInfo> selectCollectArticlesByUserId(String userId);
 
-    @Select("select * from article order by watches desc limit #{limit}")
+
+    /**
+     * 根据浏览量排行查询最热门的的文章信息
+     * @param limit
+     * @return
+     */
+    @Select("select * from article where type = 1 order by watches desc limit #{limit}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),

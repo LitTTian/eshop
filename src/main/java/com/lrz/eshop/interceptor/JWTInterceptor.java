@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * JWT token拦截器
  * @author 天天
  * @create 2023/2/28 15:49
  * @description
@@ -79,7 +80,7 @@ public class JWTInterceptor implements HandlerInterceptor {
             if (result) {
                 String id = TokenUtil.getIdByToken(token);
                 System.out.println("通过拦截器");
-                request.getSession().setAttribute("id",id);
+                request.getSession().setAttribute("id",id); // 设置id
                 return true;
             }
         }

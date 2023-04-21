@@ -2,13 +2,14 @@ package com.lrz.eshop.common.webapi;
 
 /**
  * 枚举了一些常用API操作码
- * @author 天天  
- * @create 2023/1/19 3:03  
- * @description    
+ * @author 天天
+ * @create 2023/1/19 3:03
+ * @description
  */
 public enum ResultCode implements IErrorCode {
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),
+    NOTFOUND(404, "未找到相关资源"),
     VALIDATE_FAILED(506, "参数检验失败"),
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
     FORBIDDEN(403, "没有相关权限"),
