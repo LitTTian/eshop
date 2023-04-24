@@ -28,7 +28,7 @@ public class Star {
     private Long userId;
 
     // 1.文章 2.商品 3.用户
-    private Short type;
+    private Byte type;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long foreignId;
 

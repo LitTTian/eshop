@@ -40,9 +40,10 @@ public class JWTInterceptor implements HandlerInterceptor {
             return true;
         }
         //实例化
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        // HandlerMethod handlerMethod = (HandlerMethod) handler;
         //返回此处理程序方法的方法，也就是取得接口的方法
-        Method method = handlerMethod.getMethod();
+        // Method method = handlerMethod.getMethod();
+
         //查看接口是否存在注释
         /* if (method.isAnnotationPresent(RolePermission.class)) {
             //取得接口的注解

@@ -29,7 +29,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
@@ -77,7 +77,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
     //         @Result(property = "id", column = "id"),
     //         @Result(property = "userId", column = "user_id"),
     //         @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-    //                 one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+    //                 one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
     //         ),
     //         @Result(property = "categoryId", column = "category_id"),
     //         @Result(property = "category", column = "category_id", javaType = Category.class,
@@ -144,7 +144,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
@@ -198,7 +198,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
@@ -251,7 +251,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
@@ -287,7 +287,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
@@ -325,7 +325,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,

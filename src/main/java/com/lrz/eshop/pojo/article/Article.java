@@ -91,6 +91,6 @@ public class Article {
 
     // 1：public 2：private 3：delete
     @TableField(fill = FieldFill.INSERT)
-    private byte type;
+    private Byte type;
 
 }

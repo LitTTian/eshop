@@ -16,4 +16,6 @@ public interface DoService {
      * @return
      */
     Article removeArticle(String userId, String articleId);
+
+    Integer updateUserSignature(String userId, String signature);
 }

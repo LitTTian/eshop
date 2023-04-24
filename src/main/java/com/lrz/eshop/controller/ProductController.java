@@ -30,6 +30,11 @@ public class ProductController {
     private ProductService productService;
 
 
+    /**
+     * 根据sellerId查询用户上架的所有model
+     * @param sellerId
+     * @return
+     */
     @ApiOperation("根据sellerId查询用户上架的所有model")
     @PostMapping("/selectAllModelBySellerId")
     public Result<?> selectAllModelBySellerId(@RequestParam("sellerId") String sellerId) {
@@ -57,6 +62,10 @@ public class ProductController {
         }
     }
 
+    /**
+     * 查看最新(create_time)的十个model
+     * @return
+     */
     @ApiOperation("查看最新(create_time)的十个model")
     @GetMapping("/getNewModel")
     public Result<?> getNewModel() {
@@ -64,6 +73,10 @@ public class ProductController {
         return Result.success(models);
     }
 
+    /**
+     * 查看最热(sell_count)的十个model
+     * @return
+     */
     @ApiOperation("查看最热(sell_count)的十个model")
     @GetMapping("/getHotModel")
     public Result<?> getHotModel() {
@@ -88,11 +101,16 @@ public class ProductController {
     } */
 
 
+    /**
+     * 添加商品，包含图片和具体产品
+     * @param model
+     * @return
+     */
     @ApiOperation("添加model")
     @PostMapping("/addModel")
     public Result<?> addModel(@RequestBody Model model) {
         // System.out.println("666666666666666666666666");
-        System.out.println(model);
+        // System.out.println(model);
         // if(model.getProducts() != null) {
         //     for (Product product: model.getProducts()) {
         //         product.setModelId(model.getId());
@@ -109,21 +127,21 @@ public class ProductController {
         }
     }
 
-    @ApiOperation("添加product")
+/*     @ApiOperation("添加product")
     @PostMapping("/addProduct")
     public Result<?> addProduct(@RequestBody Product product) {
         productService.insertProduct(product);
         return Result.success("添加成功", product);
-    }
+    } */
 
-    @ApiOperation("添加一组product")
+/*     @ApiOperation("添加一组product")
     @PostMapping("/addProductList")
     public Result<?> addProduct(@RequestBody List<Product> products) {
         for (Product product: products) {
             productService.insertProduct(product);
         }
         return Result.success("添加成功", products);
-    }
+    } */
 
 
     @ApiOperation("根据categoryId查询所有model")
@@ -142,6 +160,10 @@ public class ProductController {
         return Result.success("查询成功", seq);
     } */
 
+    /**
+     * 获取全部category，以及每个category的configs数组
+     * @return
+     */
     @ApiOperation("获取全部category，以及每个category的configs数组")
     @GetMapping("/selectAllCategory")
     public Result<?> selectAllCategory() {
@@ -188,6 +210,12 @@ public class ProductController {
     }
 
 
+    /**
+     * 下架商品
+     * @param sellerId
+     * @param modelId
+     * @return
+     */
     @ApiOperation("根据sellerId和modelId移除model")
     @PostMapping("/removeModel")
     public Result<?> removeModel(@RequestParam("sellerId") String sellerId, @RequestParam("modelId") String modelId) {

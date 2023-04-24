@@ -5,6 +5,7 @@ import com.lrz.eshop.pojo.article.Tag;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @create 2023/3/17 7:34
  * @description
  */
+@Repository
 public interface TagMapper extends BaseMapper<Tag> {
 
     @Select("select name from tag where id = #{id}")

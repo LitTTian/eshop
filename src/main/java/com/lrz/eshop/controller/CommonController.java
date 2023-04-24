@@ -141,6 +141,7 @@ public class CommonController {
 
     @Autowired
     LikeMapper likeMapper;
+
     @ApiOperation("查询用户的主评论点赞")
     @PostMapping("/selectLikeCommentIdsByUserId")
     public Result< ? > selectLikeCommentIdsByUserId(@RequestParam("userId") String userId) {
@@ -161,7 +162,6 @@ public class CommonController {
         List<Likes> list = likeMapper.selectLikeArticleByUserId(userId);
         return Result.success("查询成功", list);
     }
-
 
 
     // 获取文章展示卡片

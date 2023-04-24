@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lrz.eshop.controller.ImageController;
 import com.lrz.eshop.mapper.*;
 import com.lrz.eshop.pojo.common.Image;
+import com.lrz.eshop.pojo.common.ImageType;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
@@ -168,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean addModel(Model model) {
         modelMapper.insert(model);
-        System.out.println(model.getId());
+        // System.out.println(model.getId());
         if(model.getId() == null) {
             return false;
         }
@@ -177,17 +178,15 @@ public class ProductServiceImpl implements ProductService {
                 product.setModelId(model.getId());
                 insertProduct(product);
             }
-            if(model.getProducts().size() > 0) {
-                for(Image image : model.getImages()) {
-                    image.setForeignId(model.getId());
-                    image.setType((short) 1);
-                    imageService.linkImage(image);
-                }
-            }
-            return true;
-        }else {
-            return false;
         }
+        if(model.getImages().size() > 0) {
+            for(Image image : model.getImages()) {
+                image.setForeignId(model.getId());
+                image.setType(ImageType.PRODUCT.getCode());
+                imageService.linkImage(image);
+            }
+        }
+        return true;
     }
 
 

@@ -8,7 +8,4 @@ package com.lrz.eshop.service;
 public interface LikeService {
 
 
-
-
-
 }

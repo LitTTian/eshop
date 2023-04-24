@@ -73,7 +73,7 @@ public interface UserInRoomMapper extends BaseMapper<UserInRoom> {
     @Select("select id,nickname,avatar_url from (select user_id from user_in_room where room_id = #{roomId} and user_id != #{userId}) as t1 join user on t1.user_id = user.id")
     // @Results({
     //         @Result(column = "user_id", javaType = UserSocialInfo.class,
-    //                 one = @One(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")),
+    //                 one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")),
     // })
     List<UserSocialInfo> selectFriendsByUserIdAndRoomId(@Param("roomId") String roomId, @Param("userId") String userId);
 

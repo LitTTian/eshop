@@ -27,6 +27,11 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    /**
+     * 获取用户的所有私聊列表
+     * @param userId
+     * @return
+     */
     @ApiOperation("获取私聊列表")
     @PostMapping("/getPrivateChat")
     public Result<?> getPrivateChat(@RequestParam("userId") String userId) {
@@ -34,6 +39,11 @@ public class MessageController {
         return Result.success(friends);
     }
 
+    /**
+     * 获取指定房间号内的所有消息
+     * @param roomId
+     * @return
+     */
     @ApiOperation("获取房间消息")
     @PostMapping("/getRoomMessage")
     public Result<?> getRoomMessage(@RequestParam("roomId") String roomId) {
@@ -41,6 +51,12 @@ public class MessageController {
         return Result.success(messages);
     }
 
+    /**
+     * 联系卖家
+     * @param buyerId
+     * @param sellerId
+     * @return
+     */
     @ApiOperation("用户联系客服")
     @PostMapping("/contactSeller")
     public Result<?> contactSeller(@RequestParam("buyerId") String buyerId, @RequestParam("sellerId") String sellerId) {

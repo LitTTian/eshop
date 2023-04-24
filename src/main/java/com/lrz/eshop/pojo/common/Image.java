@@ -21,7 +21,7 @@ public class Image {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    private Short type;
+    private Byte type;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long foreignId;

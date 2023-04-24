@@ -29,7 +29,7 @@ public class User {
 //    @JsonSerialize(using = ToStringSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
-
+    private String signature; // 个性签名
     private String nickname;
     private String username;
     private String password;

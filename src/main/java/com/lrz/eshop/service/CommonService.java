@@ -28,7 +28,6 @@ public interface CommonService {
 
     List<Tag> hotTags();
 
-
     // 点赞和收藏
 
     Star star(Star star);
@@ -42,7 +41,6 @@ public interface CommonService {
      */
     public Likes like(Likes like);
 
-
     /**
      * 0:未操作 1:点赞 2:踩
      * @param like
@@ -50,9 +48,9 @@ public interface CommonService {
      */
     Byte isLiked(Likes like);
 
-
     List<ArticleShowInfo> selectMostWatchesArticleCard();
 
 
     List<ArticleShowInfo> selectMostWatchesArticleCardByKeyword(String keyword, String key);
+
 }

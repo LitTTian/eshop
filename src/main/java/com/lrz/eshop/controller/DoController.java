@@ -24,6 +24,12 @@ public class DoController {
     @Autowired
     DoService doService;
 
+    /**
+     * 删除文章
+     * @param articleId
+     * @param session
+     * @return
+     */
     @ApiOperation("根据articleId删除文章")
     @PostMapping("removeArticle")
     public Result<?> removeArticle(@RequestParam(value = "id") String articleId, HttpSession session) {
@@ -34,6 +40,26 @@ public class DoController {
         }
         Article articleDB = doService.removeArticle(userId, articleId);
         return Result.success("删除成功");
+    }
+
+    /**
+     * 修改文章签名
+     * @param signature
+     * @param session
+     * @return
+     */
+    @ApiOperation("修改用户签名")
+    @PostMapping("updateUserSignature")
+    public Result<?> updateUserSignature(@RequestParam(value = "signature") String signature, HttpSession session) {
+        String userId = session.getAttribute("id").toString();
+        if(userId == null || signature == null) {
+            return Result.operateFailed();
+        }
+        Integer count = doService.updateUserSignature(userId, signature);
+        if(count == null) {
+            return Result.operateFailed();
+        }
+        return Result.success("修改成功", count);
     }
 
 }

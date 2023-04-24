@@ -3,6 +3,7 @@ package com.lrz.eshop.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
+import com.lrz.eshop.pojo.product.ModelCardInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -149,15 +150,15 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @param sellerId
      * @return
      */
-    @Select("select * from model where seller_id = #{sellerId} and deleted = false")
+    @Select("select * from model where seller_id = #{sellerId} and deleted = false order by create_time desc")
     @Results({
             @Result(property = "id", column = "id"),
-            @Result(property = "categoryId", column = "category_id"),
+            // @Result(property = "categoryId", column = "category_id"),
 /*             @Result(property = "category", column = "category_id", javaType = Category.class,
                     one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
             ), */
             @Result(property = "title", column = "title"),
-            @Result(property = "advertisement", column = "advertisement"),
+            // @Result(property = "advertisement", column = "advertisement"),
 /*             @Result(property = "highPrice", column = "id", javaType = Double.class,
                     one = @One(select = "com.lrz.eshop.mapper.ProductMapper.selectHighPriceByModelId")
             ), */
@@ -167,13 +168,13 @@ public interface ModelMapper extends BaseMapper<Model> {
             @Result(property = "coverImgUrl", column = "id", javaType = String.class,
                     one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByModelId")
             ),
-            @Result(property = "sellerId", column = "seller_id"),
-            @Result(property = "starCount", column = "star_count"),
+            // @Result(property = "sellerId", column = "seller_id"),
+            // @Result(property = "starCount", column = "star_count"),
 /*             @Result(property = "sellCount", column = "total"),
             @Result(property = "stock", column = "stk"), */
             @Result(property = "createTime", column = "create_time"),
-            @Result(property = "updateTime", column = "update_time"),
-            @Result(property = "version", column = "version"),
+            // @Result(property = "updateTime", column = "update_time"),
+            // @Result(property = "version", column = "version"),
 /*             @Result(property = "images", column = "id", javaType = List.class,
                     many = @Many(select = "com.lrz.eshop.mapper.ImageMapper.selectByModelId")
             ),
@@ -348,9 +349,6 @@ public interface ModelMapper extends BaseMapper<Model> {
             ), */
     })
     Model selectDetailByModelId(String modelId);
-
-
-
 
 
 }

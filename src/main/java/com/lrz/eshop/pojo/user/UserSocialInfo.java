@@ -10,8 +10,6 @@ import java.util.Date;
 
 /**
  * 用户的社交信息
- * 通过这个类来隐藏数据库中其他的字段
- * 包括：id、昵称、头像
  * @author 天天
  * @create 2023/3/15 15:27
  * @description
@@ -25,6 +23,7 @@ public class UserSocialInfo {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
+    private String signature;
     private String nickname;
 
     private String avatarUrl;

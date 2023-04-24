@@ -104,11 +104,11 @@ public class EncryptionPropertyConfig {
          */
         @Override
         public String resolvePropertyValue(String value) {
-            System.out.println("resolvePropertyValue::" + count + ":: " + value);
+            // System.out.println("resolvePropertyValue::" + count + ":: " + value);
             if (!StringUtils.isEmpty(value) && value.startsWith(Prefix) && value.endsWith(Suffix)) {
                 String encValue = value.substring(Prefix.length(), value.length() - Suffix.length());
                 // 将解密后的配置打印在控制台上
-                System.out.println("resolvePropertyValue::" + count + ":: " + encValue);
+                // System.out.println("resolvePropertyValue::" + count + ":: " + encValue);
                 return encryptor.decrypt(encValue);
             }
             return value;

@@ -32,7 +32,7 @@ public interface MessageMapper extends BaseMapper<Message> {
                 many = @Many(select = "com.lrz.eshop.mapper.MessageContentMapper.selectByMessageId")
         ),
         @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                many = @Many(select = "com.lrz.eshop.mapper.UserMapper.selectSocialInfoById")
+                many = @Many(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
         ),
     })
     List<Message> selectByRoomId(String roomId);

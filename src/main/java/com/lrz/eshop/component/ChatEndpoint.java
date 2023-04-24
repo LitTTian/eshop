@@ -40,6 +40,7 @@ public class ChatEndpoint {
     private HttpSession httpSession;
 
 
+    private static UserInfoMapper userInfoMapper;
     private static UserMapper userMapper;
     private static RoomMapper roomMapper;
     private static MessageMapper messageMapper;
@@ -208,7 +209,7 @@ public class ChatEndpoint {
             // User fromUser = userMapper.selectById(fromId);
             // resultMessage直接发送给接收方，不需要加密
 
-            UserSocialInfo user = userMapper.selectSocialInfoById(userId);
+            UserSocialInfo user = userInfoMapper.getUserSocialInfo(userId);
             ResultMessage resultMessage = new ResultMessage();
             resultMessage.setType("chat");
             resultMessage.setFromNew(isNewRoom);

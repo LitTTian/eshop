@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 测试控制类
+ * 上传控制类
  * @author 天天
  * @create 2023/2/24 14:36
  * @description

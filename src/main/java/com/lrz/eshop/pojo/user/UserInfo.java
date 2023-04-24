@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 用户个人主页信息，包含：社交、销售、社区
  * @author 天天
  * @create 2023/4/19 15:08
  * @description

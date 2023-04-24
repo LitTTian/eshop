@@ -74,15 +74,15 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "updateTime", column = "update_time"),
             @Result(property = "version", column = "version"),
-            @Result(property = "modelStars", column = "id", javaType = List.class,
-                    many = @Many(select = "com.lrz.eshop.mapper.StarMapper.selectModelStarsByUserId")
-            ),
-            @Result(property = "articleStars", column = "id", javaType = List.class,
-                    many = @Many(select = "com.lrz.eshop.mapper.StarMapper.selectArticleStarsByUserId")
-            ),
-            @Result(property = "peopleStars", column = "id", javaType = List.class,
-                    many = @Many(select = "com.lrz.eshop.mapper.StarMapper.selectPeopleStarsByUserId")
-            ),
+            // @Result(property = "modelStars", column = "id", javaType = List.class,
+            //         many = @Many(select = "com.lrz.eshop.mapper.StarMapper.selectModelStarsByUserId")
+            // ),
+            // @Result(property = "articleStars", column = "id", javaType = List.class,
+            //         many = @Many(select = "com.lrz.eshop.mapper.StarMapper.selectArticleStarsByUserId")
+            // ),
+            // @Result(property = "peopleStars", column = "id", javaType = List.class,
+            //         many = @Many(select = "com.lrz.eshop.mapper.StarMapper.selectPeopleStarsByUserId")
+            // ),
 /*             @Result(property = "models", column = "id", javaType = List.class,
                     many = @Many(select = "com.lrz.eshop.mapper.ModelMapper.selectBySellerId")
             ),
@@ -106,8 +106,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     // @Select("Select * from user where id = #{id}")
-    @Select("Select * from user where id = #{id}")
-    UserSocialInfo selectSocialInfoById(String id);
+    // UserSocialInfo selectSocialInfoById(String id);
 
 
 

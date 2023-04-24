@@ -3,7 +3,10 @@ package com.lrz.eshop.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lrz.eshop.mapper.article.*;
 import com.lrz.eshop.pojo.article.*;
+import com.lrz.eshop.pojo.common.Image;
+import com.lrz.eshop.pojo.common.ImageType;
 import com.lrz.eshop.service.ArticleService;
+import com.lrz.eshop.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     ArticleCommentChildMapper articleCommentChildMapper;
 
+    @Autowired
+    ImageService imageService;
+
     @Override
     public Article getArticleById(String articleId) {
         Article article = articleMapper.selectDetailInfoById(articleId);
@@ -42,9 +48,31 @@ public class ArticleServiceImpl implements ArticleService {
         return article;
     }
 
+    // @Override
+    // public Article addArticle(Article article) {
+    //     return articleMapper.insert(article) == 1 ? article : null;
+    // }
+
     @Override
     public Article addArticle(Article article) {
-        return articleMapper.insert(article) == 1 ? article : null;
+        articleMapper.insert(article);
+        if(article.getId() == null) {
+            return null;
+        }
+        if(article.getArticleTags() != null) {
+            for (ArticleTag articleTag : article.getArticleTags()) {
+                articleTag.setArticleId(article.getId());
+                addArticleTag(articleTag);
+            }
+        }
+        if(article.getImages() != null) {
+            for (Image image : article.getImages()) {
+                image.setForeignId(article.getId());
+                image.setType(ImageType.ARTICLE.getCode());
+                imageService.linkImage(image);
+            }
+        }
+        return article;
     }
 
     @Override
