@@ -70,7 +70,7 @@ public interface UserService {
     Boolean existId(String id);
     Boolean existUsername(String username);
     Boolean existEmail(String id);
-    User verifyUser(User user, HttpSession session);
+    User verifyUser(UserDto user, HttpSession session);
 
 
     /**

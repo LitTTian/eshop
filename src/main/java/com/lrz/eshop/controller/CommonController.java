@@ -3,10 +3,8 @@ package com.lrz.eshop.controller;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
-import com.lrz.eshop.pojo.common.Likes;
+import com.lrz.eshop.pojo.common.*;
 import com.lrz.eshop.pojo.article.Tag;
-import com.lrz.eshop.pojo.common.Banner;
-import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.service.CommonService;
 import com.lrz.eshop.service.LikeService;
@@ -78,89 +76,6 @@ public class CommonController {
         List<Tag> tags = commonService.hotTags();
         if(tags == null) return Result.operateFailed();
         return Result.success("获取热门文章标签成功", tags);
-    }
-
-
-    // 收藏和点赞
-    @ApiOperation("收藏")
-    @PostMapping("/star")
-    // public Result<?> star(@RequestParam("userId") String userId, @RequestParam("modelId") String modelId) {
-    public Result<?> star(@RequestBody Star star) {
-        if(star.getUserId() == null || star.getForeignId() == null) {
-            return Result.operateFailed();
-        }
-        Star st = commonService.star(star);
-        if(st == null) {
-            return Result.success("已取消收藏", null);
-        }
-        return Result.success("收藏成功", st);
-    }
-
-    @ApiOperation("是否已经收藏")
-    @PostMapping("/isStared")
-    // public Result<?> star(@RequestParam("userId") String userId, @RequestParam("modelId") String modelId) {
-    public Result<?> isStared(@RequestBody Star star) {
-        if(star.getUserId() == null || star.getForeignId() == null) {
-            return Result.operateFailed();
-        }
-        Boolean isStared = commonService.isStared(star);
-        if (!isStared) {
-            return Result.success("未收藏", false);
-        }
-        return Result.success("已收藏", true);
-    }
-
-    @PostMapping("/like")
-    // 必须包含：用户userId，评论/文章foreignId，点赞类型type
-    public Result<?> like(@RequestBody Likes like) {
-        Likes likeDB = commonService.like(like);
-        if(likeDB == null) {
-            return Result.success("已取消", null);
-        } else {
-            if(likeDB.getType() == 1) {
-                return Result.success("点赞成功", likeDB);
-            }else if(likeDB.getType() == 2) {
-                return Result.success("踩成功", likeDB);
-            }
-            return Result.success("操作成功", likeDB);
-        }
-    }
-
-
-    @PostMapping("/isLiked")
-    // 必须包含：用户userId，评论/文章foreignId，点赞类型type
-    public Result<?> isLiked(@RequestBody Likes like) {
-        short isLiked = commonService.isLiked(like);
-        if(isLiked == 1) {
-            return Result.success("已点赞", 1);
-        }else if(isLiked == 2) {
-            return Result.success("已踩", 2);
-        }
-        return Result.success("未操作", 0);
-    }
-
-    @Autowired
-    LikeMapper likeMapper;
-
-    @ApiOperation("查询用户的主评论点赞")
-    @PostMapping("/selectLikeCommentIdsByUserId")
-    public Result< ? > selectLikeCommentIdsByUserId(@RequestParam("userId") String userId) {
-        List<String> list = likeMapper.selectLikeCommentIdsByUserId(userId);
-        return Result.success("查询成功", list);
-    }
-
-    @ApiOperation("查询用户的子评论点赞")
-    @PostMapping("/selectLikeCommentChildIdsByUserId")
-    public Result< ? > selectLikeCommentChildIdsByUserId(@RequestParam("userId") String userId) {
-        List<String> list = likeMapper.selectLikeCommentChildIdsByUserId(userId);
-        return Result.success("查询成功", list);
-    }
-
-    @ApiOperation("查询用户的文章点赞")
-    @PostMapping("/selectArticleLikesByUserId")
-    public Result< ? > selectArticleLikesByUserId(@RequestParam("userId") String userId) {
-        List<Likes> list = likeMapper.selectLikeArticleByUserId(userId);
-        return Result.success("查询成功", list);
     }
 
 

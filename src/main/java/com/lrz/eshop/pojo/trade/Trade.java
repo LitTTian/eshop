@@ -26,6 +26,8 @@ public class Trade {
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long sellerId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long buyerId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -67,5 +69,8 @@ public class Trade {
 
     @TableField(exist = false)
     private List<TradeDetail> tradeDetails;
+
+    private String expressCompany;
+    private String expressNumber;
 
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.trade.Trade;
+import com.lrz.eshop.pojo.user.UserSocialInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +49,9 @@ public class Model {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long sellerId;
+
+    @TableField(exist = false)
+    private UserSocialInfo seller;
 
     // private String configMain;
 

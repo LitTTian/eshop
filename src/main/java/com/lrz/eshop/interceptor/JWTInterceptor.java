@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lrz.eshop.util.RedisUtils;
 import com.lrz.eshop.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -35,10 +36,10 @@ public class JWTInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("preHandle");
         //判断状态
-        if (request.getMethod().equals("OPTIONS")) {
+/*         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
-        }
+        } */
         //实例化
         // HandlerMethod handlerMethod = (HandlerMethod) handler;
         //返回此处理程序方法的方法，也就是取得接口的方法
@@ -59,6 +60,9 @@ public class JWTInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         System.out.println("Authorization:" + token);//输出token
         if (token != null) {
+            // 判断token是否被禁用
+
+
             //判断是否通过验证
             boolean result = TokenUtil.verify(token);
             //权限

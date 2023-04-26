@@ -28,25 +28,6 @@ public interface CommonService {
 
     List<Tag> hotTags();
 
-    // 点赞和收藏
-
-    Star star(Star star);
-
-    Boolean isStared(Star star);
-
-    /**
-     * 点赞
-     * @param like
-     * @return
-     */
-    public Likes like(Likes like);
-
-    /**
-     * 0:未操作 1:点赞 2:踩
-     * @param like
-     * @return 0:未操作 1:点赞 2:踩
-     */
-    Byte isLiked(Likes like);
 
     List<ArticleShowInfo> selectMostWatchesArticleCard();
 

@@ -72,7 +72,7 @@ public interface StarMapper extends BaseMapper<Star> {
 
 
     // 修改后的star查询方法
-    @Select("select model.*, star.create_time as star_time from model,star where model.id = star.foreign_id and model.id in (select foreign_id from star where user_id = #{userId} and type = 2 ) order by star_time desc")
+    @Select("select model.*, star.create_time as star_time from model,star where star.user_id = #{userId} and model.id = star.foreign_id and model.id in (select foreign_id from star where user_id = #{userId} and type = 2 ) order by star_time desc")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "title", column = "title"),
@@ -88,10 +88,10 @@ public interface StarMapper extends BaseMapper<Star> {
     /**
      * 关注的人
      */
-    @Select("Select user.*, star.create_time as star_time from user, star where user.id = star.foreign_id and user.id in (select foreign_id from star where user_id = #{userId} and type = 3) order by star_time desc")
+    @Select("Select user.*, star.create_time as star_time from user, star where star.user_id = #{userId} and user.id = star.foreign_id and user.id in (select foreign_id from star where user_id = #{userId} and type = 3) order by star_time desc")
     List<UserSocialInfo> selectCollectUserByUserId(String userId);
 
-    @Select("Select article.*, star.create_time as star_time from article, star where article.id = star.foreign_id and article.id in (select foreign_id from star where user_id = #{userId} and type = 1) order by star_time desc")
+    @Select("Select article.*, star.create_time as star_time from article, star where star.user_id = #{userId} and article.id = star.foreign_id and article.id in (select foreign_id from star where user_id = #{userId} and type = 1) order by star_time desc")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),

@@ -30,7 +30,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject,"balance", Float.class, (float)0f);
         this.strictInsertFill(metaObject,"isSeller", Boolean.class, false);
         this.strictInsertFill(metaObject, "version", Integer.class, 1);
-        this.strictInsertFill(metaObject, "state", Short.class, (short)1);
+        this.strictInsertFill(metaObject, "state", Byte.class, (byte)1);
         // 文章浏览量
         this.strictInsertFill(metaObject, "watches", Integer.class, 0);
         // model是否被删除
@@ -49,7 +49,4 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.setFieldValByName("updateTime", new Date(), metaObject);
     }
 
-    // public static void main(String[] args) {
-    //     System.out.println(new Date());
-    // }
 }

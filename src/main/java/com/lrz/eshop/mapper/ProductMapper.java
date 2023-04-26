@@ -102,7 +102,6 @@ public interface ProductMapper extends BaseMapper<Product> {
             @Result(property = "gift", column = "gift"),
             @Result(property = "stock", column = "stock"),
             @Result(property = "sellCount", column = "sell_count"),
-
             @Result(property = "model", column = "model_id", javaType = Model.class,
                     one = @One(select = "com.lrz.eshop.mapper.ModelMapper.selectDetailByModelId")
             ),

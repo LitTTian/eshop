@@ -1,6 +1,8 @@
 package com.lrz.eshop.controller;
 
+import com.lrz.eshop.common.aop.DBLoggerAnnotation;
 import com.lrz.eshop.common.webapi.Result;
+import com.lrz.eshop.pojo.trade.ExpressDto;
 import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.service.TradeService;
 import io.swagger.annotations.Api;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 订单控制类
@@ -31,14 +35,17 @@ public class TradeController {
 
     @ApiOperation("下单")
     @PostMapping("/placeOrder")
-    public Result<?> placeOrder(@RequestBody Trade trade) {
-        System.out.println(trade);
-        Trade tradeDB = tradeService.placeOrder(trade);
-        if (tradeDB == null) {
-            return Result.operateFailed();
-        }else {
-            return Result.success("提交成功", tradeDB);
+    public Result<?> placeOrder(@RequestBody List<Trade> trades) {
+        System.out.println(trades);
+        List<Trade> tradeDBs = new ArrayList<>();
+        for(Trade trade: trades) {
+            Trade tradeDB = tradeService.placeOrder(trade);
+            if (tradeDB == null) {
+                return Result.operateFailed();
+            }
+            tradeDBs.add(tradeDB);
         }
+        return Result.success("提交成功", tradeDBs);
     }
 
 /*     @ApiOperation("提交订单")
@@ -72,18 +79,27 @@ public class TradeController {
         }
     } */
 
-    @ApiOperation("根据用户id查询所有订单")
+    @ApiOperation("根据用户id查询所有购买订单")
     @PostMapping("/getTradesByUserId")
     public Result<?> getTradesByUserId(HttpSession session) {
         String userId = session.getAttribute("id").toString();
         tradeService.updateTradeByUserId(userId);
-        return Result.success(tradeService.getTradesByUserId(userId));
+        return Result.success("查询成功", tradeService.getTradesByUserId(userId));
     }
+
+    @ApiOperation("根据用户id查询所有销售订单")
+    @PostMapping("/getTradesBySellerId")
+    public Result<?> getTradesBySellerId(HttpSession session) {
+        String sellerId = session.getAttribute("id").toString();
+        List<Trade> trades = tradeService.getTradesBySellerId(sellerId);
+        return Result.success("查询成功", trades);
+    }
+
 
     @ApiOperation("根据订单id查询具体待支付订单")
     @PostMapping("/getTradeDetailByTradeId")
-    public Result<?> getTradeDetailByTradeId(@RequestParam("tradeId") String tradeId,
-                                             @RequestParam("userId") String userId) {
+    public Result<?> getTradeDetailByTradeId(@RequestParam("tradeId") String tradeId, HttpSession session) {
+        String userId = session.getAttribute("id").toString();
         Trade trade = tradeService.getTradeDetailByTradeId(tradeId, userId);
         if(trade == null) {
             return Result.operateFailed();
@@ -92,9 +108,9 @@ public class TradeController {
     }
 
     @ApiOperation("用户支付完，通过tradeId更新trade状态")
+    @DBLoggerAnnotation(module = "订单", operation = "通过tradeId支付")
     @PostMapping("/payByTradeId")
-    public Result<?> payByTradeId(HttpSession session,
-                                  @RequestParam("tradeId") String tradeId) {
+    public Result<?> payByTradeId(@RequestParam("tradeId") String tradeId, HttpSession session) {
         String userId = session.getAttribute("id").toString();
         Trade trade = tradeService.payByTradeId(userId, tradeId);
         if (trade == null) {
@@ -103,11 +119,10 @@ public class TradeController {
         return Result.success("购买成功", trade);
     }
 
-
     @ApiOperation("取消订单")
+    @DBLoggerAnnotation(module = "订单", operation = "取消订单")
     @PostMapping("/cancelTrade")
-    public Result<?> cancelTrade(HttpSession session,
-                                 @RequestParam("tradeId") String tradeId) {
+    public Result<?> cancelTrade(@RequestParam("tradeId") String tradeId, HttpSession session) {
         String userId = session.getAttribute("id").toString();
         Trade trade = tradeService.verifyAndCancelTrade(userId, tradeId);
         if (trade == null) {
@@ -117,14 +132,31 @@ public class TradeController {
     }
 
     @ApiOperation("确认收货")
+    @DBLoggerAnnotation(module = "订单", operation = "用户确认收获")
     @PostMapping("/confirmReceipt")
-    public Result<?> confirmReceipt(HttpSession session, @RequestParam("tradeId") String tradeId) {
+    public Result<?> confirmReceipt(@RequestParam("tradeId") String tradeId, HttpSession session) {
         String userId = session.getAttribute("id").toString();
         Trade trade = tradeService.confirmReceipt(userId, tradeId);
         if (trade == null) {
             return Result.operateFailed();
         }
         return Result.success("确认收货成功", trade);
+    }
+
+    @ApiOperation("卖家发货")
+    @DBLoggerAnnotation(module = "订单", operation = "卖家发货")
+    @PostMapping("/deliverGoods")
+    // @RequestParam("tradeId") String tradeId,
+    // @RequestParam("expressCompany") String expressCompany,
+    // @RequestParam("expressNumber") String expressNumber,
+    public Result<?> deliverGoods(@RequestBody ExpressDto expressDto,
+                                  HttpSession session) {
+        String sellerId = session.getAttribute("id").toString();
+        Trade trade = tradeService.deliverGoods(sellerId, expressDto.getTradeId(), expressDto.getExpressCompany(), expressDto.getExpressNumber());
+        if (trade == null) {
+            return Result.operateFailed();
+        }
+        return Result.success("发货成功", trade);
     }
 
 

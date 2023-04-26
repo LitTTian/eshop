@@ -15,12 +15,11 @@ import java.util.List;
 @Repository
 public interface LocationMapper extends BaseMapper<Location> {
 
-    @Select("select * from location where user_id = #{userId} and state = 1 order by seq desc")
+    @Select("select * from location where user_id = #{userId} and deleted = 0 order by seq desc")
     List<Location> selectLocationsByUserId(Long userId);
 
     // select max(seq) from location where user_id = 70260777
-    @Select("select max(seq) from location where user_id = #{userId} and state = 1")
+    @Select("select max(seq) from location where user_id = #{userId} and deleted = 0")
     Integer selectMaxSeqByUserId(String userId);
-
 
 }

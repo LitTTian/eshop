@@ -76,6 +76,11 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    public List<Trade> getTradesBySellerId(String sellerId) {
+        return tradeMapper.selectBySellerId(sellerId);
+    }
+
+    @Override
     public Trade getTradeDetailByTradeId(String tradeId, String userId) {
         return tradeMapper.selectByTradeId(tradeId, userId);
     }
@@ -152,9 +157,24 @@ public class TradeServiceImpl implements TradeService {
 
 
     @Override
-    public int updateState(Trade trade, byte stateInt) {
-        trade.setState(stateInt);
+    public int updateState(Trade trade, byte stateByte) {
+        trade.setState(stateByte);
         return tradeMapper.updateById(trade);
+    }
+
+    @Override
+    public Trade deliverGoods(String sellerId, String tradeId, String expressCompany, String expressNumber) {
+        Trade trade = tradeMapper.selectById(tradeId);
+        if(trade == null || !sellerId.equals(String.valueOf(trade.getSellerId()))) {
+            return null;
+        }
+        if(trade.getState() != TradeState.WAIT_DELIVER.getCode()) { // 2:待发货
+            return null;
+        }
+        trade.setExpressCompany(expressCompany);
+        trade.setExpressNumber(expressNumber);
+        updateState(trade, TradeState.WAIT_RECEIVE.getCode()); // 3:待收货
+        return trade;
     }
 
     @Override

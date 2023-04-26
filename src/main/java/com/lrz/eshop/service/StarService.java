@@ -1,6 +1,7 @@
 package com.lrz.eshop.service;
 
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
+import com.lrz.eshop.pojo.common.Likes;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.common.StarType;
 import com.lrz.eshop.pojo.product.Model;
@@ -31,4 +32,25 @@ public interface StarService {
 
 
     List<String> selectCollectId(String userId, StarType article);
+
+    // 点赞和收藏
+
+    // Star star(Star star);
+    Boolean isStared(Star star);
+
+    /**
+     * 点赞
+     * @param like
+     * @return
+     */
+    public Likes like(Likes like);
+
+    /**
+     * 0:未操作 1:点赞 2:踩
+     * @param like
+     * @return 0:未操作 1:点赞 2:踩
+     */
+    Byte isLiked(Likes like);
+
+
 }

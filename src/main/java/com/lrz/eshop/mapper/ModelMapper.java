@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.ModelCardInfo;
+import com.lrz.eshop.pojo.user.UserSocialInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -335,6 +336,9 @@ public interface ModelMapper extends BaseMapper<Model> {
                     one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByModelId")
             ),
             @Result(property = "sellerId", column = "seller_id"),
+            @Result(property = "seller", column = "seller_id", javaType = UserSocialInfo.class, // 包含seller的社交信息
+                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+            ),
             @Result(property = "starCount", column = "star_count"),
             @Result(property = "sellCount", column = "total"),
             @Result(property = "stock", column = "stk"),

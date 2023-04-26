@@ -4,6 +4,7 @@ import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.common.webapi.ResultCode;
 import com.lrz.eshop.pojo.user.Location;
 import com.lrz.eshop.pojo.user.User;
+import com.lrz.eshop.pojo.user.UserDto;
 import com.lrz.eshop.service.TradeService;
 import com.lrz.eshop.service.UserService;
 import io.swagger.annotations.Api;
@@ -33,7 +34,7 @@ public class UserController {
     @Autowired
     private TradeService tradeService;
 
-    @ApiOperation("根据id查询用户的商城信息")
+/*     @ApiOperation("根据id查询用户的商城信息")
     @GetMapping("/getSellInfoByUserId")
     public Result<?> selectSellInfoByUserId(@RequestParam String userId) {
         return Result.success(userService.selectSellInfoByUserId(userId));
@@ -42,7 +43,7 @@ public class UserController {
     @GetMapping("/getCommunityInfoByUserId")
     public Result<?> selectCommunityInfoByUserId(@RequestParam String userId) {
         return Result.success(userService.selectCommunityInfoByUserId(userId));
-    }
+    } */
 
     @ApiOperation("根据id查询用户个人中心信息")
     @GetMapping("/getUserInfo/{userId}")
@@ -50,17 +51,17 @@ public class UserController {
         return Result.success(userService.selectUserInfo(userId));
     }
 
-    /**
+/*      *//**
      * 查询所有用户
      * @return
-     */
+     *//*
     @ApiOperation("查询所有的用户信息")
     @GetMapping("/query")
     public Result<?> query() {
         List<User> list = userService.selectList(null);
         // System.out.println(list);
         return Result.success(list);
-    }
+    } */
 
     /**
      * 查询所有用户和购买记录
@@ -75,45 +76,6 @@ public class UserController {
     // }
 
 
-    /**
-     * 登陆时确认用户名密码，并存入session
-     * @param user 用户名
-     * @param session HttpSession
-     * @return 成功或错误信息
-     */
-    @PostMapping("/verifyUser")
-    public Result<?> verifyUser(@RequestBody User user, HttpSession session) {
-        // 密码已在前端加密过了
-        User userDB = userService.verifyUser(user, session);
-        if (userDB != null) {
-            // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
-            // session.setAttribute("id", String.valueOf(userDB.getId()));
-            // System.out.println("session id: " + session.getAttribute("id"));
-            tradeService.updateTradeByUserId(String.valueOf(userDB.getId()));
-            return Result.success("登录成功", userDB);
-        }
-        return Result.failed(ResultCode.LoginFailed);
-    }
-
-    @PostMapping("/getUserInfoByToken")
-    public Result<?> getUserInfoByToken(@RequestParam String token, HttpSession session) {
-        User user = userService.getUserInfoByToken(token, session);
-        if (user != null) {
-            // session.setAttribute("id", String.valueOf(user.getId()));
-            // System.out.println("session id: " + session.getAttribute("id"));
-            tradeService.updateTradeByUserId(String.valueOf(user.getId()));
-            return Result.success("登录成功", user);
-        }
-        return Result.failed(ResultCode.LoginFailed);
-    }
-
-    @GetMapping("/logout")
-    // public Result<?> logout(@RequestParam String uId, HttpSession session) {
-    public Result<?> logout(HttpSession session) {
-        session.removeAttribute("id");
-        session.invalidate();
-        return Result.success("退出成功");
-    }
 
     /**
      * 注册时确认用户名密码，并存入session
@@ -137,7 +99,10 @@ public class UserController {
         // 使用sha1加密
         // user.setPassword(EncryptUtils.encodeWithSha1(user.setPassword()));
         userService.insert(user);
-        User userDB = userService.verifyUser(user, session);
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        User userDB = userService.verifyUser(userDto, session);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
         // session.setAttribute("id", String.valueOf(userDB.getId()));
         return Result.success("注册成功", userDB);

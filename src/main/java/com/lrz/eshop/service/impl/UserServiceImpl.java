@@ -7,6 +7,7 @@ import com.lrz.eshop.mapper.LocationMapper;
 import com.lrz.eshop.mapper.StarMapper;
 import com.lrz.eshop.mapper.UserInfoMapper;
 import com.lrz.eshop.mapper.UserMapper;
+import com.lrz.eshop.pojo.DeletedByte;
 import com.lrz.eshop.pojo.user.*;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.UserService;
@@ -67,8 +68,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.update(user, userUpdateWrapper);
     }
 
-
-
     @Override
     public int updateById(User user) {
         return userMapper.updateById(user);
@@ -84,11 +83,6 @@ public class UserServiceImpl implements UserService {
     public List<User> selectList(Wrapper<User> queryWrapper) {
         return userMapper.selectList(queryWrapper);
     }
-
-    // @Override
-    // public List<User> selectAllUserAndTrades() {
-    //     return userMapper.selectAllUserAndTrades();
-    // }
 
     @Override
     public Boolean exist(Wrapper<User> queryWrapper) {
@@ -111,7 +105,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User verifyUser(User user, HttpSession session) {
+    public User verifyUser(UserDto user, HttpSession session) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", user.getUsername());
         queryWrapper.eq("password", user.getPassword());
@@ -122,12 +116,6 @@ public class UserServiceImpl implements UserService {
             User userDB = users.get(0);
             userDB.setPassword(null);
             // String token = UUID.randomUUID().toString();
-            if(userDB.getToken() != null && !userDB.getToken().equals("")) {
-                String id = TokenUtil.getIdByToken(userDB.getToken());
-                if(Long.valueOf(id).equals(user.getId())) {
-                    return userDB;
-                }
-            }
             String token = TokenUtil.sign(userDB);
             userDB.setToken(token);
             session.setAttribute("id", String.valueOf(userDB.getId()));
@@ -176,7 +164,7 @@ public class UserServiceImpl implements UserService {
     public Location addLocation(Location location) {
         int seq = selectLocationSeqByUserId(String.valueOf(location.getUserId()));
         location.setSeq(seq);
-        location.setState((short)1); // 1表示可用
+        location.setDeleted(DeletedByte.NOT_DELETED.getCode()); // 0表示可用
         locationMapper.insert(location);
         if(location.getId() == null) {
             return null;
@@ -190,7 +178,7 @@ public class UserServiceImpl implements UserService {
         if(location == null) {
             return null;
         }
-        location.setState((short)0);
+        location.setDeleted(DeletedByte.DELETED.getCode());
         locationMapper.updateById(location);
         return location;
     }
@@ -198,7 +186,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Location updateLocation(Location location) {
         Location locationDB = locationMapper.selectById(location.getId());
-        if(locationDB == null || locationDB.getState() == 0) {
+        if(locationDB == null || locationDB.getDeleted() == DeletedByte.DELETED.getCode()) {
             return null;
         }
         locationDB.setName(location.getName());
@@ -215,9 +203,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserSellInfo selectSellInfoByUserId(String userId) {
-        // UserSellInfo userSellInfo = userInfoMapper.getUserSellInfo(userId);
-        // System.out.println(userSellInfo);
-        // return userSellInfo;
         return userInfoMapper.getUserSellInfo(userId);
     }
 

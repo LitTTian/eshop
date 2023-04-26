@@ -15,6 +15,8 @@ public interface TradeService {
 
     List<Trade> getTradesByUserId(String userId);
 
+    List<Trade> getTradesBySellerId(String sellerId);
+
     /**
      * 获取订单详情，用于支付页面
      * @param tradeId
@@ -45,4 +47,5 @@ public interface TradeService {
     int cancelTrade(Trade trade);
     int updateState(Trade trade, byte state);
 
+    Trade deliverGoods(String sellerId, String tradeId, String expressCompany, String expressNumber);
 }
