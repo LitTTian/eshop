@@ -12,11 +12,13 @@ import com.lrz.eshop.pojo.product.ModelCardInfo;
 import com.lrz.eshop.pojo.user.UserSocialInfo;
 import com.lrz.eshop.service.ArticleService;
 import com.lrz.eshop.service.StarService;
+import com.lrz.eshop.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -36,11 +38,19 @@ public class StarController {
     @Autowired
     private StarService starService;
 
+    // @Autowired
+    // private HttpSession session;
+
+    @Autowired
+    private HttpServletRequest request;
+
 
     // 三种收藏的id信息
     @PostMapping("/selectCollectUserId")
-    public Result<?> selectCollectUserId(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> selectCollectUserId() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
@@ -48,8 +58,10 @@ public class StarController {
         return Result.success("查询成功", ids);
     }
     @PostMapping("/selectCollectModelId")
-    public Result<?> selectCollectModelId(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> selectCollectModelId() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
@@ -57,8 +69,10 @@ public class StarController {
         return Result.success("查询成功", ids);
     }
     @PostMapping("/selectCollectArticleId")
-    public Result<?> selectCollectArticleId(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> selectCollectArticleId() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
@@ -69,8 +83,10 @@ public class StarController {
     // 三种收藏的具体展示信息
     @ApiOperation("根据userId获取用户关注的用户信息")
     @PostMapping("/selectCollectUser")
-    public Result<?> selectCollectUser(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> selectCollectUser() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
@@ -80,8 +96,10 @@ public class StarController {
 
     @ApiOperation("根据userId获取用户收藏的商品")
     @PostMapping("/selectCollectModel")
-    public Result<?> selectCollectModel(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> selectCollectModel() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
@@ -92,8 +110,10 @@ public class StarController {
     // selectCollectArticle
     @ApiOperation("根据userId获取用户收藏的文章")
     @PostMapping("/selectCollectArticle")
-    public Result<?> selectCollectArticle(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> selectCollectArticle() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
@@ -103,37 +123,52 @@ public class StarController {
 
 
     // 三个收藏方法
-    @ApiOperation("收藏用户")
+    @ApiOperation("关注用户")
     @PostMapping("/collectUser")
-    public Result<?> collectUser(@RequestParam(value = "foreignId") String foreignId, HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> collectUser(@RequestParam(value = "foreignId") String foreignId) {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
         Star star = starService.collectUser(userId, foreignId);
+        if(star == null) {
+            return Result.success("已取消关注", null);
+        }
         return Result.success("关注成功", star);
     }
 
     @ApiOperation("收藏商品")
     @PostMapping("/collectModel")
-    public Result<?> collectModel(@RequestParam(value = "foreignId") String foreignId, HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> collectModel(@RequestParam(value = "foreignId") String foreignId) {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
         Star star = starService.collectModel(userId, foreignId);
-        return Result.success("关注成功", star);
+        if(star == null) {
+            return Result.success("已取消收藏", null);
+        }
+        return Result.success("收藏成功", star);
     }
 
     @ApiOperation("收藏文章")
     @PostMapping("/collectArticle")
-    public Result<?> collectArticle(@RequestParam(value = "foreignId") String foreignId, HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result<?> collectArticle(@RequestParam(value = "foreignId") String foreignId) {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         if(userId == null) {
             return Result.operateFailed();
         }
         Star star = starService.collectArticle(userId, foreignId);
-        return Result.success("关注成功", star);
+        if(star == null) {
+            return Result.success("已取消收藏", null);
+        }
+        return Result.success("收藏成功", star);
     }
 
 
@@ -203,24 +238,30 @@ public class StarController {
     @ApiOperation("查询用户的主评论点赞")
     @PostMapping("/selectLikeCommentId")
     // public Result< ? > selectLikeCommentIdsByUserId(@RequestParam("userId") String userId) {
-    public Result< ? > selectLikeCommentId(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result< ? > selectLikeCommentId() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         List<String> list = likeMapper.selectLikeCommentIdsByUserId(userId);
         return Result.success("查询成功", list);
     }
 
     @ApiOperation("查询用户的子评论点赞")
     @PostMapping("/selectLikeCommentChildId")
-    public Result< ? > selectLikeCommentChildId(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result< ? > selectLikeCommentChildId() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         List<String> list = likeMapper.selectLikeCommentChildIdsByUserId(userId);
         return Result.success("查询成功", list);
     }
 
     @ApiOperation("查询用户的文章点赞")
     @PostMapping("/selectArticleLike")
-    public Result< ? > selectArticleLike(HttpSession session) {
-        String userId = session.getAttribute("id").toString();
+    public Result< ? > selectArticleLike() {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         List<Likes> list = likeMapper.selectLikeArticleByUserId(userId);
         return Result.success("查询成功", list);
     }

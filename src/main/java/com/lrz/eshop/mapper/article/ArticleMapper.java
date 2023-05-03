@@ -29,21 +29,21 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
                     // 用这种方式查出来的category有configs
-                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "abstracts", column = "abstracts"),
             @Result(property = "content", column = "content"),
             @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
             ),
             @Result(property = "images", column = "id", javaType = List.class,
-                    many = @Many(select = "com.lrz.eshop.mapper.ImageMapper.selectByArticleId")
+                    many = @Many(select = "com.lrz.eshop.mapper.common.ImageMapper.selectByArticleId")
             ),
             // 标签
             @Result(property = "articleTags", column = "id", javaType = List.class,
@@ -52,7 +52,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             // 浏览、赞、踩
             @Result(property = "watches", column = "watches"),
             @Result(property = "stars", column = "id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
             ),
             @Result(property = "likes", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
@@ -77,21 +77,21 @@ public interface ArticleMapper extends BaseMapper<Article> {
     //         @Result(property = "id", column = "id"),
     //         @Result(property = "userId", column = "user_id"),
     //         @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-    //                 one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+    //                 one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
     //         ),
     //         @Result(property = "categoryId", column = "category_id"),
     //         @Result(property = "category", column = "category_id", javaType = Category.class,
     //                 // 用这种方式查出来的category有configs
-    //                 one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+    //                 one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
     //         ),
     //         @Result(property = "title", column = "title"),
     //         @Result(property = "abstracts", column = "abstracts"),
     //         @Result(property = "content", column = "content"),
     //         @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-    //                 one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+    //                 one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
     //         ),
     //         // @Result(property = "images", column = "id", javaType = List.class,
-    //         //         many = @Many(select = "com.lrz.eshop.mapper.ImageMapper.selectByArticleId")
+    //         //         many = @Many(select = "com.lrz.eshop.mapper.common.ImageMapper.selectByArticleId")
     //         // ),
     //         @Result(property = "articleTags", column = "id", javaType = List.class,
     //                 many = @Many(select = "com.lrz.eshop.mapper.article.ArticleTagMapper.selectByArticleId")
@@ -144,21 +144,21 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
                     // 用这种方式查出来的category有configs
-                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "abstracts", column = "abstracts"),
             // @Result(property = "content", column = "content"),
             @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
             ),
             // @Result(property = "images", column = "id", javaType = List.class,
-            //         many = @Many(select = "com.lrz.eshop.mapper.ImageMapper.selectByArticleId")
+            //         many = @Many(select = "com.lrz.eshop.mapper.common.ImageMapper.selectByArticleId")
             // ),
             // 标签
             // @Result(property = "articleTags", column = "id", javaType = List.class,
@@ -167,7 +167,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             // 浏览、赞、踩
             @Result(property = "watches", column = "watches"),
             @Result(property = "stars", column = "id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
             ),
             @Result(property = "likes", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
@@ -198,21 +198,21 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
                     // 用这种方式查出来的category有configs
-                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "abstracts", column = "abstracts"),
             // @Result(property = "content", column = "content"),
             @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
             ),
             // @Result(property = "images", column = "id", javaType = List.class,
-            //         many = @Many(select = "com.lrz.eshop.mapper.ImageMapper.selectByArticleId")
+            //         many = @Many(select = "com.lrz.eshop.mapper.common.ImageMapper.selectByArticleId")
             // ),
             // 标签
             // @Result(property = "articleTags", column = "id", javaType = List.class,
@@ -221,7 +221,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
             // 浏览、赞、踩
             @Result(property = "watches", column = "watches"),
             @Result(property = "stars", column = "id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
             ),
             @Result(property = "likes", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
@@ -251,22 +251,22 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
                     // 用这种方式查出来的category有configs
-                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "abstracts", column = "abstracts"),
             @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
             ),
             // 浏览、赞、踩
             @Result(property = "watches", column = "watches"),
             @Result(property = "stars", column = "id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
             ),
             @Result(property = "likes", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
@@ -287,22 +287,22 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
                     // 用这种方式查出来的category有configs
-                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "abstracts", column = "abstracts"),
             @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
             ),
             // 浏览、赞、踩
             @Result(property = "watches", column = "watches"),
             @Result(property = "stars", column = "id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
             ),
             @Result(property = "likes", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
@@ -325,22 +325,22 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "id", column = "id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "category", column = "category_id", javaType = Category.class,
                     // 用这种方式查出来的category有configs
-                    one = @One(select = "com.lrz.eshop.mapper.CategoryMapper.selectCategoryByCategoryId")
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "abstracts", column = "abstracts"),
             @Result(property = "coverImageUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.ImageMapper.selectCoverImageUrlByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
             ),
             // 浏览、赞、踩
             @Result(property = "watches", column = "watches"),
             @Result(property = "stars", column = "id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.StarMapper.selectStarCountByArticleId")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
             ),
             @Result(property = "likes", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")

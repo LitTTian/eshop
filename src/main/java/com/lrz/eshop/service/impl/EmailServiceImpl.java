@@ -3,7 +3,7 @@ package com.lrz.eshop.service.impl;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import com.lrz.eshop.service.EmailService;
-import com.lrz.eshop.service.dto.EmailDto;
+import com.lrz.eshop.controller.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;

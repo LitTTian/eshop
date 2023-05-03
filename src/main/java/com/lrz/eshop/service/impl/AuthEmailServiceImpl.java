@@ -1,11 +1,11 @@
 package com.lrz.eshop.service.impl;
 
 import com.google.code.kaptcha.Producer;
-import com.lrz.eshop.common.captchaapi.CaptchaExpiration;
+import com.lrz.eshop.common.captcha.CaptchaExpiration;
 import com.lrz.eshop.service.AuthEmailService;
 import com.lrz.eshop.service.EmailService;
 import com.lrz.eshop.service.UserService;
-import com.lrz.eshop.service.dto.EmailDto;
+import com.lrz.eshop.controller.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

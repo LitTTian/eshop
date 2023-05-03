@@ -25,7 +25,10 @@ public class WebSocketConfig extends  ServerEndpointConfig.Configurator {
     public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
         // HandshakeRequest封装了request对象，可以获取request对象中的信息
         HttpSession httpSession = (HttpSession)request.getHttpSession();
+        // System.out.println("modifyHandshake");
+        // System.out.println(request.getHeaders());
         if (httpSession != null) { // 读取session域中存储的数据
+            // sec.getUserProperties().put("token", request.getHeaders().get("token"));
             sec.getUserProperties().put(HttpSession.class.getName(),httpSession);
         }
         super.modifyHandshake(sec, request, response);

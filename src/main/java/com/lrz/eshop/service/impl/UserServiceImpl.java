@@ -3,16 +3,18 @@ package com.lrz.eshop.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.lrz.eshop.mapper.LocationMapper;
-import com.lrz.eshop.mapper.StarMapper;
-import com.lrz.eshop.mapper.UserInfoMapper;
-import com.lrz.eshop.mapper.UserMapper;
+import com.lrz.eshop.controller.dto.UserDto;
+import com.lrz.eshop.mapper.user.LocationMapper;
+import com.lrz.eshop.mapper.star.StarMapper;
+import com.lrz.eshop.mapper.user.UserInfoMapper;
+import com.lrz.eshop.mapper.user.UserMapper;
 import com.lrz.eshop.pojo.DeletedByte;
 import com.lrz.eshop.pojo.user.*;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.UserService;
 import com.lrz.eshop.util.ImageNameUtil;
 import com.lrz.eshop.util.TokenUtil;
+import org.apache.http.protocol.HttpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +53,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     ImageNameUtil imageNameUtil;
+
+    @Autowired
+    HttpSession session;
 
 
     @Override
@@ -105,7 +110,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User verifyUser(UserDto user, HttpSession session) {
+    public User verifyUser(UserDto user) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", user.getUsername());
         queryWrapper.eq("password", user.getPassword());
@@ -141,7 +146,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserInfoByToken(String token, HttpSession session) {
+    public User getUserInfoByToken(String token) {
         if(!TokenUtil.verify(token)) {
             return null;
         }

@@ -5,11 +5,13 @@ import com.lrz.eshop.pojo.chat.Message;
 import com.lrz.eshop.pojo.chat.Room;
 import com.lrz.eshop.pojo.chat.UserInRoom;
 import com.lrz.eshop.service.MessageService;
+import com.lrz.eshop.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -27,14 +29,18 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private HttpServletRequest request;
+
     /**
      * 获取用户的所有私聊列表
-     * @param userId
      * @return
      */
     @ApiOperation("获取私聊列表")
     @PostMapping("/getPrivateChat")
-    public Result<?> getPrivateChat(@RequestParam("userId") String userId) {
+    public Result<?> getPrivateChat() {
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
         List<UserInRoom> friends = messageService.getPrivateChat(userId);
         return Result.success(friends);
     }
@@ -47,6 +53,10 @@ public class MessageController {
     @ApiOperation("获取房间消息")
     @PostMapping("/getRoomMessage")
     public Result<?> getRoomMessage(@RequestParam("roomId") String roomId) {
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
+        System.out.println("取到的token是" + token);
+        System.out.println("取到的userId是" + userId);
         List<Message> messages = messageService.getRoomMessage(roomId);
         return Result.success(messages);
     }

@@ -1,16 +1,15 @@
 package com.lrz.eshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lrz.eshop.mapper.ModelMapper;
-import com.lrz.eshop.mapper.StarMapper;
-import com.lrz.eshop.mapper.UserMapper;
+import com.lrz.eshop.mapper.product.ModelMapper;
+import com.lrz.eshop.mapper.star.StarMapper;
+import com.lrz.eshop.mapper.user.UserMapper;
 import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.common.Likes;
 import com.lrz.eshop.pojo.common.LikesState;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.common.StarType;
-import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.ModelCardInfo;
 import com.lrz.eshop.pojo.user.UserSocialInfo;
 import com.lrz.eshop.service.StarService;

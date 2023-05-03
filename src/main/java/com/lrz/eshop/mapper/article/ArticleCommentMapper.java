@@ -31,7 +31,7 @@ public interface ArticleCommentMapper extends BaseMapper<ArticleComment> {
             @Result(property = "userId", column = "user_id"),
             @Result(property = "articleId", column = "article_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "content", column = "content"),
             @Result(property = "likes", column = "id", javaType = Integer.class,
@@ -53,7 +53,7 @@ public interface ArticleCommentMapper extends BaseMapper<ArticleComment> {
             @Result(property = "userId", column = "user_id"),
             @Result(property = "articleId", column = "article_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "content", column = "content"),
             @Result(property = "likes", column = "id", javaType = Integer.class,

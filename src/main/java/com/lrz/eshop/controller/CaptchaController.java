@@ -1,7 +1,7 @@
 package com.lrz.eshop.controller;
 
 import com.google.code.kaptcha.Producer;
-import com.lrz.eshop.common.captchaapi.CaptchaExpiration;
+import com.lrz.eshop.common.captcha.CaptchaExpiration;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.service.AuthEmailService;
 import com.lrz.eshop.util.RedisUtils;

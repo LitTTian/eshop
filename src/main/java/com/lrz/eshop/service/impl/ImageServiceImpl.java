@@ -1,9 +1,13 @@
 package com.lrz.eshop.service.impl;
 
-import com.lrz.eshop.mapper.ImageMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lrz.eshop.mapper.common.ImageMapper;
 import com.lrz.eshop.pojo.common.Image;
+import com.lrz.eshop.pojo.common.ImageType;
+import com.lrz.eshop.pojo.product.Product;
 import com.lrz.eshop.service.ImageService;
 import com.lrz.eshop.service.OssService;
+import com.lrz.eshop.service.ProductService;
 import com.lrz.eshop.util.ImageNameUtil;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,9 @@ public class ImageServiceImpl implements ImageService {
 
     @Autowired
     ImageMapper imageMapper;
+
+    // @Autowired
+    // ProductService productService;
 
     @Autowired
     OssService ossService;
@@ -93,7 +100,34 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Integer selectMaxPicSeqByForeignIdAndType(String foreignId, int type) {
+    public Integer selectMaxPicSeqByForeignIdAndType(String foreignId, byte type) {
         return imageMapper.maxPicSeq(foreignId, type);
     }
+
+    @Override
+    public Image selectCoverImageByForeignIdAndType(String foreignId, byte type) {
+        QueryWrapper<Image> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("foreign_id", foreignId);
+        queryWrapper.eq("type", type);
+        Image image = imageMapper.selectOne(queryWrapper);
+        return image;
+    }
+
+    @Override
+    public Image selectCoverImageUrlByModelId(String modelId) {
+        return selectCoverImageByForeignIdAndType(modelId, ImageType.PRODUCT.getCode());
+    }
+
+    @Override
+    public Image selectCoverImageUrlByArticleId(String articleId) {
+        return selectCoverImageByForeignIdAndType(articleId, ImageType.ARTICLE.getCode());
+    }
+
+/*    @Override
+    public Image selectCoverImageUrlByProductId(String productId) {
+        Product product = productService.selectById(productId);
+        return selectCoverImageByForeignIdAndType(String.valueOf(product.getModelId()), ImageType.PRODUCT.getCode());
+    }*/
+
+
 }

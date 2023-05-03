@@ -57,6 +57,7 @@ public class JWTInterceptor implements HandlerInterceptor {
         //设置编码
         response.setCharacterEncoding("utf-8");
         // 从 http 请求头中取出 token
+        // String token = request.getHeader("Authorization");
         String token = request.getHeader("Authorization");
         System.out.println("Authorization:" + token);//输出token
         if (token != null) {

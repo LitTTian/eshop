@@ -8,10 +8,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**  
+/**
  * 加密工具类
- * @author 天天  
- * @create 2023/1/19 17:21  
+ * @author 天天
+ * @create 2023/1/19 17:21
  * @description
  */
 public class EncryptUtils {
@@ -89,7 +89,9 @@ public class EncryptUtils {
             longs[i ++] = l;
             // System.out.println(l);
         }
-        return Encode.mergeAndDecode(longs);
+        String msg = Encode.mergeAndDecode(longs);
+        // System.out.println("解密后的消息内容：" + msg);
+        return msg;
     }
 
     public static void main(String[] args) {

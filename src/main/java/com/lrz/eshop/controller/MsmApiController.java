@@ -2,10 +2,10 @@ package com.lrz.eshop.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.google.code.kaptcha.Producer;
-import com.lrz.eshop.common.captchaapi.CaptchaExpiration;
+import com.lrz.eshop.common.captcha.CaptchaExpiration;
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.service.EmailService;
-import com.lrz.eshop.service.dto.EmailDto;
+import com.lrz.eshop.controller.dto.EmailDto;
 import com.lrz.eshop.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

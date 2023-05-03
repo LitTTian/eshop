@@ -1,9 +1,8 @@
 package com.lrz.eshop.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lrz.eshop.mapper.BannerMapper;
-import com.lrz.eshop.mapper.CategoryMapper;
-import com.lrz.eshop.mapper.StarMapper;
+import com.lrz.eshop.mapper.common.BannerMapper;
+import com.lrz.eshop.mapper.product.CategoryMapper;
+import com.lrz.eshop.mapper.star.StarMapper;
 import com.lrz.eshop.mapper.article.ArticleMapper;
 import com.lrz.eshop.mapper.article.LikeMapper;
 import com.lrz.eshop.mapper.article.TagMapper;

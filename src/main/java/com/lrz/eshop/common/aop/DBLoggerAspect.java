@@ -60,7 +60,7 @@ public class DBLoggerAspect {
         sysOperation.setModule(dbLoggerAnnotation.module());
         sysOperation.setOperation(dbLoggerAnnotation.operation());
         Object[] args = pjp.getArgs();
-        sysOperation.setParams(JSON.toJSONString(args[0])); // 只获取第一个参数
+        sysOperation.setParams(JSON.toJSONString(args)); // 只获取第一个参数
         sysOperation.setIp(NetworkUtils.getIpAddr(HttpContextUtils.getHttpServletRequest()));
         sysOperation.setCreateTime(data);
         sysOperation.setExecuteTime(time + "ms");

@@ -20,6 +20,12 @@ public interface ImageService {
 
     Image linkImage(Image image);
 
-    Integer selectMaxPicSeqByForeignIdAndType(String foreignId, int type);
+    Integer selectMaxPicSeqByForeignIdAndType(String foreignId, byte type);
+
+    Image selectCoverImageByForeignIdAndType(String foreignId, byte type);
+
+    Image selectCoverImageUrlByModelId(String modelId);
+    Image selectCoverImageUrlByArticleId(String articleId);
+    // Image selectCoverImageUrlByProductId(String productId);
 
 }

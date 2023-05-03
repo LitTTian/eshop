@@ -2,6 +2,7 @@ package com.lrz.eshop.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.lrz.eshop.controller.dto.UserDto;
 import com.lrz.eshop.pojo.common.Star;
 import com.lrz.eshop.pojo.user.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,7 +71,7 @@ public interface UserService {
     Boolean existId(String id);
     Boolean existUsername(String username);
     Boolean existEmail(String id);
-    User verifyUser(UserDto user, HttpSession session);
+    User verifyUser(UserDto user);
 
 
     /**
@@ -82,7 +83,7 @@ public interface UserService {
     String uploadUserAvatar(MultipartFile file, User user);
 
 
-    User getUserInfoByToken(String token, HttpSession session);
+    User getUserInfoByToken(String token);
 
     int selectLocationSeqByUserId(String userId);
     Location addLocation(Location location);

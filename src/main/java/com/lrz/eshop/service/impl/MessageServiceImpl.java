@@ -1,9 +1,9 @@
 package com.lrz.eshop.service.impl;
 
-import com.lrz.eshop.mapper.MessageContentMapper;
-import com.lrz.eshop.mapper.MessageMapper;
-import com.lrz.eshop.mapper.RoomMapper;
-import com.lrz.eshop.mapper.UserInRoomMapper;
+import com.lrz.eshop.mapper.chat.MessageContentMapper;
+import com.lrz.eshop.mapper.chat.MessageMapper;
+import com.lrz.eshop.mapper.chat.RoomMapper;
+import com.lrz.eshop.mapper.user.UserInRoomMapper;
 import com.lrz.eshop.pojo.chat.*;
 import com.lrz.eshop.service.MessageService;
 import com.lrz.eshop.util.EncryptUtils;
@@ -79,12 +79,16 @@ public class MessageServiceImpl implements MessageService {
             message.setUserId(Long.valueOf(buyerId));
             // message.setContent(HELLO_MESSAGE);
             // 加密消息
+            messageMapper.insert(message);
+            if(message.getId() == null) {
+                // 发送消息失败
+                return null;
+            }
             List<MessageContent> messageContents = EncryptUtils.encryptMessage(HELLO_MESSAGE, newRoomId);
             for(MessageContent messageContent : messageContents) {
-                messageContent.setMessageId(newRoomId);
+                messageContent.setMessageId(message.getId());
                 messageContentMapper.insert(messageContent);
             }
-            messageMapper.insert(message);
             // 返回新的房间号
             roomId = String.valueOf(newRoomId);
         }

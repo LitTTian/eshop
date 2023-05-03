@@ -1,26 +1,25 @@
 package com.lrz.eshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lrz.eshop.controller.ImageController;
-import com.lrz.eshop.mapper.*;
+import com.lrz.eshop.mapper.common.ImageMapper;
+import com.lrz.eshop.mapper.product.CategoryMapper;
+import com.lrz.eshop.mapper.product.ModelMapper;
+import com.lrz.eshop.mapper.product.ProductMapper;
+import com.lrz.eshop.mapper.trade.TradeDetailMapper;
+import com.lrz.eshop.mapper.trade.TradeMapper;
 import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.common.ImageType;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
-import com.lrz.eshop.pojo.trade.Trade;
-import com.lrz.eshop.pojo.trade.TradeDetail;
 import com.lrz.eshop.service.ImageService;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.ProductService;
 import com.lrz.eshop.util.ImageNameUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author 天天
@@ -187,6 +186,11 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return true;
+    }
+
+    @Override
+    public Product selectById(String productId) {
+        return productMapper.selectById(productId);
     }
 
 

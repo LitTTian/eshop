@@ -1,17 +1,24 @@
 package com.lrz.eshop.service.impl;
 
-import com.lrz.eshop.mapper.TradeDetailMapper;
-import com.lrz.eshop.mapper.TradeMapper;
-import com.lrz.eshop.mapper.UserMapper;
+import com.lrz.eshop.common.aop.DBLoggerAnnotation;
+import com.lrz.eshop.controller.dto.TradeDTO;
+import com.lrz.eshop.controller.dto.TradeDetailDTO;
+import com.lrz.eshop.mapper.product.ProductMapper;
+import com.lrz.eshop.mapper.trade.TradeDetailMapper;
+import com.lrz.eshop.mapper.trade.TradeMapper;
+import com.lrz.eshop.mapper.user.UserMapper;
+import com.lrz.eshop.pojo.product.Product;
 import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.pojo.trade.TradeDetail;
 import com.lrz.eshop.pojo.trade.TradeState;
 import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.producer.DelayMessageProducer;
+import com.lrz.eshop.service.ImageService;
 import com.lrz.eshop.service.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +39,15 @@ public class TradeServiceImpl implements TradeService {
     TradeDetailMapper tradeDetailMapper;
 
     @Autowired
+    ProductMapper productMapper;
+
+    @Autowired
+    ImageService imageService;
+
+    @Autowired
     private DelayMessageProducer delayMessageProducer;
 
-    @Override
+/*    @Override
     public Trade placeOrder(Trade trade) {
         insertTrade(trade);
         if(trade.getId() == null) {
@@ -48,8 +61,74 @@ public class TradeServiceImpl implements TradeService {
             delayMessageProducer.send(String.valueOf(trade.getId()), 15 * 60 * 1000);
             return trade;
         }
+    }*/
+
+    @Override
+    // 新的placeOrder
+    public List<Trade> placeOrderList(List<TradeDTO> tradeDTOs) {
+        List<Trade> trades = new ArrayList<>();
+        for(TradeDTO TradeDTO: tradeDTOs) {
+            trades.add(placeOrder(TradeDTO));
+        }
+        return trades;
     }
 
+
+    @Override
+    @DBLoggerAnnotation(module = "订单", operation = "下单")
+    public Trade placeOrder(TradeDTO tradeDTO) {
+        List<TradeDetail> tradeDetails = new ArrayList<>();
+        int index = 0;
+        int totalCount = 0;
+        float totalPrice = 0;
+        float totalDiscount = 0;
+        // 运费
+        int totalTransportationExpenses = 0;
+        for(TradeDetailDTO detail: tradeDTO.getTradeDetailDTOs()) {
+            Product product = productMapper.selectById(detail.getProductId());
+            int count = detail.getCount();
+            float price = product.getPrice();
+            float originPrice = product.getOriginalPrice();
+            float discount = count * ( originPrice - price);
+            totalCount += count;
+            totalPrice += count * price;
+            totalDiscount += discount;
+            totalTransportationExpenses += 0;
+            TradeDetail tradeDetail = new TradeDetail();
+            // tradeDetail.setSellerId(Long.valueOf(tradeDTO.getSellerId())); // TODO 需要删除此字段
+            tradeDetail.setProductId(Long.valueOf(detail.getProductId()));
+            tradeDetail.setPrice(price);
+            tradeDetail.setCount(count);
+            tradeDetail.setDiscount(discount);
+            tradeDetail.setTransportationExpenses(0);
+            // TODO TradeDetail的imageUrl获取方式要修改
+            // tradeDetail.setImageUrl(imageService.selectCoverImageUrlByProductId(detail.getProductId()).getImgUrl());
+            tradeDetail.setImageUrl(detail.getImageUrl());
+            tradeDetails.add(tradeDetail);
+        }
+        Trade trade = new Trade();
+        trade.setSellerId(Long.valueOf(tradeDTO.getSellerId()));
+        trade.setBuyerId(Long.valueOf(tradeDTO.getBuyerId()));
+        trade.setLocationId(Long.valueOf(tradeDTO.getLocationId()));
+        trade.setTotalCount(totalCount);
+        trade.setTotalPrice(totalPrice);
+        trade.setTotalDiscount(totalDiscount);
+        trade.setTotalTransportationExpenses(totalTransportationExpenses);
+        // 更新trade状态并插入数据库
+        trade.setState(TradeState.WAIT_PAY.getCode());
+        // 插入数据库后，trade有id了
+        tradeMapper.insert(trade);
+        if(trade.getId() == null) {
+            return null;
+        }else {
+            for(TradeDetail detail: tradeDetails) {
+                detail.setTradeId(trade.getId());
+                tradeDetailMapper.insert(detail);
+            }
+        }
+        delayMessageProducer.send(String.valueOf(trade.getId()), 15 * 60 * 1000);
+        return trade;
+    }
     @Override
     public Trade insertTrade(Trade trade) {
         tradeMapper.insert(trade);
@@ -87,6 +166,7 @@ public class TradeServiceImpl implements TradeService {
 
 
     @Override
+    @DBLoggerAnnotation(module = "订单", operation = "通过tradeId支付")
     public Trade payByTradeId(String userId, String tradeId) {
         User user = userMapper.selectById(userId);
         Trade trade = tradeMapper.selectById(tradeId);
@@ -103,6 +183,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    @DBLoggerAnnotation(module = "订单", operation = "取消订单")
     public Trade verifyAndCancelTrade(String userId, String tradeId) {
         Trade trade = tradeMapper.selectById(tradeId);
         if(trade == null || !userId.equals(String.valueOf(trade.getBuyerId()))) {
@@ -117,6 +198,7 @@ public class TradeServiceImpl implements TradeService {
         return trade;
     }
 
+    @DBLoggerAnnotation(module = "订单", operation = "用户确认收货")
     @Override
     public Trade confirmReceipt(String userId, String tradeId) {
         Trade trade = tradeMapper.selectById(tradeId);
@@ -163,6 +245,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    @DBLoggerAnnotation(module = "订单", operation = "卖家发货")
     public Trade deliverGoods(String sellerId, String tradeId, String expressCompany, String expressNumber) {
         Trade trade = tradeMapper.selectById(tradeId);
         if(trade == null || !sellerId.equals(String.valueOf(trade.getSellerId()))) {

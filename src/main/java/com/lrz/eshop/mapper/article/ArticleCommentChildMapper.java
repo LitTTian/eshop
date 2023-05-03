@@ -26,7 +26,7 @@ public interface ArticleCommentChildMapper extends BaseMapper<ArticleCommentChil
             @Result(property = "userId", column = "user_id"),
             @Result(property = "articleId", column = "article_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "mainCommentId", column = "main_comment_id"),
             @Result(property = "replyCommentId", column = "reply_comment_id"),
@@ -51,7 +51,7 @@ public interface ArticleCommentChildMapper extends BaseMapper<ArticleCommentChil
     @Select("<script> select * from user where id in (select user_id from <choose><when test='afterMain==true'> article_comment </when> <otherwise> article_comment_child </otherwise> </choose> where id = #{replyCommentId}) </script>")
     // @Select("<script> select user_id from <choose><when test='afterMain==true'> article_comment </when> <otherwise> article_comment_child </otherwise> </choose> where id = #{replyCommentId} </script>")
     // @Result(column = "user_id", javaType = UserSocialInfo.class,
-    //         one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+    //         one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
     // )
     UserSocialInfo selectByReplyCommentId(String replyCommentId, Boolean afterMain);
 
@@ -62,7 +62,7 @@ public interface ArticleCommentChildMapper extends BaseMapper<ArticleCommentChil
             @Result(property = "userId", column = "user_id"),
             @Result(property = "articleId", column = "article_id"),
             @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
-                    one = @One(select = "com.lrz.eshop.mapper.UserInfoMapper.getUserSocialInfo")
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
             ),
             @Result(property = "mainCommentId", column = "main_comment_id"),
             @Result(property = "replyCommentId", column = "reply_comment_id"),

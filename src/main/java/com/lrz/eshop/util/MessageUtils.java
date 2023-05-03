@@ -2,7 +2,7 @@ package com.lrz.eshop.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lrz.eshop.pojo.chat.ResultMessage;
+import com.lrz.eshop.component.ResultMessage;
 import lombok.Data;
 
 /**

@@ -1,5 +1,7 @@
 package com.lrz.eshop.service;
 
+import com.lrz.eshop.common.aop.DBLoggerAnnotation;
+import com.lrz.eshop.controller.dto.TradeDTO;
 import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.pojo.trade.TradeDetail;
 
@@ -25,11 +27,21 @@ public interface TradeService {
      */
     Trade getTradeDetailByTradeId(String tradeId, String userId);
 
+    Trade placeOrder(TradeDTO tradeDTO);
+
+
+
     Trade payByTradeId(String userId, String tradeId);
 
-    Trade verifyAndCancelTrade(String userId, String tradeId);
+
+    Trade deliverGoods(String sellerId, String tradeId, String expressCompany, String expressNumber);
+
+
 
     Trade confirmReceipt(String userId, String tradeId);
+
+
+    Trade verifyAndCancelTrade(String userId, String tradeId);
 
     void updateTradeState(Trade trade);
 
@@ -38,7 +50,7 @@ public interface TradeService {
     void updateTradeByUserId(String id);
 
 
-    Trade placeOrder(Trade trade);
+    List<Trade> placeOrderList(List<TradeDTO> tradeDTOs);
 
     Trade insertTrade(Trade trade);
 
@@ -47,5 +59,4 @@ public interface TradeService {
     int cancelTrade(Trade trade);
     int updateState(Trade trade, byte state);
 
-    Trade deliverGoods(String sellerId, String tradeId, String expressCompany, String expressNumber);
 }

@@ -1,6 +1,6 @@
 package com.lrz.eshop.consumer;
 
-import com.lrz.eshop.mapper.TradeMapper;
+import com.lrz.eshop.mapper.trade.TradeMapper;
 import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.service.TradeService;
 import com.rabbitmq.client.Channel;

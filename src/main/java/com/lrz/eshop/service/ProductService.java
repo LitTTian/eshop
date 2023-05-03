@@ -90,4 +90,6 @@ public interface ProductService {
 
 
     boolean addModel(Model model);
+
+    Product selectById(String productId);
 }

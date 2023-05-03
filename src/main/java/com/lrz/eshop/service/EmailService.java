@@ -1,6 +1,6 @@
 package com.lrz.eshop.service;
 
-import com.lrz.eshop.service.dto.EmailDto;
+import com.lrz.eshop.controller.dto.EmailDto;
 
 /**
  *

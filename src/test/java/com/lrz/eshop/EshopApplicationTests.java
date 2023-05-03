@@ -1,20 +1,13 @@
 package com.lrz.eshop;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lrz.eshop.mapper.MessageContentMapper;
-import com.lrz.eshop.mapper.MessageMapper;
+import com.lrz.eshop.mapper.chat.MessageContentMapper;
+import com.lrz.eshop.mapper.chat.MessageMapper;
 import com.lrz.eshop.mapper.article.ArticleMapper;
-import com.lrz.eshop.pojo.article.Article;
-import com.lrz.eshop.pojo.chat.Message;
-import com.lrz.eshop.pojo.chat.MessageContent;
 import com.lrz.eshop.service.CommonService;
-import com.lrz.eshop.util.EncryptUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // @ContextConfiguration(locations= {"classpath:application.yml"})

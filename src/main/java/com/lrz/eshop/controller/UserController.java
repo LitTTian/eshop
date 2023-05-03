@@ -4,7 +4,7 @@ import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.common.webapi.ResultCode;
 import com.lrz.eshop.pojo.user.Location;
 import com.lrz.eshop.pojo.user.User;
-import com.lrz.eshop.pojo.user.UserDto;
+import com.lrz.eshop.controller.dto.UserDto;
 import com.lrz.eshop.service.TradeService;
 import com.lrz.eshop.service.UserService;
 import io.swagger.annotations.Api;
@@ -51,40 +51,15 @@ public class UserController {
         return Result.success(userService.selectUserInfo(userId));
     }
 
-/*      *//**
-     * 查询所有用户
-     * @return
-     *//*
-    @ApiOperation("查询所有的用户信息")
-    @GetMapping("/query")
-    public Result<?> query() {
-        List<User> list = userService.selectList(null);
-        // System.out.println(list);
-        return Result.success(list);
-    } */
-
-    /**
-     * 查询所有用户和购买记录
-     * @return
-     */
-    // @ApiOperation("查询所有用户和购买记录")
-    // @GetMapping("/queryAll")
-    // public Result<?> queryAll() {
-    //     List<User> list = userService.selectAllUserAndTrades();
-    //     // System.out.println(list);
-    //     return Result.success(list);
-    // }
-
 
 
     /**
      * 注册时确认用户名密码，并存入session
      * @param user 用户名
-     * @param session HttpSession
      * @return 用户对象
      */
     @PostMapping("/register")
-    public Result<?> register(@RequestBody User user, HttpSession session) {
+    public Result<?> register(@RequestBody User user) {
         // System.out.println(user);
         // 判断是否已存在用户
         if(userService.existEmail(user.getEmail())) {
@@ -102,7 +77,7 @@ public class UserController {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setPassword(user.getPassword());
-        User userDB = userService.verifyUser(userDto, session);
+        User userDB = userService.verifyUser(userDto);
         // id 在 session中保存为String，为的是防止Long在存储雪花算法得到的id时丢失精度
         // session.setAttribute("id", String.valueOf(userDB.getId()));
         return Result.success("注册成功", userDB);
