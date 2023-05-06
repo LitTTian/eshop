@@ -2,12 +2,14 @@ package com.lrz.eshop.controller;
 
 import com.lrz.eshop.common.webapi.Result;
 import com.lrz.eshop.pojo.article.Article;
+import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.service.DoService;
 import com.lrz.eshop.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -71,5 +73,39 @@ public class DoController {
         }
         return Result.success("修改成功", count);
     }
+
+    @ApiOperation("修改昵称")
+    @PostMapping("updateUserNickname")
+    public Result<?> updateUserNickname(@RequestParam(value = "nickname") String nickname) {
+        // String userId = session.getAttribute("id").toString();
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
+        if(userId == null || nickname == null) {
+            return Result.operateFailed();
+        }
+        Integer count = doService.updateUserNickname(userId, nickname);
+        if(count == null) {
+            return Result.operateFailed();
+        }
+        return Result.success("修改成功", count);
+    }
+
+    /**
+     * 为用户设置头像
+     * @param file 头像图片
+     * @param id 用户id
+     * @return 头像地址
+     */
+    @PostMapping("/setAvatar")
+    public Result<?> setAvatar(@RequestParam("file") MultipartFile file) {
+        String token = request.getHeader("Authorization");
+        String userId = TokenUtil.getIdByToken(token);
+        String url = doService.setAvatar(userId, file);
+        if (url == null) {
+            return Result.operateFailed();
+        }
+        return Result.success("上传成功", url);
+    }
+
 
 }

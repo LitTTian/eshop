@@ -40,7 +40,7 @@ public interface UserInfoMapper extends BaseMapper<User> {
     //         private int peopleStarCount; // 关注的人的数量
     //         private int fansCount; // 粉丝的数量
 
-    @Select("select sum(watches) as watches, count(*) as article_count, user_id from article where user_id = #{userId}")
+    @Select("select sum(watches) as watches, count(*) as article_count, #{userId} as user_id from article where user_id = #{userId}")
     @Results({
             @Result(property = "id", column = "user_id"),
             @Result(property = "articleCount", column = "article_count"),
@@ -81,7 +81,7 @@ public interface UserInfoMapper extends BaseMapper<User> {
      * @param userId
      * @return
      */
-    @Select("select count(*) as counts, seller_id from model where seller_id = #{userId}")
+    @Select("select count(*) as counts, #{userId} as seller_id from model where seller_id = #{userId}")
     @Results({
             @Result(property = "id", column = "seller_id"),
             @Result(property = "modelSellCount", column = "seller_id", javaType = Integer.class,

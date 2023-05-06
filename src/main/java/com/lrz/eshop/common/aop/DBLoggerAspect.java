@@ -17,10 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -60,7 +63,20 @@ public class DBLoggerAspect {
         sysOperation.setModule(dbLoggerAnnotation.module());
         sysOperation.setOperation(dbLoggerAnnotation.operation());
         Object[] args = pjp.getArgs();
-        sysOperation.setParams(JSON.toJSONString(args)); // 只获取第一个参数
+        // Object[] params = new Object[args.length + 5];
+        List<Object> params = new ArrayList<Object>();
+        int index = 0;
+        for (Object arg: args) { // 过滤过长参数
+            if(arg instanceof MultipartFile || arg instanceof MultipartFile[]) { // 文件类型不记录
+                continue;
+            }else if(arg instanceof HttpServletRequest) { // request不记录
+                continue;
+            }else if(arg instanceof ServletRequestAttributes) { // request不记录
+                continue;
+            }
+            params.add(arg);
+        }
+        sysOperation.setParams(JSON.toJSONString(params));
         sysOperation.setIp(NetworkUtils.getIpAddr(HttpContextUtils.getHttpServletRequest()));
         sysOperation.setCreateTime(data);
         sysOperation.setExecuteTime(time + "ms");
@@ -85,3 +101,4 @@ public class DBLoggerAspect {
     }
 
 }
+

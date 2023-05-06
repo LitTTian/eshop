@@ -9,9 +9,6 @@ package com.lrz.eshop.service;
 import com.github.pagehelper.PageInfo;
 import com.lrz.eshop.pojo.product.Model;
 
-/**
- * 商品查询服务类
- */
 public interface SearchService {
     PageInfo<Model> findPageByKeywordOrder(Integer page, Integer size, String keyword, String order);
 

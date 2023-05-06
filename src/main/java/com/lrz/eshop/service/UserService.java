@@ -74,15 +74,6 @@ public interface UserService {
     User verifyUser(UserDto user);
 
 
-    /**
-     * 上传头像到阿里云OSS
-     * @param file
-     * @param user
-     * @return
-     */
-    String uploadUserAvatar(MultipartFile file, User user);
-
-
     User getUserInfoByToken(String token);
 
     int selectLocationSeqByUserId(String userId);

@@ -1,6 +1,7 @@
 package com.lrz.eshop.service;
 
 import com.lrz.eshop.pojo.article.Article;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author 天天
@@ -18,4 +19,10 @@ public interface DoService {
     Article removeArticle(String userId, String articleId);
 
     Integer updateUserSignature(String userId, String signature);
+
+    Integer updateUserNickname(String userId, String nickname);
+
+    String setAvatar(String userId, MultipartFile image);
+
+
 }

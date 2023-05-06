@@ -18,6 +18,28 @@ spring:
         username: test # RabbitMQ服务器用户名
         password: liruizhi
         virtual-host: / # RabbitMQ服务器虚拟主机
+        publisher-returns: true # 开启发送端消息确认机制
+        publisher-confirm-type: correlated #开启消息的confirm机制
+        template:
+            mandatory: true #在需要使用消息的return机制时候，此参数必须设置为true
+        simple:
+            enabled: true
+            # 消费者并发数量
+            concurrency: 5
+            # 每个消费者获取最大投递数量
+            max-concurrency: 10
+            # 每次获取消息数量
+            prefetch: 1
+            retry:
+                enabled: true
+                # 最大重试次数
+                max-attempts: 3
+                # 重试间隔时间
+                initial-interval: 1000ms
+                # 重试间隔时间递增系数
+                multiplier: 1.1
+                # 最大重试间隔时间
+                max-interval: 10000ms
     servlet:
         multipart:
             max-file-size: 2MB

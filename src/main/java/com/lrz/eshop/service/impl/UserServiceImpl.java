@@ -130,20 +130,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public String uploadUserAvatar(MultipartFile file, User user) {
-        String originPath = user.getAvatarUrl();
-        if(originPath != null && !originPath.equals("")) {
-            if(!ossService.deleteFile(originPath)) {
-                return null;
-            }
-        }
-        // users/123456/avatar/2021/01/19/123456/avatar/db39a8379db54ae0a92e82f498751589.jpg
-        String path = "users/" + user.getId() + "/avatar/" + imageNameUtil.getImgName(file.getOriginalFilename());
-        // 成功返回：https://oss-cn-hangzhou.aliyuncs.com/images/users/123456/avatar/db39a8379db54ae0a92e82f498751589.jpg
-        // 否则返回：null
-        return ossService.uploadFile(file, path);
-    }
+
 
     @Override
     public User getUserInfoByToken(String token) {

@@ -7,9 +7,11 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lrz.eshop.common.webapi.ResultCode;
 import com.lrz.eshop.util.RedisUtils;
 import com.lrz.eshop.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -96,8 +98,8 @@ public class JWTInterceptor implements HandlerInterceptor {
         try {
             JSONObject json = new JSONObject();
             // json.put("success", "false");
-            json.put("msg", "认证失败，token无效");
-            json.put("code", "404");
+            json.put("msg", ResultCode.UNAUTHORIZED.getMessage());
+            json.put("code", ResultCode.UNAUTHORIZED.getCode());
             response.getWriter().append(json.toJSONString());
             System.out.println("认证失败，token无效");
             // response.getWriter().write("50000");

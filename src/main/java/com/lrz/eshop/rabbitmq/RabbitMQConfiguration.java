@@ -1,4 +1,4 @@
-package com.lrz.eshop.config;
+package com.lrz.eshop.rabbitmq;
 
 import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Qualifier;

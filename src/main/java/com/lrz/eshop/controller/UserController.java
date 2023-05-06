@@ -110,30 +110,6 @@ public class UserController {
     }
 
 
-    /**
-     * 为用户设置头像
-     * @param file 头像图片
-     * @param id 用户id
-     * @return 头像地址
-     */
-    @PostMapping("/setAvatar")
-    public Result<?> setAvatar(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
-        // 先查询出来才能使乐观锁生效
-        User user = userService.selectUserInfoById(id);
-        if(user == null) {
-            return Result.operateFailed();
-        }
-        //  将头像上传云端
-        String url = userService.uploadUserAvatar(file, user);
-        if (url == null) {
-            return Result.operateFailed();
-        }
-        // 修改数据库
-        user.setAvatarUrl(url);
-        userService.updateById(user);
-        return Result.success("上传成功", url);
-    }
-
 
     @ApiOperation("新增地址")
     @PostMapping("/addLocation")

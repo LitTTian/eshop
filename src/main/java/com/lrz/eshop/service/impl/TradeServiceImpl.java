@@ -12,7 +12,7 @@ import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.pojo.trade.TradeDetail;
 import com.lrz.eshop.pojo.trade.TradeState;
 import com.lrz.eshop.pojo.user.User;
-import com.lrz.eshop.producer.DelayMessageProducer;
+import com.lrz.eshop.rabbitmq.producer.DelayMessageProducer;
 import com.lrz.eshop.service.ImageService;
 import com.lrz.eshop.service.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +126,8 @@ public class TradeServiceImpl implements TradeService {
                 tradeDetailMapper.insert(detail);
             }
         }
-        delayMessageProducer.send(String.valueOf(trade.getId()), 15 * 60 * 1000);
+        delayMessageProducer.sendTradeValidator(String.valueOf(trade.getId()), 15 * 60 * 1000);
+        // delayMessageProducer.sendTradeValidator(String.valueOf(trade.getId()), 15 * 1000);
         return trade;
     }
     @Override
@@ -261,7 +262,9 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    @DBLoggerAnnotation(module = "订单", operation = "取消订单")
     public int cancelTrade(Trade trade) {
+        // System.out.println("取消订单：" + trade.getId());
         return updateState(trade, TradeState.CANCEL.getCode());
     }
 

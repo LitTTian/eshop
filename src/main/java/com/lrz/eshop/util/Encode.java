@@ -22,20 +22,20 @@ public class Encode {
             char c = str.charAt(i);
             int index = (int) c;
             // System.out.print(c);
-            if(index >= 97) { // a-z
+            if(index >= 97) { // a-z => 26-51
                 newstr.append(index - 71);
-            }else if(index >= 75) { // K-Z
+            }else if(index >= 75) { // K-Z => 10-25
                 newstr.append(index - 65);
-            }else if (index >= 65) { // A-J
+            }else if (index >= 65) { // A-J => 00-09
                 newstr.append("0").append(index - 65);
                 // newstr.append(index - 65);
-            }else if(index >= 48 && index <= 57) { // 0-9
+            }else if(index >= 48 && index <= 57) { // 0-9 => 52-61
                 newstr.append(index + 4);
-            }else if(index == 43) {
+            }else if(index == 43) { // + => 62
                 newstr.append(62);
-            }else if (index == 47) {
+            }else if (index == 47) { // / => 63
                 newstr.append(63);
-            }else if (index == 61) {
+            }else if (index == 61) { // = => 64
                 newstr.append(64);
             }else {
                 System.out.println(c);

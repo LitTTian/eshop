@@ -12,9 +12,9 @@ import java.security.SecureRandom;
  * @description
  */
 public class ElgamalUtils {
-    private static final Long p = Long.parseLong("366241480223");
+    private static final Long p = Long.parseLong("366241480223"); // p为一个素数
 
-    private static final Long a = Long.parseLong("221467792290");
+    private static final Long a = Long.parseLong("221467792290"); // a为一个原根
 
     /**
      * 将用户的id作为k生成C1并返回

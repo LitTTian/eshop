@@ -13,6 +13,7 @@ public enum ResultCode implements IErrorCode {
     VALIDATE_FAILED(506, "参数检验失败"),
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
     FORBIDDEN(403, "没有相关权限"),
+    Authentication_Timeout(419, "认证超时"),
     LoginFailed(444, "登录失败"),
     UserNotExist(445, "用户不存在"),
     UsernameAlreadyExist(446, "用户名已存在"),
