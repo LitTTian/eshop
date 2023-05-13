@@ -22,12 +22,9 @@ public class UserSocialInfo {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
-
     private String signature;
     private String nickname;
-
     private String avatarUrl;
-
     private Date createTime;
 
 }

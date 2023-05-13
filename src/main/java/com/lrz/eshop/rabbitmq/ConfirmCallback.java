@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 /**
+ * 消息=>交换机
  * @author 天天
  * @create 2023/5/6 11:31
  * @description
@@ -19,7 +20,7 @@ public class ConfirmCallback implements RabbitTemplate.ConfirmCallback {
         if (!ack) {
             log.error("消息发送异常!");
         } else {
-            log.info("发送者收到确认，correlationData={} ,ack={}, cause={}", correlationData.getId(), ack, cause);
+            log.info("消息成功发送到Exchange!");
         }
     }
 }

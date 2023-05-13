@@ -1,135 +1,138 @@
 server:
-    port: 8088
+  port: 8088
 mybatis-plus:
-    configuration:
-        # 指定日志输出格式
-        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  configuration:
+    # 指定日志输出格式
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #    config-location: classpath:mybatis-config.xml
 #pagehelper分页插件配置
 pagehelper:
-    helper-dialect: mysql  #设置数据库类型
-    reasonable: true  #开启合理化：页码<=0 查询第一页，页码>=总页数查询最后一页
-    support-methods-arguments: true  #支持通过 Mapper 接口参数来传递分页参数
-    params: count=countsql
+  helper-dialect: mysql  #设置数据库类型
+  reasonable: true  #开启合理化：页码<=0 查询第一页，页码>=总页数查询最后一页
+  support-methods-arguments: true  #支持通过 Mapper 接口参数来传递分页参数
+  params: count=countsql
 spring:
-    rabbitmq:
-        host: localhost # RabbitMQ服务器地址
-        port: 5672 # RabbitMQ服务器端口
-        username: test # RabbitMQ服务器用户名
-        password: liruizhi
-        virtual-host: / # RabbitMQ服务器虚拟主机
-        publisher-returns: true # 开启发送端消息确认机制
-        publisher-confirm-type: correlated #开启消息的confirm机制
-        template:
-            mandatory: true #在需要使用消息的return机制时候，此参数必须设置为true
-        simple:
-            enabled: true
-            # 消费者并发数量
-            concurrency: 5
-            # 每个消费者获取最大投递数量
-            max-concurrency: 10
-            # 每次获取消息数量
-            prefetch: 1
-            retry:
-                enabled: true
-                # 最大重试次数
-                max-attempts: 3
-                # 重试间隔时间
-                initial-interval: 1000ms
-                # 重试间隔时间递增系数
-                multiplier: 1.1
-                # 最大重试间隔时间
-                max-interval: 10000ms
-    servlet:
-        multipart:
-            max-file-size: 2MB
-            max-request-size: 10MB
-    datasource:
-        username: ENC@[yWRWzi8K+TM1iHIZYrqspQ==]
-        password: ENC@[T4t2tW8gpY6oHKdDeQ5xvKA30mEVw2og]
-#        url: ENC@[5spTxc59d5YHlqCsa3HKupJbbHj09YpxHjjPeBR+/18jHio6pFPnn56WKRKC8rV1hOsXQHgY8fmECyAjmLOi1kep6QWkrcHHYw/lYePwp4ou2WEeDnD9VkZLSPrwjht4HdeCtA4Blaa6WB1Vd5nfM61vaW/R46xbVicMlZn89BVVoH4D7au5jWcqHPfHiG/g]
-#        url: jdbc:mysql://{url:port}/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
-#        url: jdbc:mysql://localhost:3306/eshop?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
-        url: jdbc:mysql://43.143.215.47:3306/eshop?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-    # 配置redis
-    redis:
-        #redis-单机和主从配置
-        host: ENC@[jPwm2BBtqFGXAnfP/7VLNxjNByYY1JIK]
-        port: 6379
-#        jedis:
-#            pool:
-#                # 连接池最大连接数(使用负值表示没有限制) 默认为8
-#                max-active: 8
-#                # 连接池中的最大空闲连接 默认为8
-#                max-idle: 8
-#                # 连接池最大阻塞等待时间(使用负值表示没有限制) 默认为-1
-#                max-wait: -1
-#                # 连接池中的最小空闲连接 默认为 0
-#                min-idle: 0
-        timeout: 5000
-        #redis-哨兵集群的配置
-        password: ENC@[+PISn5p4RhkDxNh2M7eRULSsPMnVDpIV]
-        lettuce:
-            pool:
-                max-active: 8
-                max-wait: -1
-                max-idle: 8
-                min-idle: 0
-            shutdown-timeout: 3000
-    #        sentinel:
-#            master: mymaster
-#            nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
-    mvc:
-        pathmatch:
-            matching-strategy: ant_path_matcher
-    devtools:
-        # 热模块部署
-        restart:
+  rabbitmq:
+    host: localhost # RabbitMQ服务器地址
+    port: 5672 # RabbitMQ服务器端口
+    username: test # RabbitMQ服务器用户名
+    password: liruizhi
+    virtual-host: / # RabbitMQ服务器虚拟主机
+    publisher-returns: true # 开启发送端消息确认机制
+    publisher-confirm-type: correlated #开启消息的confirm机制
+    template:
+      mandatory: true #在需要使用消息的return机制时候，此参数必须设置为true
+    listener:
+      simple:
+        acknowledge-mode: manual # 设置手动确认消息
+        # 消费者并发数量
+        concurrency: 5
+        # 每个消费者获取最大投递数量
+        max-concurrency: 10
+        # 每次获取消息数量
+        prefetch: 1
+        retry:
           enabled: true
-          additional-paths: src/main/java
-          exclude: static/**
+          # 最大重试次数
+          max-attempts: 3
+          # 重试间隔时间
+          initial-interval: 1000ms
+          # 重试间隔时间递增系数
+          multiplier: 1.1
+          # 最大重试间隔时间
+          max-interval: 10000ms
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 10MB
+  datasource:
+    username: ENC@[yWRWzi8K+TM1iHIZYrqspQ==]
+    password: ENC@[T4t2tW8gpY6oHKdDeQ5xvKA30mEVw2og]
+    #        url: ENC@[5spTxc59d5YHlqCsa3HKupJbbHj09YpxHjjPeBR+/18jHio6pFPnn56WKRKC8rV1hOsXQHgY8fmECyAjmLOi1kep6QWkrcHHYw/lYePwp4ou2WEeDnD9VkZLSPrwjht4HdeCtA4Blaa6WB1Vd5nfM61vaW/R46xbVicMlZn89BVVoH4D7au5jWcqHPfHiG/g]
+    #        url: jdbc:mysql://{url:port}/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    #        url: jdbc:mysql://localhost:3306/eshop?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://43.143.215.47:3306/eshop?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # 配置redis
+  redis:
+    #redis-单机和主从配置
+    host: ENC@[jPwm2BBtqFGXAnfP/7VLNxjNByYY1JIK]
+    port: 6379
+    #        jedis:
+    #            pool:
+    #                # 连接池最大连接数(使用负值表示没有限制) 默认为8
+    #                max-active: 8
+    #                # 连接池中的最大空闲连接 默认为8
+    #                max-idle: 8
+    #                # 连接池最大阻塞等待时间(使用负值表示没有限制) 默认为-1
+    #                max-wait: -1
+    #                # 连接池中的最小空闲连接 默认为 0
+    #                min-idle: 0
+    timeout: 5000
+    #redis-哨兵集群的配置
+    password: ENC@[+PISn5p4RhkDxNh2M7eRULSsPMnVDpIV]
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+      shutdown-timeout: 3000
+  #        sentinel:
+  #            master: mymaster
+  #            nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  devtools:
+    # 热模块部署
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: static/**
 
 # jasypt加密配置
 jasypt:
-    encryptor:
-        # 加密盐
-        password: liruizhi
-        algorithm: PBEWITHMD5ANDDES
-        property:
-            prefix: "ENC@["
-            suffix: "]"
+  encryptor:
+    # 加密盐
+    password: liruizhi
+    algorithm: PBEWITHMD5ANDDES
+    property:
+      prefix: "ENC@["
+      suffix: "]"
 #        iv-generator-classname: org.jasypt.iv.NoIvGenerator
 # 阿里云oss对象存储服务
 aliyun:
-    oss:
-        endpoint: ENC@[c5rUxJAXLRD9MrKWfBQv7YENikH0n2Qpw2vGiuHmP5WEXceAWQ+QRg==]
-        id: ENC@[C6eLSEFmiCOhrv6Y9ZHOtOE+isxDk95OGAai+s3LhKPwE/s1ClfVhw==]
-        secret: ENC@[Lf+ySV6IiN4xD/fDBiFkj9hDamOouCCjJSZLC+DfKleKo/nxnB9gCQ==]
-        bucket-name: ENC@[txs9Rot+dBPUZiCbXGxKeHVHCw3aq0F7]
-        dir-prefix: images/
+  oss:
+    endpoint: ENC@[c5rUxJAXLRD9MrKWfBQv7YENikH0n2Qpw2vGiuHmP5WEXceAWQ+QRg==]
+    id: ENC@[C6eLSEFmiCOhrv6Y9ZHOtOE+isxDk95OGAai+s3LhKPwE/s1ClfVhw==]
+    secret: ENC@[Lf+ySV6IiN4xD/fDBiFkj9hDamOouCCjJSZLC+DfKleKo/nxnB9gCQ==]
+    bucket-name: ENC@[txs9Rot+dBPUZiCbXGxKeHVHCw3aq0F7]
+    dir-prefix: images/
 # 注册用电子邮箱信息
 mail:
-    # 负责发送验证码的邮箱
-    email: ENC@[h5Av3Qhe7acsxuH+ZHC+Lh84k5lGh/Blb90qBNCgFFw=]
-    host: smtp.163.com
-    port: 465
-#    username: EPMall
-    password: ENC@[vXsyW3Luc+GHsJA1JbTJsUN0v/sa40ioGyFnIKQZDqM=]
-    username: ENC@[UnXejK1c+38DBoqD4GIQFBl/hpHB+hKl]
-    # 授权码是用于登录第三方邮件客户端的专用密码
-#    password: WDYPAXVBNEUBYTUI
-#    # 开启加密认证
-#    properties:
-#        mail:
-#            smtp:
-#                ssl:
-#                    enable: true
+  # 负责发送验证码的邮箱
+  email: ENC@[h5Av3Qhe7acsxuH+ZHC+Lh84k5lGh/Blb90qBNCgFFw=]
+  host: smtp.163.com
+  port: 465
+  #    username: EPMall
+  password: ENC@[vXsyW3Luc+GHsJA1JbTJsUN0v/sa40ioGyFnIKQZDqM=]
+  username: ENC@[UnXejK1c+38DBoqD4GIQFBl/hpHB+hKl]
+  # 授权码是用于登录第三方邮件客户端的专用密码
+  #    password: WDYPAXVBNEUBYTUI
+  #    # 开启加密认证
+  #    properties:
+  #        mail:
+  #            smtp:
+  #                ssl:
+  #                    enable: true
 
 
-
-# 注意：
-    # Spring Boot 2.6.X后与Swagger有版本冲突问题，需要在application.properties中添加:
-    # spring.mvc.pathmatch.matching-strategy=ant_path_matcher
+elasticsearch:
+  host: localhost
+  port: 9200
+  # 注意：
+  # Spring Boot 2.6.X后与Swagger有版本冲突问题，需要在application.properties中添加:
+  # spring.mvc.pathmatch.matching-strategy=ant_path_matcher
 

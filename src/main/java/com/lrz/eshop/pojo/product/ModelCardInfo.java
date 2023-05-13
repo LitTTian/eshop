@@ -21,6 +21,8 @@ public class ModelCardInfo {
 
     private String title;
 
+    private Category category;
+
     @TableField(exist = false)
     private double lowPrice;
 

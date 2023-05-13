@@ -48,7 +48,7 @@ public class OssServiceImpl implements OssService {
         // https://e-shop-oss.oss-cn-hangzhou.aliyuncs.com/images/users/123456/avatar/db39a8379db54ae0a92e82f498751589.jpg
         String url = "https://" + ossBucketName + "." + ossClient.getEndpoint().getHost() + "/" + filePath;
         return url;
-    }
+    }   
 
     @Override
     public Boolean deleteFile(String path) {

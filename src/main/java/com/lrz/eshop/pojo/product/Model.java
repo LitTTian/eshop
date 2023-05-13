@@ -32,6 +32,9 @@ public class Model {
     private Long categoryId;
 
     @TableField(exist = false)
+    private String categoryName;
+
+    @TableField(exist = false)
     private Category category;
 
     private String title;
@@ -61,6 +64,7 @@ public class Model {
     // private String config4;
     // private String config5;
 
+    @TableField(exist = false)
     private int starCount; // 收藏数
 
     @TableField(exist = false)

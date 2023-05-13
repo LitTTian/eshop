@@ -64,9 +64,17 @@ public interface StarMapper extends BaseMapper<Star> {
     })
     List<Star> selectPeopleStarsByUserId(String userId);
 
+    // 收藏数
     @Select("select count(*) from star where foreign_id = #{articleId} and type = 1")
     Integer selectStarCountByArticleId(String articleId);
 
+    @Select("select count(*) from star where foreign_id = #{modelId} and type = 2")
+    Integer selectStarCountByModelId(String modelId);
+
+    @Select("select count(*) from star where user_id = #{userId} and type = 3")
+    Integer peopleStarCount(String userId); // 关注的人的数量
+    @Select("select count(*) from star where foreign_id = #{userId} and type = 3")
+    Integer fansCount(String userId);
 
 
 
@@ -76,6 +84,9 @@ public interface StarMapper extends BaseMapper<Star> {
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "title", column = "title"),
+            @Result(property = "category", column = "category_id", javaType = Category.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
+            ),
             @Result(property = "lowPrice", column = "id", javaType = Double.class,
                     one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
             ),

@@ -1,6 +1,7 @@
 package com.lrz.eshop.mapper.product;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lrz.eshop.elasticsearch.ModelMapping;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.ModelCardInfo;
@@ -154,10 +155,10 @@ public interface ModelMapper extends BaseMapper<Model> {
     @Select("select * from model where seller_id = #{sellerId} and deleted = false order by create_time desc")
     @Results({
             @Result(property = "id", column = "id"),
-            // @Result(property = "categoryId", column = "category_id"),
-/*             @Result(property = "category", column = "category_id", javaType = Category.class,
+            @Result(property = "categoryId", column = "category_id"),
+            @Result(property = "category", column = "category_id", javaType = Category.class,
                     one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
-            ), */
+            ),
             @Result(property = "title", column = "title"),
             // @Result(property = "advertisement", column = "advertisement"),
 /*             @Result(property = "highPrice", column = "id", javaType = Double.class,
@@ -232,39 +233,39 @@ public interface ModelMapper extends BaseMapper<Model> {
      * @param categoryId
      * @return
      */
-    @Select("select * from model where id in (select model_id from querytop) and category_id = #{categoryId} and model.deleted = false")
-    @Results({
-            @Result(property = "id", column = "id"),
-            @Result(property = "categoryId", column = "category_id"),
-/*             @Result(property = "category", column = "category_id", javaType = Category.class,
-                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
-            ), */
-            @Result(property = "title", column = "title"),
-            @Result(property = "advertisement", column = "advertisement"),
-/*             @Result(property = "highPrice", column = "id", javaType = Double.class,
-                    one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectHighPriceByModelId")
-            ), */
-            @Result(property = "lowPrice", column = "id", javaType = Double.class,
-                    one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
-            ),
-            @Result(property = "coverImgUrl", column = "id", javaType = String.class,
-                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByModelId")
-            ),
-            @Result(property = "sellerId", column = "seller_id"),
-            @Result(property = "starCount", column = "star_count"),
-/*             @Result(property = "sellCount", column = "total"),
-            @Result(property = "stock", column = "stk"), */
-            @Result(property = "createTime", column = "create_time"),
-            @Result(property = "updateTime", column = "update_time"),
-            @Result(property = "version", column = "version"),
-/*             @Result(property = "images", column = "id", javaType = List.class,
-                    many = @Many(select = "com.lrz.eshop.mapper.common.ImageMapper.selectByModelId")
-            ),
-            @Result(property = "products", column = "id", javaType = List.class,
-                    many = @Many(select = "com.lrz.eshop.mapper.product.ProductMapper.selectByModelId")
-            ), */
-    })
-    List<Model> selectTopModelByCategoryId(String categoryId);
+        @Select("select * from model where id in (select model_id from querytop) and category_id = #{categoryId} and model.deleted = false")
+        @Results({
+                @Result(property = "id", column = "id"),
+                @Result(property = "categoryId", column = "category_id"),
+    /*             @Result(property = "category", column = "category_id", javaType = Category.class,
+                        one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
+                ), */
+                @Result(property = "title", column = "title"),
+                @Result(property = "advertisement", column = "advertisement"),
+    /*             @Result(property = "highPrice", column = "id", javaType = Double.class,
+                        one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectHighPriceByModelId")
+                ), */
+                @Result(property = "lowPrice", column = "id", javaType = Double.class,
+                        one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
+                ),
+                @Result(property = "coverImgUrl", column = "id", javaType = String.class,
+                        one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByModelId")
+                ),
+                @Result(property = "sellerId", column = "seller_id"),
+                @Result(property = "starCount", column = "star_count"),
+    /*             @Result(property = "sellCount", column = "total"),
+                @Result(property = "stock", column = "stk"), */
+                @Result(property = "createTime", column = "create_time"),
+                @Result(property = "updateTime", column = "update_time"),
+                @Result(property = "version", column = "version"),
+    /*             @Result(property = "images", column = "id", javaType = List.class,
+                        many = @Many(select = "com.lrz.eshop.mapper.common.ImageMapper.selectByModelId")
+                ),
+                @Result(property = "products", column = "id", javaType = List.class,
+                        many = @Many(select = "com.lrz.eshop.mapper.product.ProductMapper.selectByModelId")
+                ), */
+        })
+        List<Model> selectTopModelByCategoryId(String categoryId);
 
     /**
      * 根据keyword和order查询model
@@ -307,6 +308,38 @@ public interface ModelMapper extends BaseMapper<Model> {
             ), */
     })
     List<Model> selectModelByKeywordOrder(String keyword, String order);
+
+
+    @Select("SELECT * FROM (SELECT model_id, SUM(sell_count) AS total, SUM(stock) AS stk FROM product GROUP BY model_id)t1 JOIN model ON t1.model_id = model.id AND model.deleted = false AND category_id = #{categoryId} ORDER BY #{order} DESC")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "categoryId", column = "category_id"),
+            @Result(property = "category", column = "category_id", javaType = Category.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
+            ),
+            @Result(property = "categoryName", column = "category_id", javaType = Category.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryNameByCategoryId")
+            ),
+            @Result(property = "title", column = "title"),
+            @Result(property = "advertisement", column = "advertisement"),
+            @Result(property = "highPrice", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectHighPriceByModelId")
+            ),
+            @Result(property = "lowPrice", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
+            ),
+            @Result(property = "coverImgUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByModelId")
+            ),
+            @Result(property = "sellerId", column = "seller_id"),
+            @Result(property = "starCount", column = "star_count"),
+            @Result(property = "sellCount", column = "total"),
+            @Result(property = "stock", column = "stk"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "version", column = "version"),
+    })
+    List<Model> selectModelByCategoryIdOrder(String categoryId, String order);
 
 
     /**
@@ -355,4 +388,32 @@ public interface ModelMapper extends BaseMapper<Model> {
     Model selectDetailByModelId(String modelId);
 
 
+    /**
+     * 用于ElasticSearch的初始化数据
+     * @return
+     */
+    @Select("select * from model")
+    @Results({
+            // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
+            @Result(property = "id", column = "id"),
+            @Result(property = "categoryId", column = "category_id"),
+            // Category的详细信息
+            @Result(property = "categoryName", column = "category_id", javaType = Category.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryNameByCategoryId")
+            ),
+            @Result(property = "title", column = "title"),
+            @Result(property = "advertisement", column = "advertisement"),
+            @Result(property = "starCounts", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByModelId")
+            ),
+            @Result(property = "lowPrice", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
+            ),
+            @Result(property = "coverImgUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByModelId")
+            ),
+            @Result(property = "sellerId", column = "seller_id"),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    List<ModelMapping> selectAllModelMapping();
 }

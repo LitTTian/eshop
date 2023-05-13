@@ -351,7 +351,7 @@ public class ChatEndpoint {
         catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("连接成功");
+        System.out.println("发送消息列表成功");
     }
 
 

@@ -86,7 +86,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public List<ArticleShowInfo> selectMostWatchesArticleCard() {
-        return articleMapper.selectMostWatchesArticleCard(10);
+        return articleMapper.selectMostWatchesArticleCard(5);
     }
 
 

@@ -18,10 +18,10 @@ import org.springframework.stereotype.Repository;
 public interface UserInfoMapper extends BaseMapper<User> {
 
 
-    @Select("select count(*) from star where user_id = #{userId} and type = 3")
-    public int peopleStarCount(String userId); // 关注的人的数量
-    @Select("select count(*) from star where foreign_id = #{userId} and type = 3")
-    public int fansCount(String userId);
+    // @Select("select count(*) from star where user_id = #{userId} and type = 3")
+    // public int peopleStarCount(String userId); // 关注的人的数量
+    // @Select("select count(*) from star where foreign_id = #{userId} and type = 3")
+    // public int fansCount(String userId);
 
     /**
      * 根据id查询用户的社交信息
@@ -55,10 +55,10 @@ public interface UserInfoMapper extends BaseMapper<User> {
                     one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.articleLikedCount")
             ),
             @Result(property = "peopleStarCount", column = "user_id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.peopleStarCount")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.peopleStarCount")
             ),
             @Result(property = "fansCount", column = "user_id", javaType = Integer.class,
-                    one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.fansCount")
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.fansCount")
             ),
     })
     public UserCommunityInfo getUserCommunityInfo(String userId);

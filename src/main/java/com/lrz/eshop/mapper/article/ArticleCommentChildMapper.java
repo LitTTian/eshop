@@ -70,8 +70,6 @@ public interface ArticleCommentChildMapper extends BaseMapper<ArticleCommentChil
             @Result(property = "replyUser", column = "{replyCommentId = reply_comment_id, afterMain = after_main}", javaType = UserSocialInfo.class,
                     one = @One(select = "com.lrz.eshop.mapper.article.ArticleCommentChildMapper.selectByReplyCommentId")
             ),
-
-
             @Result(property = "content", column = "content"),
             @Result(property = "afterMain", column = "after_main"),
             @Result(property = "likes", column = "id", javaType = Integer.class,

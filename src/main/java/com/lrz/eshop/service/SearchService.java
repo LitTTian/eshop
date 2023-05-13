@@ -7,11 +7,32 @@ package com.lrz.eshop.service;
  */
 
 import com.github.pagehelper.PageInfo;
+import com.lrz.eshop.common.page.MyPageInfo;
+import com.lrz.eshop.elasticsearch.ModelMapping;
+import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.product.Model;
 
+import java.io.IOException;
+import java.util.List;
+
 public interface SearchService {
-    PageInfo<Model> findPageByKeywordOrder(Integer page, Integer size, String keyword, String order);
+    PageInfo<Model> findPageByKeywordOrder(Integer page, Integer pageSize, String keyword, String order);
 
-    PageInfo<Model> findPageByKeyword(Integer page, Integer size, String keyword);
+    PageInfo<Model> findPageByKeyword(Integer page, Integer pageSize, String keyword);
 
+    PageInfo<Model> findPageByCategoryIdOrder(Integer page, Integer pageSize, String categoryId, String order);
+
+    // 文章搜索
+    PageInfo<ArticleShowInfo> findPageArticleByKeywordOrder(Integer page, Integer pageSize, String keyword, String order);
+
+    PageInfo<ArticleShowInfo> findPageArticleByCategoryIdOrder(Integer page, Integer pageSize, String categoryId, String order);
+
+    /**
+     * 使用ES搜索商品
+     * @param keyword
+     * @param from
+     * @param pageSize
+     * @return
+     */
+    MyPageInfo<ModelMapping> search(String keyword, int from, int pageSize) throws IOException;
 }

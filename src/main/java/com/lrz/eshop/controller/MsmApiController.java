@@ -74,20 +74,18 @@ public class MsmApiController {
     public Result<?> sendEmailCode(HttpServletRequest request, HttpServletResponse response, @PathVariable String email) {
         String redisKey = redisUtils.getRedisKey(request, "email");
         String code = (String) redisTemplate.opsForValue().get(redisKey);
-        System.out.println("code = " + code);
-        if(!StringUtils.isEmpty(code)) {
+        // System.out.println("code = " + code);
+        if(!StringUtils.isEmpty(code)) { // redis中已经有了验证码
             return Result.success("验证码已发送");
         }
-        // 如果从redis获取不到，
-        // 生成验证码，
+
         code = captcharProducer.createText();
         emailService.sendRegistryCode(
                 new EmailDto(Collections.singletonList(email),
                         "验证码",
                         code,
                         "邮箱注册"));
-        //生成验证码放到redis里面，设置有效时间
-        redisTemplate.opsForValue().set(
+        redisTemplate.opsForValue().set( //生成验证码放到redis里面，设置有效时间
                 redisKey,
                 code,
                 CaptchaExpiration.MAIL_REGISTRY_CODE.getCount(),

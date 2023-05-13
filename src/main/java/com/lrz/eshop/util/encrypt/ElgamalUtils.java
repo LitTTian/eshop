@@ -17,7 +17,7 @@ public class ElgamalUtils {
     private static final Long a = Long.parseLong("221467792290"); // a为一个原根
 
     /**
-     * 将用户的id作为k生成C1并返回
+     * 通过随机数k生成C1并返回
      * @param k
      * @return C1 = a^k mod p
      */
@@ -82,7 +82,7 @@ public class ElgamalUtils {
     /**
      *
      * @param M 要加密的内容
-     * @param x 房间号
+     * @param x 房间id
      * @return 加密后的C1和C2
      */
     public static long[] encrypt(Long M, Long x) {

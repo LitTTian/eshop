@@ -43,6 +43,8 @@ public interface CategoryMapper extends BaseMapper<Category> {
     })
     Category selectCategoryByCategoryId(String categoryId);
 
+    @Select("select name from category where id = #{categoryId}")
+    String selectCategoryNameByCategoryId(String categoryId);
 
     /**
      * 查询所有的分类，包括分类下的model

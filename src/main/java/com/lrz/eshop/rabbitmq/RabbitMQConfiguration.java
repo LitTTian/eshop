@@ -20,9 +20,12 @@ public class RabbitMQConfiguration {
 
     // 声明 1个路由key 1个队列 1个交换机
     public static final String DELAY_EXCHANGE_NAME = "delay.exchange"; // 延迟交换机
-    public static final String DELAY_QUEUE_NAME = "delay.queue"; // 延迟队列
+    public static final String DELAY_ORDER_QUEUE_NAME = "delay.order.queue"; // 延迟队列
     // 延迟队列路由key
-    public static final String DELAY_QUEUE_ROUTING_KEY = "delay.queue.routing.key";
+    public static final String DELAY_ORDER_QUEUE_ROUTING_KEY = "delay.order.queue.routing.key";
+    public static final String DELAY_PRINT_QUEUE_NAME = "delay.print.queue"; // 延迟打印控制台
+    // 延迟队列路由key
+    public static final String DELAY_PRINT_QUEUE_ROUTING_KEY = "delay.print.queue.routing.key";
 
 
     // 声明延迟交换器
@@ -35,18 +38,32 @@ public class RabbitMQConfiguration {
 
 
     // 声明延迟队列，不设置TTL存活时间，并且绑定死信交换机
-    @Bean("delayQueue")
-    public Queue delayQueue() {
-        return new Queue(DELAY_QUEUE_NAME);
+    @Bean("delayOrderQueue")
+    public Queue delayOrderQueue() {
+        return new Queue(DELAY_ORDER_QUEUE_NAME);
     }
 
 
     // 声明延迟队列的绑定关系
     @Bean
-    public Binding delayBindingA(@Qualifier("delayQueue") Queue queue,
+    public Binding delayBindingA(@Qualifier("delayOrderQueue") Queue queue,
                                  @Qualifier("delayExchange") CustomExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(DELAY_QUEUE_ROUTING_KEY).noargs();
+        return BindingBuilder.bind(queue).to(exchange).with(DELAY_ORDER_QUEUE_ROUTING_KEY).noargs();
     }
+
+    // 打印控制台队列
+    @Bean("delayPrintQueue")
+    public Queue delayPrintQueue() {
+        return new Queue(DELAY_PRINT_QUEUE_NAME);
+    }
+    @Bean
+    public Binding delayBindingB(@Qualifier("delayPrintQueue") Queue queue,
+                                 @Qualifier("delayExchange") CustomExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(DELAY_PRINT_QUEUE_ROUTING_KEY).noargs();
+    }
+
+
+
 
 
 

@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 /**
+ * 交换机=>队列
  * @author 天天
  * @create 2023/5/6 11:33
  * @description

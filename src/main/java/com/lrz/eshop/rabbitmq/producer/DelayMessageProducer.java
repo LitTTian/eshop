@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-import static com.lrz.eshop.rabbitmq.RabbitMQConfiguration.DELAY_EXCHANGE_NAME;
-import static com.lrz.eshop.rabbitmq.RabbitMQConfiguration.DELAY_QUEUE_ROUTING_KEY;
+import static com.lrz.eshop.rabbitmq.RabbitMQConfiguration.*;
 
 
 /**
@@ -28,8 +27,8 @@ public class DelayMessageProducer {
     @Autowired
     private ConfirmCallback confirmCallback;
 
-    @Autowired
-    private ReturnCallback returnCallback;
+    // @Autowired
+    // private ReturnCallback returnCallback;
 
 
 
@@ -43,9 +42,18 @@ public class DelayMessageProducer {
 
         rabbitTemplate.setMandatory(true); // 开启失败通知
         rabbitTemplate.setConfirmCallback(confirmCallback); // 消费者确认收到消息后，手动ack回执回调处理
-        rabbitTemplate.setReturnCallback(returnCallback); // 消息投递到队列失败回调处理
+        // rabbitTemplate.setReturnCallback(returnCallback); // 消息投递到队列失败回调处理
         // 设置消息的过期时间
-        rabbitTemplate.convertAndSend(DELAY_EXCHANGE_NAME, DELAY_QUEUE_ROUTING_KEY, orderId, msg -> {
+        rabbitTemplate.convertAndSend(DELAY_EXCHANGE_NAME, DELAY_ORDER_QUEUE_ROUTING_KEY, orderId, msg -> {
+            msg.getMessageProperties().setDelay(delayTime); // 设置延迟时间
+            return msg;
+        });
+    }
+
+    public void sendDelayPrintMessage(String text, Integer delayTime) {
+        rabbitTemplate.setConfirmCallback(confirmCallback); // 消费者确认收到消息后，手动ack回执回调处理
+        // rabbitTemplate.setReturnCallback(returnCallback);
+        rabbitTemplate.convertAndSend(DELAY_EXCHANGE_NAME, DELAY_PRINT_QUEUE_ROUTING_KEY, text, msg -> {
             msg.getMessageProperties().setDelay(delayTime); // 设置延迟时间
             return msg;
         });

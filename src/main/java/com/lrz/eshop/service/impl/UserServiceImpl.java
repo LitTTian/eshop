@@ -120,11 +120,8 @@ public class UserServiceImpl implements UserService {
         }else { // 登录成功
             User userDB = users.get(0);
             userDB.setPassword(null);
-            // String token = UUID.randomUUID().toString();
             String token = TokenUtil.sign(userDB);
             userDB.setToken(token);
-            session.setAttribute("id", String.valueOf(userDB.getId()));
-            System.out.println("session id: " + session.getAttribute("id"));
             // redisUtils.set(token, sUser.getId(), 60 * 60 * 24 * 7,  TimeUnit.SECONDS);
             return userDB;
         }
@@ -141,8 +138,6 @@ public class UserServiceImpl implements UserService {
         User user = selectUserInfoById(userId);
         // String newToken = TokenUtil.sign(user);
         user.setToken(token);
-        session.setAttribute("id", String.valueOf(user.getId()));
-        System.out.println("session id: " + session.getAttribute("id"));
         user.setPassword(null);
         return user;
     }

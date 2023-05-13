@@ -6,17 +6,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 
-/**  
+/**
  * 梦开始的地方
- * @author 天天  
- * @create 2023/1/19 17:22  
- * @description    
+ * @author 天天
+ * @create 2023/1/19 17:22
+ * @description
  */
 @SpringBootApplication
 @ServletComponentScan
 // @ComponentScan(basePackages = {"com.lrz.eshop"})
-@MapperScan("com.lrz.eshop.mapper")
-@MapperScan("com.lrz.eshop.mapper.article")
+// @MapperScan("com.lrz.eshop.mapper")
 public class EshopApplication {
 
     public static void main(String[] args) {
