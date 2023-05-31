@@ -1,4 +1,4 @@
-package com.lrz.eshop.component;
+package com.lrz.eshop.chat;
 
 /**
  * @author 天天

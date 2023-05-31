@@ -17,7 +17,8 @@ public enum ResultCode implements IErrorCode {
     LoginFailed(444, "登录失败"),
     UserNotExist(445, "用户不存在"),
     UsernameAlreadyExist(446, "用户名已存在"),
-    EmailAlreadyExist(447, "邮箱已存在"),;
+    EmailAlreadyExist(447, "邮箱已存在"),
+    TokenIsBlocked(448, "token已过期"),;
     private long code;
     private String message;
 

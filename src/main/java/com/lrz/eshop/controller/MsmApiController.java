@@ -72,7 +72,7 @@ public class MsmApiController {
      */
     @GetMapping("/sendEmail/{email}")
     public Result<?> sendEmailCode(HttpServletRequest request, HttpServletResponse response, @PathVariable String email) {
-        String redisKey = redisUtils.getRedisKey(request, "email");
+        String redisKey = redisUtils.getUniqueRedisKey(request, "email");
         String code = (String) redisTemplate.opsForValue().get(redisKey);
         // System.out.println("code = " + code);
         if(!StringUtils.isEmpty(code)) { // redis中已经有了验证码

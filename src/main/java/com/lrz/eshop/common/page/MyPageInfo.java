@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 分页封装
  * @author 天天
  * @create 2023/5/12 4:40
  * @description

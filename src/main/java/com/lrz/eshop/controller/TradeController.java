@@ -113,7 +113,7 @@ public class TradeController {
         // String userId = session.getAttribute("id").toString();
         String token = request.getHeader("Authorization");
         String userId = TokenUtil.getIdByToken(token);
-        tradeService.updateTradeByUserId(userId);
+        tradeService.updateTradeByUserId(userId); // 用户查询订单时检测是否超时
         return Result.success("查询成功", tradeService.getTradesByUserId(userId));
     }
 

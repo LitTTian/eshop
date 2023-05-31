@@ -63,9 +63,9 @@ public class DBLoggerAspect {
         sysOperation.setModule(dbLoggerAnnotation.module());
         sysOperation.setOperation(dbLoggerAnnotation.operation());
         Object[] args = pjp.getArgs();
-        // Object[] params = new Object[args.length + 5];
         List<Object> params = new ArrayList<Object>();
         int index = 0;
+        // 过滤过长参数
         for (Object arg: args) { // 过滤过长参数
             if(arg instanceof MultipartFile || arg instanceof MultipartFile[]) { // 文件类型不记录
                 continue;

@@ -7,12 +7,15 @@ import com.lrz.eshop.pojo.user.User;
 import com.lrz.eshop.controller.dto.UserDto;
 import com.lrz.eshop.service.TradeService;
 import com.lrz.eshop.service.UserService;
+import com.lrz.eshop.util.RedisUtils;
+import com.lrz.eshop.util.TokenUtil;
 import io.swagger.annotations.Api;
 import org.apache.http.protocol.HttpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 登录控制器
@@ -33,6 +36,12 @@ public class LoginController {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
     /**
      * 登陆时确认用户名密码，并存入session
@@ -57,6 +66,9 @@ public class LoginController {
     @PostMapping("/getUserInfoByToken")
     @DBLoggerAnnotation(module="登录", operation = "通过token登录")
     public Result<?> getUserInfoByToken(@RequestParam(value = "token") String token) {
+        if(redisUtils.isBlockedToken(token)) {
+            return Result.failed(ResultCode.TokenIsBlocked);
+        }
         User user = userService.getUserInfoByToken(token);
         if (user != null) {
             // session.setAttribute("id", String.valueOf(user.getId()));
@@ -72,8 +84,9 @@ public class LoginController {
     // public Result<?> logout(@RequestParam String uId) {
     public Result<?> logout(@RequestParam(value = "token") String token) {
         System.out.println("logout token: " + token);
-        //TODO 退出后将token加入redis黑名单
-        session.removeAttribute("id");
+        long time = TokenUtil.getTokenExpireTime(token);
+        redisUtils.addBlockedToken(token, time, TimeUnit.MILLISECONDS);
+        // session.removeAttribute("id");
         session.invalidate();
         return Result.success("退出成功");
     }

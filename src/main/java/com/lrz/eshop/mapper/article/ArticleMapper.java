@@ -1,6 +1,7 @@
 package com.lrz.eshop.mapper.article;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lrz.eshop.elasticsearch.ArticleMapping;
 import com.lrz.eshop.pojo.article.Article;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.product.Category;
@@ -269,5 +270,47 @@ public interface ArticleMapper extends BaseMapper<Article> {
             @Result(property = "createTime", column = "create_time"),
     })
     List<ArticleShowInfo> selectMostWatchesArticleCard(int limit);
+
+
+
+    // 给ElasticSearch用的数据库查询
+
+    @Select("select * from article where type = 1")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "userId", column = "user_id"),
+            // @Result(property = "user", column = "user_id", javaType = UserSocialInfo.class,
+            //         one = @One(select = "com.lrz.eshop.mapper.user.UserInfoMapper.getUserSocialInfo")
+            // ),
+            @Result(property = "nickname", column = "user_id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.user.UserMapper.selectNicknameById")
+            ),
+            @Result(property = "categoryId", column = "category_id"),
+            // @Result(property = "category", column = "category_id", javaType = Category.class,
+            //         // 用这种方式查出来的category有configs
+            //         one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryByCategoryId")
+            // ),
+            @Result(property = "categoryName", column = "category_id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryNameByCategoryId")
+            ),
+            @Result(property = "title", column = "title"),
+            @Result(property = "abstracts", column = "abstracts"),
+            @Result(property = "coverImageUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByArticleId")
+            ),
+            // 浏览、赞、踩
+            @Result(property = "watches", column = "watches"),
+            @Result(property = "stars", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByArticleId")
+            ),
+            @Result(property = "likes", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectLikeCountByArticleId")
+            ),
+            @Result(property = "dislikes", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.article.LikeMapper.selectDislikeCountByArticleId")
+            ),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    List<ArticleMapping> selectAllArticleMappings();
 
 }

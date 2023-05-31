@@ -1,7 +1,6 @@
-package com.lrz.eshop.component;
+package com.lrz.eshop.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lrz.eshop.common.aop.DBLoggerAnnotation;
 import com.lrz.eshop.config.WebSocketConfig;
 import com.lrz.eshop.mapper.chat.MessageContentMapper;
 import com.lrz.eshop.mapper.chat.MessageMapper;

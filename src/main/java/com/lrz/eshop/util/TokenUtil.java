@@ -1,5 +1,6 @@
 package com.lrz.eshop.util;
 
+import cn.hutool.jwt.Claims;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.lrz.eshop.common.BaseException;
 import com.lrz.eshop.common.ConstantResultCode;
 import com.lrz.eshop.pojo.user.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import java.util.Date;
  */
 
 @Component
+@Slf4j
 public class TokenUtil {
 
     /*
@@ -75,6 +78,7 @@ public class TokenUtil {
                     // 使用了HMAC256加密算法。
                     .sign(Algorithm.HMAC256(TOKEN_SECRET));
         } catch (Exception e) {
+            log.error("Exception:" + e);
             e.printStackTrace();
         }
         return token;
@@ -100,9 +104,14 @@ public class TokenUtil {
             System.out.println("过期时间：" + sdf.format(jwt.getExpiresAt()));
             return true;
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Exception:" + e);
             return false;
         }
+    }
+
+    public static long getTokenExpireTime(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getExpiresAt().getTime() - System.currentTimeMillis();
     }
 
     /**

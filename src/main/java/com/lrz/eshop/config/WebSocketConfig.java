@@ -1,6 +1,5 @@
 package com.lrz.eshop.config;
 
-import com.lrz.eshop.component.ChatEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;

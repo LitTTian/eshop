@@ -388,23 +388,27 @@ public interface ModelMapper extends BaseMapper<Model> {
     Model selectDetailByModelId(String modelId);
 
 
+    // 给ElasticSearch用的
     /**
      * 用于ElasticSearch的初始化数据
      * @return
      */
-    @Select("select * from model")
+    @Select("select * from model where deleted = false")
     @Results({
             // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
             @Result(property = "id", column = "id"),
             @Result(property = "categoryId", column = "category_id"),
             // Category的详细信息
-            @Result(property = "categoryName", column = "category_id", javaType = Category.class,
+            @Result(property = "categoryName", column = "category_id", javaType = String.class,
                     one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryNameByCategoryId")
             ),
             @Result(property = "title", column = "title"),
             @Result(property = "advertisement", column = "advertisement"),
-            @Result(property = "starCounts", column = "id", javaType = Double.class,
+            @Result(property = "starCounts", column = "id", javaType = Integer.class,
                     one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByModelId")
+            ),
+            @Result(property = "sellCounts", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.ModelMapper.selectSellCountByModelId")
             ),
             @Result(property = "lowPrice", column = "id", javaType = Double.class,
                     one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
@@ -416,4 +420,37 @@ public interface ModelMapper extends BaseMapper<Model> {
             @Result(property = "createTime", column = "create_time"),
     })
     List<ModelMapping> selectAllModelMapping();
+
+    @Select("select * from model where id = #{modelId} and deleted = false")
+    @Results({
+            // 这里的column是上面select查询的结果，即user表的默认column不再是驼峰！！！
+            @Result(property = "id", column = "id"),
+            @Result(property = "categoryId", column = "category_id"),
+            // Category的详细信息
+            @Result(property = "categoryName", column = "category_id", javaType = Category.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.CategoryMapper.selectCategoryNameByCategoryId")
+            ),
+            @Result(property = "title", column = "title"),
+            @Result(property = "advertisement", column = "advertisement"),
+            @Result(property = "starCounts", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.star.StarMapper.selectStarCountByModelId")
+            ),
+            @Result(property = "sellCounts", column = "id", javaType = Integer.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.ModelMapper.selectSellCountByModelId")
+            ),
+            @Result(property = "lowPrice", column = "id", javaType = Double.class,
+                    one = @One(select = "com.lrz.eshop.mapper.product.ProductMapper.selectLowPriceByModelId")
+            ),
+            @Result(property = "coverImgUrl", column = "id", javaType = String.class,
+                    one = @One(select = "com.lrz.eshop.mapper.common.ImageMapper.selectCoverImageUrlByModelId")
+            ),
+            @Result(property = "sellerId", column = "seller_id"),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    ModelMapping selectModelMappingByModelId(String modelId);
+
+    @Select("select sum(sell_count) from product where model_id = #{modelId}")
+    Integer selectSellCountByModelId(String modelId);
+
+
 }

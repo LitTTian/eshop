@@ -21,12 +21,22 @@ public class RedisUtils {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    public void addBlockedToken(String token, long timeout, TimeUnit timeUnit) {
+        // timeout, timeUnit无法设置过期时间
+        redisTemplate.opsForSet().add("blocked-token", token);
+    }
+
+    public boolean isBlockedToken(String token) {
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember("blocked-token", token));
+    }
+
+
     /**
      * 获取验证码key
      * @param request
      * @return
      */
-    public String getRedisKey(@RequestBody HttpServletRequest request, String type){
+    public String getUniqueRedisKey(@RequestBody HttpServletRequest request, String type){
         String ip = NetworkUtils.getIpAddr(request);
         String userAgent = request.getHeader("User-Agent");
         String key = "user-service:" + type + ":" + EncryptUtils.encodeWithSha1(ip + userAgent);
@@ -45,7 +55,6 @@ public class RedisUtils {
 
     /**
      * 普通设置键值
-     *
      * @param key   键
      * @param value 值
      * @return true成功 false失败
@@ -61,7 +70,6 @@ public class RedisUtils {
 
     /**
      * 普通设置键值并设置过期时间
-     *
      * @param key   键
      * @param value 值
      * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
@@ -95,7 +103,6 @@ public class RedisUtils {
 
     /**
      * 删除缓存
-     *
      * @param key 键
      * @return 是否成功
      */

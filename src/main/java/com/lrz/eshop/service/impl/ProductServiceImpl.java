@@ -1,6 +1,8 @@
 package com.lrz.eshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lrz.eshop.elasticsearch.ElasticSearch;
+import com.lrz.eshop.elasticsearch.ModelMapping;
 import com.lrz.eshop.mapper.common.ImageMapper;
 import com.lrz.eshop.mapper.product.CategoryMapper;
 import com.lrz.eshop.mapper.product.ModelMapper;
@@ -16,10 +18,24 @@ import com.lrz.eshop.service.ImageService;
 import com.lrz.eshop.service.OssService;
 import com.lrz.eshop.service.ProductService;
 import com.lrz.eshop.util.ImageNameUtil;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 天天
@@ -28,6 +44,12 @@ import java.util.List;
  */
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    ElasticSearch elasticSearch;
+
+    @Autowired
+    RestHighLevelClient restHighLevelClient;
 
     @Autowired
     ProductMapper productMapper;
@@ -55,8 +77,59 @@ public class ProductServiceImpl implements ProductService {
     ImageNameUtil imageNameUtil;
 
     @Override
-    public List<Model> selectAllModelBySellerId(String sellerId) {
-        return modelMapper.selectBySellerId(sellerId);
+    public List<ModelMapping> selectAllModelBySellerId(String sellerId) {
+        // return modelMapper.selectBySellerId(sellerId);
+        QueryBuilder queryBuilder = QueryBuilders.termQuery("sellerId", sellerId);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
+                .query(queryBuilder)
+                .sort("createTime", SortOrder.DESC)
+                .size(200);
+        SearchRequest searchRequest = new SearchRequest()
+                .indices("models")
+                .source(searchSourceBuilder);
+        List<ModelMapping> modelMappings = new ArrayList<>();
+        try {
+            SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            for (SearchHit hit : searchResponse.getHits().getHits()) {
+                // System.out.println(hit);
+                Map<String, Object> sourceMap = hit.getSourceAsMap();
+
+                // TODO 异常处理
+                String id = sourceMap.get("id").toString();
+                String title = title = sourceMap.get("title") == null ? null : sourceMap.get("title").toString();
+                ;
+                String advertisement = advertisement = sourceMap.get("advertisement") == null ? null : sourceMap.get("advertisement").toString();
+                ;
+                String categoryName = sourceMap.get("categoryName") == null ? null : sourceMap.get("categoryName").toString();
+                int starCounts = sourceMap.get("starCounts") == null ? 0 : Integer.parseInt(sourceMap.get("starCounts").toString());
+                double lowPrice = sourceMap.get("lowPrice") == null ? 0 : Double.parseDouble(sourceMap.get("lowPrice").toString());
+                String coverImgUrl = sourceMap.get("coverImgUrl") == null ? null : sourceMap.get("coverImgUrl").toString();
+                String categoryId = sourceMap.get("categoryId") == null ? null : sourceMap.get("categoryId").toString();
+                Instant instant = Instant.parse(sourceMap.get("createTime").toString());
+                Date createTime = new Date();
+                if (instant != null) {
+                    createTime = Date.from(instant);
+                }
+                ModelMapping mapping = new ModelMapping();
+                mapping.setId(Long.valueOf(id));
+                mapping.setTitle(title);
+                mapping.setAdvertisement(advertisement);
+                mapping.setCategoryId(Long.valueOf(categoryId));
+                mapping.setCategoryName(categoryName);
+                mapping.setStarCounts(starCounts);
+                mapping.setLowPrice(lowPrice);
+                mapping.setCoverImgUrl(coverImgUrl);
+                mapping.setSellerId(Long.valueOf(sellerId));
+                mapping.setCreateTime(createTime);
+                modelMappings.add(mapping);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        // 封装分页结果
+        return modelMappings;
     }
 
     @Override
@@ -136,6 +209,7 @@ public class ProductServiceImpl implements ProductService {
         }
         model.setDeleted(true);
         modelMapper.updateById(model);
+        elasticSearch.removeModelMappingByIdFromEs(modelId);
         return model;
     }
 
@@ -185,6 +259,8 @@ public class ProductServiceImpl implements ProductService {
                 imageService.linkImage(image);
             }
         }
+        ModelMapping modelMapping = modelMapper.selectModelMappingByModelId(String.valueOf(model.getId()));
+        elasticSearch.addModelMappingToEs(modelMapping);
         return true;
     }
 

@@ -1,4 +1,4 @@
-package com.lrz.eshop.component;
+package com.lrz.eshop.chat;
 
 import com.lrz.eshop.pojo.user.UserSocialInfo;
 import lombok.Data;

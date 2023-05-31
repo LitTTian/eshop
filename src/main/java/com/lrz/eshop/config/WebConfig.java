@@ -41,6 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/star/**")
                 .addPathPatterns("/api/do/**")
                 .addPathPatterns("/api/message/**")
+                .addPathPatterns("/api/location/**")
                 // .addPathPatterns("/ws") // 添加拦截器后，websocket能正确拿到session
                 .excludePathPatterns("/api/user/**")
                 .excludePathPatterns("/api/login/**");

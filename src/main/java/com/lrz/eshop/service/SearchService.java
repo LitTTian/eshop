@@ -8,6 +8,7 @@ package com.lrz.eshop.service;
 
 import com.github.pagehelper.PageInfo;
 import com.lrz.eshop.common.page.MyPageInfo;
+import com.lrz.eshop.elasticsearch.ArticleMapping;
 import com.lrz.eshop.elasticsearch.ModelMapping;
 import com.lrz.eshop.pojo.article.ArticleShowInfo;
 import com.lrz.eshop.pojo.product.Model;
@@ -35,4 +36,16 @@ public interface SearchService {
      * @return
      */
     MyPageInfo<ModelMapping> search(String keyword, int from, int pageSize) throws IOException;
+
+    MyPageInfo<ModelMapping> searchByCategoryIdOrder(String categoryId, String order, int from, int pageSize) throws IOException;
+
+    MyPageInfo<ArticleMapping> searchArticle(String keyword, int from, int pageSize) throws IOException;
+
+    MyPageInfo<ArticleMapping> searchHotArticle(int pageSize) throws IOException;
+
+    MyPageInfo<ArticleMapping> searchArticleByCategoryIdOrder(String categoryId, String order, int from, int pageSize) throws IOException;
+
+    MyPageInfo<ModelMapping> searchModelNew(int pageSize) throws IOException;
+
+    MyPageInfo<ModelMapping> searchModelHot(int pageSize) throws IOException;
 }

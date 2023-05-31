@@ -1,6 +1,7 @@
 package com.lrz.eshop.controller;
 
 import com.lrz.eshop.common.webapi.Result;
+import com.lrz.eshop.elasticsearch.ModelMapping;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
 import com.lrz.eshop.pojo.product.Product;
@@ -8,6 +9,7 @@ import com.lrz.eshop.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class ProductController {
     @ApiOperation("根据sellerId查询用户上架的所有model")
     @PostMapping("/selectAllModelBySellerId")
     public Result<?> selectAllModelBySellerId(@RequestParam("sellerId") String sellerId) {
-        List<Model> models = productService.selectAllModelBySellerId(sellerId);
+        List<ModelMapping> models = productService.selectAllModelBySellerId(sellerId);
         if (models == null) {
             return Result.operateFailed();
         }else {

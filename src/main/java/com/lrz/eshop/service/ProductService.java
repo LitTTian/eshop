@@ -1,5 +1,6 @@
 package com.lrz.eshop.service;
 
+import com.lrz.eshop.elasticsearch.ModelMapping;
 import com.lrz.eshop.pojo.common.Image;
 import com.lrz.eshop.pojo.product.Category;
 import com.lrz.eshop.pojo.product.Model;
@@ -8,6 +9,7 @@ import com.lrz.eshop.pojo.trade.Trade;
 import com.lrz.eshop.pojo.trade.TradeDetail;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public interface ProductService {
      * @param sellerId
      * @return
      */
-    List<Model> selectAllModelBySellerId(String sellerId);
+    List<ModelMapping> selectAllModelBySellerId(String sellerId);
 
     /**
      * 获取最新机型

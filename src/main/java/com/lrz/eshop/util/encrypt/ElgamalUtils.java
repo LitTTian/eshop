@@ -13,8 +13,7 @@ import java.security.SecureRandom;
  */
 public class ElgamalUtils {
     private static final Long p = Long.parseLong("366241480223"); // p为一个素数
-
-    private static final Long a = Long.parseLong("221467792290"); // a为一个原根
+    private static final Long a = Long.parseLong("221467792290"); // a为一个原根,a^k mod p两两不同（1< a <p, 0 < k < p）
 
     /**
      * 通过随机数k生成C1并返回
@@ -50,6 +49,10 @@ public class ElgamalUtils {
         //        return remainder * M % p;
     }
 
+    /**
+     * 生成0~p的随机数k
+     * @return
+     */
     Long generateK() {
         // 重构随机数生成规则
         // Random r = new Random();
@@ -69,6 +72,13 @@ public class ElgamalUtils {
         return k;
     }
 
+    /**
+     * 通过C1、C2和房间号x解密
+     * @param C1
+     * @param C2
+     * @param x
+     * @return
+     */
     public static Long decrypt(Long C1, Long C2, Long x) {
         Long v = MyMath.fastExpMod(C1, x, p);
         Long v1 = MyMath.egcd(v, p)[1];
@@ -80,7 +90,7 @@ public class ElgamalUtils {
     }
 
     /**
-     *
+     * 将要加密的内容M和房间号x传入，返回加密后的C1和C2
      * @param M 要加密的内容
      * @param x 房间id
      * @return 加密后的C1和C2

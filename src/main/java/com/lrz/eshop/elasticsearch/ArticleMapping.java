@@ -1,6 +1,10 @@
 package com.lrz.eshop.elasticsearch;
 
-import com.lrz.eshop.pojo.product.Model;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lrz.eshop.pojo.product.Category;
+import com.lrz.eshop.pojo.user.UserSocialInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,50 +20,52 @@ import java.util.Date;
 
 /**
  * @author 天天
- * @create 2023/5/12 3:45
+ * @create 2023/5/18 23:21
  * @description
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModelMapping {
-
-
+public class ArticleMapping {
     @ElasticsearchProperty(type = FieldType.Long, index = false)
     private Long id;
 
-    @ElasticsearchProperty(type = FieldType.Text)
-    private String title;
+    @ElasticsearchProperty(type = FieldType.Long)
+    private Long userId;
 
-    @ElasticsearchProperty(type = FieldType.Text)
-    private String advertisement;
+    @ElasticsearchProperty(type = FieldType.Keyword, index = false)
+    private String nickname;
 
-    @ElasticsearchProperty(type = FieldType.Keyword)
+    @ElasticsearchProperty(type = FieldType.Long)
     private Long categoryId;
 
     @ElasticsearchProperty(type = FieldType.Keyword)
     private String categoryName;
 
-    @ElasticsearchProperty(type = FieldType.Integer, index = false)
-    private int starCounts;
+    @ElasticsearchProperty(type = FieldType.Text)
+    private String title;
 
-    @ElasticsearchProperty(type = FieldType.Integer, index = false)
-    private int sellCounts;
-
-    @ElasticsearchProperty(type = FieldType.Double, index = false)
-    private Double lowPrice;
+    @ElasticsearchProperty(type = FieldType.Text)
+    private String abstracts;
 
     @ElasticsearchProperty(type = FieldType.Keyword, index = false)
-    private String coverImgUrl;
+    private String coverImageUrl;
 
-    @ElasticsearchProperty(type = FieldType.Keyword)
-    private Long sellerId;
+    @ElasticsearchProperty(type = FieldType.Integer, index = false)
+    private int watches;
+
+    @ElasticsearchProperty(type = FieldType.Integer, index = false)
+    private int stars;
+
+    @ElasticsearchProperty(type = FieldType.Integer, index = false)
+    private int likes;
+    // isLike = 0,
+    @ElasticsearchProperty(type = FieldType.Integer, index = false)
+    private int dislikes;
 
     @ElasticsearchProperty(type = FieldType.Date, index = false)
     private Date createTime;
-
-    // getters and setters omitted for brevity
 
     public static String getSource() {
         try {
@@ -68,14 +74,16 @@ public class ModelMapping {
             {
                 builder.startObject("properties");
                 {
-                    Class<? extends ModelMapping> obj = new ModelMapping().getClass();
-                    for (Field field : obj.getDeclaredFields()) {
+                    Class<? extends ArticleMapping> obj = ArticleMapping.class;
+                    for(Field field: obj.getDeclaredFields()) {
                         ElasticsearchProperty annotation = field.getAnnotation(ElasticsearchProperty.class);
-                        if (annotation != null) {
+                        if(annotation != null) {
                             builder.startObject(field.getName());
                             {
                                 builder.field("type", annotation.type().getMappedName());
-                                builder.field("index", annotation.index());
+                                if(!annotation.index()) {
+                                    builder.field("index", false);
+                                }
                             }
                             builder.endObject();
                         }
@@ -84,10 +92,9 @@ public class ModelMapping {
                 builder.endObject();
             }
             builder.endObject();
-            // System.out.println(Strings.toString(builder));
             return Strings.toString(builder);
-        } catch (IOException ex) {
-            throw new MapperParsingException("Failed to build mapping source", ex);
+        } catch (Exception e) {
+            throw new MapperParsingException("Failed to build mapping source", e);
         }
     }
 
@@ -96,19 +103,20 @@ public class ModelMapping {
         builder.startObject();
         {
             builder.field("id", this.getId());
-            builder.field("title", this.getTitle());
-            builder.field("advertisement", this.getAdvertisement());
+            builder.field("userId", this.getUserId());
+            builder.field("nickname", this.getNickname());
             builder.field("categoryId", this.getCategoryId());
             builder.field("categoryName", this.getCategoryName());
-            builder.field("starCounts", this.getStarCounts());
-            builder.field("sellCounts", this.getSellCounts());
-            builder.field("lowPrice", this.getLowPrice());
-            builder.field("coverImgUrl", this.getCoverImgUrl());
-            builder.field("sellerId", this.getSellerId());
+            builder.field("title", this.getTitle());
+            builder.field("abstracts", this.getAbstracts());
+            builder.field("coverImageUrl", this.getCoverImageUrl());
+            builder.field("watches", this.getWatches());
+            builder.field("stars", this.getStars());
+            builder.field("likes", this.getLikes());
+            builder.field("dislikes", this.getDislikes());
             builder.field("createTime", this.getCreateTime());
         }
         builder.endObject();
         return Strings.toString(builder);
     }
-
 }

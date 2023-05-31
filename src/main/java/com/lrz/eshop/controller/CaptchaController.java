@@ -46,7 +46,7 @@ public class CaptchaController {
     @GetMapping("/getImage")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
         String captchaText = captcharProducer.createText();
-        String key = redisUtils.getRedisKey(request, "captcha");
+        String key = redisUtils.getUniqueRedisKey(request, "captcha");
         // 10分钟过期
         redisTemplate.opsForValue().set(
                 key,
@@ -69,19 +69,19 @@ public class CaptchaController {
 
     @GetMapping("/sendEmailCode/{email}")
     public Result<?> sendEmailCodeWithPath(HttpServletRequest request, HttpServletResponse response, @PathVariable String email) {
-        String redisKey = redisUtils.getRedisKey(request, "email-code");
+        String redisKey = redisUtils.getUniqueRedisKey(request, "email-code");
         return Result.success(authEmailService.sendEmailCode(redisKey, email));
     }
 
     @PostMapping("/sendEmailCode")
     public Result<?> sendEmailCode(HttpServletRequest request, HttpServletResponse response, @RequestParam String email) {
-        String redisKey = redisUtils.getRedisKey(request, "email-code");
+        String redisKey = redisUtils.getUniqueRedisKey(request, "email-code");
         return Result.success(authEmailService.sendEmailCode(redisKey, email));
     }
 
     @PostMapping("/verifyEmailCode")
     public Result<?> verifyEmailCode(HttpServletRequest request, HttpServletResponse response,@RequestParam String emailCode) {
-        String redisKey = redisUtils.getRedisKey(request, "email-code");
+        String redisKey = redisUtils.getUniqueRedisKey(request, "email-code");
         return Result.success(authEmailService.verifyEmailCode(redisKey, emailCode));
     }
 

@@ -92,9 +92,9 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(property = "sells", column = "id", javaType = List.class,
                     many = @Many(select = "com.lrz.eshop.mapper.trade.TradeDetailMapper.selectBySellerId")
             ), */
-            @Result(property = "locations", column = "id", javaType = List.class,
+/*            @Result(property = "locations", column = "id", javaType = List.class,
                     many = @Many(select = "com.lrz.eshop.mapper.user.LocationMapper.selectLocationsByUserId")
-            ),
+            ),*/
     })
     User selectUserInfoById(String id);
 
@@ -108,6 +108,9 @@ public interface UserMapper extends BaseMapper<User> {
     // @Select("Select * from user where id = #{id}")
     // UserSocialInfo selectSocialInfoById(String id);
 
+
+    @Select("Select nickname from user where id = #{id}")
+    String selectNicknameById(String id);
 
 
 }
